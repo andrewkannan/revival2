@@ -295,53 +295,28 @@ export async function deleteRegistration(id: string) {
 export async function getDashboardStats() {
   const config = await getAdminConfig();
   
-  const securedStats = await prisma.ticket.groupBy({
-    by: ['ticketType'],
-    where: {
-      registration: {
-        status: 'SEAT_SECURED'
-      }
-    },
-    _count: true
-  });
-
-  const pendingStats = await prisma.ticket.groupBy({
-    by: ['ticketType'],
-    where: {
-      registration: {
-        status: {
-          in: ['PENDING_FOR_PAYMENT', 'PENDING_FOR_REVIEW']
-        }
-      }
-    },
-    _count: true
-  });
-
   const totalRegistrations = await prisma.registration.count();
 
-  const paidAmountAgg = await prisma.registration.aggregate({
-    _sum: { totalAmount: true },
+  const securedAgg = await prisma.registration.aggregate({
+    _sum: { adultTickets: true, kidsTickets: true, totalAmount: true },
     where: { status: 'SEAT_SECURED' }
   });
 
-  const pendingAmountAgg = await prisma.registration.aggregate({
-    _sum: { totalAmount: true },
+  const pendingAgg = await prisma.registration.aggregate({
+    _sum: { adultTickets: true, kidsTickets: true, totalAmount: true },
     where: { status: { in: ['PENDING_FOR_PAYMENT', 'PENDING_FOR_REVIEW'] } }
   });
-
-  const getCount = (stats: any[], type: 'ADULT' | 'KIDS') => 
-    stats.find(s => s.ticketType === type)?._count || 0;
 
   return {
     adultCapacity: config.adultCapacity,
     kidsCapacity: config.kidsCapacity,
-    securedAdults: getCount(securedStats, 'ADULT'),
-    securedKids: getCount(securedStats, 'KIDS'),
-    pendingAdults: getCount(pendingStats, 'ADULT'),
-    pendingKids: getCount(pendingStats, 'KIDS'),
+    securedAdults: securedAgg._sum.adultTickets || 0,
+    securedKids: securedAgg._sum.kidsTickets || 0,
+    pendingAdults: pendingAgg._sum.adultTickets || 0,
+    pendingKids: pendingAgg._sum.kidsTickets || 0,
     totalRegistrations,
-    totalPaidAmount: Number(paidAmountAgg._sum.totalAmount || 0),
-    totalPendingAmount: Number(pendingAmountAgg._sum.totalAmount || 0)
+    totalPaidAmount: Number(securedAgg._sum.totalAmount || 0),
+    totalPendingAmount: Number(pendingAgg._sum.totalAmount || 0)
   };
 }
 
