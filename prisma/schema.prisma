@@ -84,10 +84,10 @@ model AdminConfig {
   adultCapacity        Int      @default(300)
   kidsCapacity         Int      @default(100)
   isEarlyBird          Boolean  @default(true)
-  adultPriceEarlyBird  Decimal  @db.Decimal(10, 2)
-  kidsPriceEarlyBird   Decimal  @db.Decimal(10, 2)
-  adultPriceRegular    Decimal  @db.Decimal(10, 2)
-  kidsPriceRegular     Decimal  @db.Decimal(10, 2)
+  adultPriceEarlyBird  Decimal  @default(0) @db.Decimal(10, 2)
+  kidsPriceEarlyBird   Decimal  @default(0) @db.Decimal(10, 2)
+  adultPriceRegular    Decimal  @default(0) @db.Decimal(10, 2)
+  kidsPriceRegular     Decimal  @default(0) @db.Decimal(10, 2)
   earlyBirdEndDate     DateTime?
   updatedAt            DateTime @updatedAt
 }
