@@ -84,7 +84,20 @@ export async function releaseLockAction(sessionId: string) {
 }
 
 export async function getPricing() {
-  const adminConfig = await prisma.adminConfig.findUnique({ where: { id: 1 } });
+  let adminConfig = await prisma.adminConfig.findUnique({ where: { id: 1 } });
+  
+  // Self-heal: If the prices are 0 (due to recent Prisma migration @default(0)), set them to standard
+  if (adminConfig && Number(adminConfig.adultPriceEarlyBird) === 0) {
+    adminConfig = await prisma.adminConfig.update({
+      where: { id: 1 },
+      data: {
+        adultPriceEarlyBird: 50,
+        kidsPriceEarlyBird: 25,
+        adultPriceRegular: 70,
+        kidsPriceRegular: 35,
+      }
+    });
+  }
   
   // Check if early bird is active and not expired
   let isEarlyBird = adminConfig?.isEarlyBird ?? true;
