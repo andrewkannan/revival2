@@ -269,7 +269,7 @@ export default function RegistrationsTable({ initialData }: Props) {
                     <td className="px-4 py-4 whitespace-nowrap">
                       <div className="font-medium text-white mb-0.5">RM {reg.totalAmount}</div>
                       <div className="text-slate-400 text-xs">
-                        {reg.adultTickets} Tickets
+                        {reg.adultTickets} Adult {reg.kidsTickets > 0 && `, ${reg.kidsTickets} Kids`}
                       </div>
                       <div className="text-slate-400 text-xs mt-0.5">
                         {reg.attendee.outreach.replace('_', ' ')}
@@ -413,7 +413,7 @@ export default function RegistrationsTable({ initialData }: Props) {
                   <div>
                     <div className="font-medium text-white mb-0.5">RM {reg.totalAmount}</div>
                     <div className="text-slate-400 text-xs">
-                      {reg.adultTickets} Tickets
+                      {reg.adultTickets} Adult {reg.kidsTickets > 0 && `, ${reg.kidsTickets} Kids`}
                     </div>
                     <div className="text-slate-400 text-xs mt-0.5">
                       {reg.attendee.outreach.replace('_', ' ')}

@@ -7,7 +7,6 @@ export default async function RegistrationsPage() {
   const registrations = await prisma.registration.findMany({
     include: {
       attendee: true,
-      tickets: true,
     },
     orderBy: {
       createdAt: 'desc',

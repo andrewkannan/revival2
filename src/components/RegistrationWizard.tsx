@@ -35,7 +35,7 @@ export default function RegistrationWizard() {
   const [registrationId, setRegistrationId] = useState<string | null>(null);
   const [pricing, setPricing] = useState({ adultPrice: 50, adultPriceOriginal: 70, kidsPrice: 25, kidsPriceOriginal: 35, isEarlyBird: true });
   
-  const { register, handleSubmit, formState: { errors }, watch, trigger, getValues } = useForm<FormData>({
+  const { register, handleSubmit, formState: { errors }, watch, trigger, getValues, setValue } = useForm<FormData>({
     resolver: zodResolver(step === 1 ? step1Schema : step2Schema) as any,
     defaultValues: {
       name: '', email: '', phone: '', outreach: 'JOHOR_BAHRU',
@@ -277,9 +277,9 @@ export default function RegistrationWizard() {
                 </div>
               </div>
               <div className="flex items-center space-x-3">
-                <button type="button" onClick={() => { const val = getValues('adultTickets'); if(val > 0) register('adultTickets').onChange({target: {name: 'adultTickets', value: val - 1}}) }} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20">-</button>
+                <button type="button" onClick={() => { const val = getValues('adultTickets'); if(val > 0) setValue('adultTickets', val - 1, { shouldValidate: true }) }} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20">-</button>
                 <span className="w-4 text-center font-medium">{formData.adultTickets}</span>
-                <button type="button" onClick={() => { const val = getValues('adultTickets'); if(val < 10) register('adultTickets').onChange({target: {name: 'adultTickets', value: val + 1}}) }} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20">+</button>
+                <button type="button" onClick={() => { const val = getValues('adultTickets'); if(val < 10) setValue('adultTickets', val + 1, { shouldValidate: true }) }} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20">+</button>
               </div>
             </div>
 
