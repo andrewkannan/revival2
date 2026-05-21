@@ -183,10 +183,15 @@ export async function updateRegistrationDetails(
     totalAmount: number;
     status: RegistrationStatus;
     receiptBase64?: string | null;
+    adultTickets?: number;
+    kidsTickets?: number;
   }
 ) {
   try {
-    const oldReg = await prisma.registration.findUnique({ where: { id } });
+    const oldReg = await prisma.registration.findUnique({ 
+      where: { id },
+      include: { tickets: true }
+    });
     
     const updateData: any = {
       status: data.status,
@@ -195,10 +200,56 @@ export async function updateRegistrationDetails(
     if (data.receiptBase64) {
       updateData.receiptUrl = data.receiptBase64;
     }
+    
+    if (data.adultTickets !== undefined) {
+      updateData.adultTickets = data.adultTickets;
+    }
+    if (data.kidsTickets !== undefined) {
+      updateData.kidsTickets = data.kidsTickets;
+    }
 
-    await prisma.registration.update({
-      where: { id },
-      data: updateData
+    await prisma.$transaction(async (tx) => {
+      await tx.registration.update({
+        where: { id },
+        data: updateData
+      });
+
+      // Sync Ticket table if ticket counts changed
+      if (oldReg && data.adultTickets !== undefined && data.adultTickets !== oldReg.adultTickets) {
+        const diff = data.adultTickets - oldReg.adultTickets;
+        if (diff > 0) {
+          const newTickets = Array.from({ length: diff }).map(() => ({
+            registrationId: id,
+            ticketType: 'ADULT' as const
+          }));
+          await tx.ticket.createMany({ data: newTickets });
+        } else if (diff < 0) {
+          const excess = Math.abs(diff);
+          const adultTickets = oldReg.tickets.filter(t => t.ticketType === 'ADULT');
+          const toDelete = adultTickets.slice(0, excess).map(t => t.id);
+          if (toDelete.length > 0) {
+            await tx.ticket.deleteMany({ where: { id: { in: toDelete } } });
+          }
+        }
+      }
+
+      if (oldReg && data.kidsTickets !== undefined && data.kidsTickets !== oldReg.kidsTickets) {
+        const diff = data.kidsTickets - oldReg.kidsTickets;
+        if (diff > 0) {
+          const newTickets = Array.from({ length: diff }).map(() => ({
+            registrationId: id,
+            ticketType: 'KIDS' as const
+          }));
+          await tx.ticket.createMany({ data: newTickets });
+        } else if (diff < 0) {
+          const excess = Math.abs(diff);
+          const kidsTickets = oldReg.tickets.filter(t => t.ticketType === 'KIDS');
+          const toDelete = kidsTickets.slice(0, excess).map(t => t.id);
+          if (toDelete.length > 0) {
+            await tx.ticket.deleteMany({ where: { id: { in: toDelete } } });
+          }
+        }
+      }
     });
 
     await prisma.attendee.update({

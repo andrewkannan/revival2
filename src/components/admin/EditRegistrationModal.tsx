@@ -17,6 +17,8 @@ export type EditData = {
   totalAmount: string;
   status: RegistrationStatus;
   receiptUrl: string | null;
+  adultTickets: number;
+  kidsTickets: number;
 };
 
 interface Props {
@@ -32,6 +34,8 @@ export default function EditRegistrationModal({ data, onClose }: Props) {
     outreach: data.outreach,
     totalAmount: data.totalAmount,
     status: data.status,
+    adultTickets: data.adultTickets,
+    kidsTickets: data.kidsTickets,
   });
 
   const [receiptBase64, setReceiptBase64] = useState<string | null>(null);
@@ -199,6 +203,28 @@ export default function EditRegistrationModal({ data, onClose }: Props) {
                 <option value="SIMPANG_RENGGAM">Simpang Renggam</option>
                 <option value="OTHERS">Others</option>
               </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-300">Adult Tickets</label>
+              <input 
+                type="number"
+                min="0"
+                required 
+                value={formData.adultTickets} 
+                onChange={e => setFormData({...formData, adultTickets: parseInt(e.target.value) || 0})} 
+                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-poster-accent transition-colors font-mono" 
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-300">Kids Tickets</label>
+              <input 
+                type="number"
+                min="0"
+                required 
+                value={formData.kidsTickets} 
+                onChange={e => setFormData({...formData, kidsTickets: parseInt(e.target.value) || 0})} 
+                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-poster-accent transition-colors font-mono" 
+              />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-slate-300">Total Amount (RM)</label>

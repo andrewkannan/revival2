@@ -310,7 +310,9 @@ export default function RegistrationsTable({ initialData }: Props) {
                               totalAmount: reg.totalAmount,
                               status: reg.status,
                               receiptUrl: reg.receiptUrl,
-                              orderNumber: reg.orderNumber
+                              orderNumber: reg.orderNumber,
+                              adultTickets: reg.adultTickets,
+                              kidsTickets: reg.kidsTickets
                             })}
                             className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 rounded transition-colors border border-white/10"
                           >
@@ -392,7 +394,9 @@ export default function RegistrationsTable({ initialData }: Props) {
                           totalAmount: reg.totalAmount,
                           status: reg.status,
                           receiptUrl: reg.receiptUrl,
-                          orderNumber: reg.orderNumber
+                          orderNumber: reg.orderNumber,
+                          adultTickets: reg.adultTickets,
+                          kidsTickets: reg.kidsTickets
                         })}
                         className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 rounded transition-colors border border-white/10"
                       >
