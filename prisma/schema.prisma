@@ -139,6 +139,7 @@ model ReportSettings {
   enabled       Boolean  @default(false)
   emails        String   @default("") // Comma-separated list of emails
   frequencyDays Int      @default(3)
+  sendTime      String   @default("08:00") // 24-hour format HH:mm
   lastSentAt    DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

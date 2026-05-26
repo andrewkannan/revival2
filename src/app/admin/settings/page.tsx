@@ -16,6 +16,7 @@ export default function SettingsPage() {
     enabled: false,
     emails: '',
     frequencyDays: 3,
+    sendTime: '08:00'
   });
   
   const [generalData, setGeneralData] = useState({
@@ -73,6 +74,7 @@ export default function SettingsPage() {
         enabled: report.enabled,
         emails: report.emails,
         frequencyDays: report.frequencyDays,
+        sendTime: report.sendTime || '08:00',
       });
 
       setLoading(false);
@@ -411,6 +413,10 @@ export default function SettingsPage() {
                   <div>
                     <label className="block text-sm font-medium text-slate-300 mb-2">Frequency (Days)</label>
                     <input type="number" name="frequencyDays" value={reportData.frequencyDays} onChange={handleReportChange} min="1" max="30" className="w-full max-w-xs bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Time of Day</label>
+                    <input type="time" name="sendTime" value={reportData.sendTime} onChange={handleReportChange} className="w-full max-w-xs bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" />
                   </div>
                 </>
               )}

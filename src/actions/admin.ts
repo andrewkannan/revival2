@@ -381,6 +381,7 @@ export async function getReportSettings() {
         enabled: false,
         emails: "",
         frequencyDays: 3,
+        sendTime: "08:00",
       }
     });
   }
@@ -392,6 +393,7 @@ export async function updateReportSettings(data: {
   enabled: boolean;
   emails: string;
   frequencyDays: number;
+  sendTime: string;
 }) {
   try {
     await prisma.reportSettings.upsert({
