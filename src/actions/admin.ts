@@ -252,15 +252,38 @@ export async function updateRegistrationDetails(
       }
     });
 
-    await prisma.attendee.update({
+    const attendeeObj = await prisma.attendee.findUnique({
       where: { id: attendeeId },
-      data: {
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        outreach: data.outreach,
-      }
+      include: { _count: { select: { registrations: true } } }
     });
+
+    if (attendeeObj && attendeeObj._count.registrations > 1) {
+      // Create a NEW attendee for this specific registration and link it
+      const newAttendee = await prisma.attendee.create({
+        data: {
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          outreach: data.outreach,
+        }
+      });
+      // Update this specific registration to point to the newly created attendee
+      await prisma.registration.update({
+        where: { id },
+        data: { attendeeId: newAttendee.id }
+      });
+    } else {
+      // Just update the existing attendee since it only has 1 registration
+      await prisma.attendee.update({
+        where: { id: attendeeId },
+        data: {
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          outreach: data.outreach,
+        }
+      });
+    }
 
     if (data.status === 'PAYMENT_REJECTED' && oldReg?.status !== 'PAYMENT_REJECTED') {
       // Fire and forget email
