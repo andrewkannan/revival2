@@ -369,6 +369,46 @@ export async function getDashboardStats() {
   };
 }
 
+export async function getReportSettings() {
+  let settings = await prisma.reportSettings.findUnique({
+    where: { id: 1 }
+  });
+
+  if (!settings) {
+    settings = await prisma.reportSettings.create({
+      data: {
+        id: 1,
+        enabled: false,
+        emails: "",
+        frequencyDays: 3,
+      }
+    });
+  }
+
+  return settings;
+}
+
+export async function updateReportSettings(data: {
+  enabled: boolean;
+  emails: string;
+  frequencyDays: number;
+}) {
+  try {
+    await prisma.reportSettings.upsert({
+      where: { id: 1 },
+      update: data,
+      create: {
+        id: 1,
+        ...data
+      }
+    });
+    return { success: true };
+  } catch (e) {
+    console.error("Failed to update report settings", e);
+    return { success: false, message: "Failed to update report settings." };
+  }
+}
+
 export async function getEmailSettings() {
   let settings = await prisma.emailSettings.findUnique({
     where: { id: 1 }

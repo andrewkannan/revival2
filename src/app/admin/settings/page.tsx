@@ -1,16 +1,22 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getAdminConfig, updateAdminConfig, getEmailSettings, updateEmailSettings, getEmailTemplate, updateEmailTemplate, wipeDatabase } from '@/actions/admin';
-import { Save, Loader2, Info, Mail, Settings as SettingsIcon, LayoutTemplate, AlertTriangle } from 'lucide-react';
+import { getAdminConfig, updateAdminConfig, getEmailSettings, updateEmailSettings, getEmailTemplate, updateEmailTemplate, wipeDatabase, getReportSettings, updateReportSettings } from '@/actions/admin';
+import { Save, Loader2, Info, Mail, Settings as SettingsIcon, LayoutTemplate, AlertTriangle, FileText } from 'lucide-react';
 import { TemplateType } from '@prisma/client';
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
-  const [activeTab, setActiveTab] = useState<'general' | 'smtp' | 'templates'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'smtp' | 'templates' | 'reports'>('general');
   const [activeTemplate, setActiveTemplate] = useState<TemplateType>('INVOICE');
+  
+  const [reportData, setReportData] = useState({
+    enabled: false,
+    emails: '',
+    frequencyDays: 3,
+  });
   
   const [generalData, setGeneralData] = useState({
     adultCapacity: 300,
@@ -37,8 +43,9 @@ export default function SettingsPage() {
       getEmailSettings(),
       getEmailTemplate('INVOICE'),
       getEmailTemplate('E_TICKET'),
-      getEmailTemplate('REMINDER')
-    ]).then(([config, smtp, invoice, eTicket, reminder]) => {
+      getEmailTemplate('REMINDER'),
+      getReportSettings()
+    ]).then(([config, smtp, invoice, eTicket, reminder, report]) => {
       setGeneralData({
         adultCapacity: config.adultCapacity,
         isEarlyBird: config.isEarlyBird,
@@ -60,6 +67,12 @@ export default function SettingsPage() {
         INVOICE: { subject: invoice.subject, bodyHtml: invoice.bodyHtml },
         E_TICKET: { subject: eTicket.subject, bodyHtml: eTicket.bodyHtml },
         REMINDER: { subject: reminder.subject, bodyHtml: reminder.bodyHtml },
+      });
+
+      setReportData({
+        enabled: report.enabled,
+        emails: report.emails,
+        frequencyDays: report.frequencyDays,
       });
 
       setLoading(false);
@@ -153,6 +166,30 @@ export default function SettingsPage() {
     setTimeout(() => setMessage({ text: '', type: '' }), 3000);
   };
 
+  const handleReportChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setReportData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : (type === 'number' ? Number(value) : value)
+    }));
+  };
+
+  const handleReportSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setMessage({ text: '', type: '' });
+
+    const result = await updateReportSettings(reportData);
+    
+    if (result.success) {
+      setMessage({ text: 'Report settings saved successfully.', type: 'success' });
+    } else {
+      setMessage({ text: result.message || 'Failed to save.', type: 'error' });
+    }
+    setSaving(false);
+    setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+  };
+
   const handleWipeDatabase = async () => {
     const password = window.prompt("DANGER: This will permanently wipe all registrations, tickets, and emails, and reset the order number sequence back to 1. To proceed, type the exact password: WIPE_REVIVAL_2026");
     if (password === "WIPE_REVIVAL_2026") {
@@ -203,6 +240,12 @@ export default function SettingsPage() {
           className={`pb-4 flex items-center gap-2 font-medium transition-colors border-b-2 ${activeTab === 'templates' ? 'border-white text-white' : 'border-transparent text-slate-400 hover:text-white'}`}
         >
           <LayoutTemplate className="w-4 h-4" /> Templates
+        </button>
+        <button
+          onClick={() => setActiveTab('reports')}
+          className={`pb-4 flex items-center gap-2 font-medium transition-colors border-b-2 ${activeTab === 'reports' ? 'border-white text-white' : 'border-transparent text-slate-400 hover:text-white'}`}
+        >
+          <FileText className="w-4 h-4" /> Reports
         </button>
       </div>
 
@@ -362,6 +405,53 @@ export default function SettingsPage() {
             </button>
           </form>
         </div>
+      )}
+
+      {/* Reports Tab */}
+      {activeTab === 'reports' && (
+        <form onSubmit={handleReportSubmit} className="space-y-8">
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+            <h2 className="text-xl font-semibold mb-6">Automated Dashboard Reports</h2>
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <input type="checkbox" id="enabled" name="enabled" checked={reportData.enabled} onChange={handleReportChange} className="w-5 h-5 rounded border-white/10 bg-black/50 text-white focus:ring-white/30 focus:ring-offset-black" />
+                <label htmlFor="enabled" className="text-sm font-medium text-white cursor-pointer">Enable Auto Reports</label>
+              </div>
+              
+              {reportData.enabled && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Recipient Emails (Comma separated)</label>
+                    <input type="text" name="emails" value={reportData.emails} onChange={handleReportChange} placeholder="admin@example.com, team@example.com" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Frequency (Days)</label>
+                    <input type="number" name="frequencyDays" value={reportData.frequencyDays} onChange={handleReportChange} min="1" max="30" className="w-full max-w-xs bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" />
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="flex gap-4">
+            <button type="submit" disabled={saving} className="bg-white text-black font-medium px-8 py-3 rounded-xl hover:bg-slate-200 transition-all disabled:opacity-50 flex items-center gap-2">
+              {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />} Save Report Settings
+            </button>
+            <button type="button" disabled={saving} onClick={async () => {
+              setSaving(true);
+              try {
+                const res = await fetch('/api/cron/report?test=1', { method: 'POST' });
+                if (res.ok) alert('Test report sent successfully!');
+                else alert('Failed to send test report.');
+              } catch (e) {
+                alert('Error sending test report.');
+              }
+              setSaving(false);
+            }} className="bg-poster-accent/20 text-poster-accent border border-poster-accent/30 font-medium px-8 py-3 rounded-xl hover:bg-poster-accent/30 transition-all disabled:opacity-50">
+              Send Test Report Now
+            </button>
+          </div>
+        </form>
       )}
 
       {/* Danger Zone */}
