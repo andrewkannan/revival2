@@ -92,7 +92,7 @@ export async function sendDashboardReport() {
       user: emailSettings.username,
       pass: emailSettings.password,
     },
-  });
+  } as any);
 
   const emailList = settings.emails.split(',').map(e => e.trim()).filter(e => e.length > 0);
   
