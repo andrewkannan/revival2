@@ -42,7 +42,7 @@ enum TicketType {
 model Attendee {
   id            String         @id @default(uuid())
   name          String
-  email         String         @unique
+  email         String
   phone         String
   outreach      OutreachLocation
   registrations Registration[]

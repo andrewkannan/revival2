@@ -138,27 +138,15 @@ export async function finalizeRegistration(data: RegistrationData, sessionId: st
     const totalAmount = (data.adultTickets * pricing.adultPrice) + (data.kidsTickets * pricing.kidsPrice);
 
     const result = await prisma.$transaction(async (tx) => {
-      // 1. Find or create Attendee
-      let attendee = await tx.attendee.findUnique({
-        where: { email: data.email }
+      // 1. Always create a new Attendee for every registration
+      const attendee = await tx.attendee.create({
+        data: {
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          outreach: data.outreach,
+        }
       });
-      
-      if (!attendee) {
-        attendee = await tx.attendee.create({
-          data: {
-            name: data.name,
-            email: data.email,
-            phone: data.phone,
-            outreach: data.outreach,
-          }
-        });
-      } else {
-        // update phone or name just in case
-        attendee = await tx.attendee.update({
-          where: { email: data.email },
-          data: { name: data.name, phone: data.phone, outreach: data.outreach }
-        });
-      }
 
       // 2. Create Registration
       const registration = await tx.registration.create({
