@@ -1,4 +1,4 @@
-import { prisma } from './prisma';
+import prisma from './prisma';
 import { getDashboardStats } from '@/actions/admin';
 import nodemailer from 'nodemailer';
 

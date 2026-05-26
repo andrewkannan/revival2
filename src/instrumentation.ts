@@ -3,7 +3,7 @@ export async function register() {
     // Dynamically import to avoid edge runtime issues
     const cron = await import('node-cron');
     const { sendDashboardReport } = await import('./lib/report');
-    const { prisma } = await import('./lib/prisma');
+    const { default: prisma } = await import('./lib/prisma');
 
     // Run every hour
     cron.schedule('0 * * * *', async () => {
