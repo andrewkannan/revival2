@@ -440,11 +440,15 @@ export default function SettingsPage() {
             <button type="button" disabled={saving} onClick={async () => {
               setSaving(true);
               try {
+                // Auto-save first
+                await updateReportSettings(reportData);
+                
                 const res = await fetch('/api/cron/report?test=1', { method: 'POST' });
+                const data = await res.json();
                 if (res.ok) alert('Test report sent successfully!');
-                else alert('Failed to send test report.');
-              } catch (e) {
-                alert('Error sending test report.');
+                else alert('Failed to send test report: ' + data.message);
+              } catch (e: any) {
+                alert('Error sending test report: ' + e.message);
               }
               setSaving(false);
             }} className="bg-poster-accent/20 text-poster-accent border border-poster-accent/30 font-medium px-8 py-3 rounded-xl hover:bg-poster-accent/30 transition-all disabled:opacity-50">

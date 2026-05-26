@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     
     // We can add a secret key check here in the future if we use an external cron service
     
-    const result = await sendDashboardReport();
+    const result = await sendDashboardReport(isTest);
     
     if (result.success) {
       return NextResponse.json({ success: true, message: 'Report sent successfully' });

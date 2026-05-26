@@ -2,9 +2,9 @@ import prisma from './prisma';
 import { getDashboardStats } from '@/actions/admin';
 import nodemailer from 'nodemailer';
 
-export async function sendDashboardReport() {
+export async function sendDashboardReport(isTest: boolean = false) {
   const settings = await prisma.reportSettings.findUnique({ where: { id: 1 } });
-  if (!settings || !settings.enabled || !settings.emails) {
+  if (!settings || (!settings.enabled && !isTest) || !settings.emails) {
     return { success: false, message: 'Reports disabled or no emails configured' };
   }
 
