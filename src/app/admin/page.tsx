@@ -124,16 +124,28 @@ export default async function AdminDashboard() {
       <div className="pt-6">
         <h2 className="text-2xl font-bold tracking-tight mb-6">Outreach Locations</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {Object.entries(stats.outreachCounts || {}).sort((a, b) => b[1] - a[1]).map(([location, count]) => (
-            <div key={location} className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col justify-between">
+          {Object.entries(stats.outreachCounts || {}).sort((a, b) => b[1].total - a[1].total).map(([location, countStats]) => (
+            <div key={location} className="bg-white/5 border border-white/10 rounded-2xl p-5 flex flex-col justify-between">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-poster-accent/10 rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-poster-accent/10 rounded-full flex items-center justify-center shrink-0">
                   <MapPin className="w-4 h-4 text-poster-accent" />
                 </div>
                 <h3 className="font-medium text-slate-300 text-sm truncate" title={location.replace('_', ' ')}>{location.replace('_', ' ')}</h3>
               </div>
-              <p className="text-3xl font-bold">{count}</p>
-              <p className="text-xs text-slate-500 mt-1">Registrations</p>
+              <div className="flex items-baseline gap-2">
+                <p className="text-3xl font-bold">{countStats.total}</p>
+                <p className="text-xs text-slate-500">Registrations</p>
+              </div>
+              <div className="mt-4 flex flex-col gap-1 text-sm border-t border-white/5 pt-3">
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Secured:</span>
+                  <span className="font-medium text-emerald-400">{countStats.secured}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Pending:</span>
+                  <span className="font-medium text-amber-400">{countStats.pending}</span>
+                </div>
+              </div>
             </div>
           ))}
         </div>

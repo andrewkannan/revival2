@@ -332,14 +332,23 @@ export async function getDashboardStats() {
 
   // Calculate outreach stats
   const allRegistrations = await prisma.registration.findMany({
-    select: { attendee: { select: { outreach: true } } }
+    select: { status: true, attendee: { select: { outreach: true } } }
   });
   
+  type OutreachStats = { total: number; secured: number; pending: number };
   const outreachCounts = allRegistrations.reduce((acc, curr) => {
     const loc = curr.attendee?.outreach || 'OTHERS';
-    acc[loc] = (acc[loc] || 0) + 1;
+    if (!acc[loc]) {
+      acc[loc] = { total: 0, secured: 0, pending: 0 };
+    }
+    acc[loc].total += 1;
+    if (curr.status === 'SEAT_SECURED') {
+      acc[loc].secured += 1;
+    } else if (curr.status === 'PENDING_FOR_PAYMENT' || curr.status === 'PENDING_FOR_REVIEW') {
+      acc[loc].pending += 1;
+    }
     return acc;
-  }, {} as Record<string, number>);
+  }, {} as Record<string, OutreachStats>);
 
   return {
     adultCapacity: config.adultCapacity,
