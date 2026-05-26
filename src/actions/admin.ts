@@ -332,20 +332,25 @@ export async function getDashboardStats() {
 
   // Calculate outreach stats
   const allRegistrations = await prisma.registration.findMany({
-    select: { status: true, attendee: { select: { outreach: true } } }
+    select: { status: true, adultTickets: true, kidsTickets: true, attendee: { select: { outreach: true } } }
   });
   
-  type OutreachStats = { total: number; secured: number; pending: number };
+  type OutreachStats = { totalRegistrations: number; totalTickets: number; secured: number; pending: number };
   const outreachCounts = allRegistrations.reduce((acc, curr) => {
     const loc = curr.attendee?.outreach || 'OTHERS';
     if (!acc[loc]) {
-      acc[loc] = { total: 0, secured: 0, pending: 0 };
+      acc[loc] = { totalRegistrations: 0, totalTickets: 0, secured: 0, pending: 0 };
     }
-    acc[loc].total += 1;
+    
+    const ticketsInReg = curr.adultTickets + curr.kidsTickets;
+    
+    acc[loc].totalRegistrations += 1;
+    acc[loc].totalTickets += ticketsInReg;
+    
     if (curr.status === 'SEAT_SECURED') {
-      acc[loc].secured += 1;
+      acc[loc].secured += ticketsInReg;
     } else if (curr.status === 'PENDING_FOR_PAYMENT' || curr.status === 'PENDING_FOR_REVIEW') {
-      acc[loc].pending += 1;
+      acc[loc].pending += ticketsInReg;
     }
     return acc;
   }, {} as Record<string, OutreachStats>);

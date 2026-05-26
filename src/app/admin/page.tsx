@@ -93,7 +93,7 @@ export default async function AdminDashboard() {
             </div>
             <h3 className="font-medium text-slate-400">Secured</h3>
           </div>
-          <p className="text-3xl font-bold text-poster-accent">{stats.securedAdults}</p>
+          <p className="text-3xl font-bold text-poster-accent">{stats.securedAdults + stats.securedKids}</p>
           <p className="text-sm text-slate-500 mt-1">Tickets</p>
         </div>
 
@@ -104,7 +104,7 @@ export default async function AdminDashboard() {
             </div>
             <h3 className="font-medium text-slate-400">Pending</h3>
           </div>
-          <p className="text-3xl font-bold text-amber-400">{stats.pendingAdults}</p>
+          <p className="text-3xl font-bold text-amber-400">{stats.pendingAdults + stats.pendingKids}</p>
           <p className="text-sm text-slate-500 mt-1">Tickets</p>
         </div>
 
@@ -115,7 +115,7 @@ export default async function AdminDashboard() {
             </div>
             <h3 className="font-medium text-slate-400">Active Locks</h3>
           </div>
-          <p className="text-3xl font-bold text-purple-400">{locks.activeAdults}</p>
+          <p className="text-3xl font-bold text-purple-400">{locks.activeAdults + locks.activeKids}</p>
           <p className="text-sm text-slate-500 mt-1">Tickets</p>
         </div>
       </div>
@@ -124,7 +124,7 @@ export default async function AdminDashboard() {
       <div className="pt-6">
         <h2 className="text-2xl font-bold tracking-tight mb-6">Outreach Locations</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {Object.entries(stats.outreachCounts || {}).sort((a, b) => b[1].total - a[1].total).map(([location, countStats]) => (
+          {Object.entries(stats.outreachCounts || {}).sort((a, b) => b[1].totalTickets - a[1].totalTickets).map(([location, countStats]) => (
             <div key={location} className="bg-white/5 border border-white/10 rounded-2xl p-5 flex flex-col justify-between">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 bg-poster-accent/10 rounded-full flex items-center justify-center shrink-0">
@@ -133,8 +133,8 @@ export default async function AdminDashboard() {
                 <h3 className="font-medium text-slate-300 text-sm truncate" title={location.replace('_', ' ')}>{location.replace('_', ' ')}</h3>
               </div>
               <div className="flex items-baseline gap-2">
-                <p className="text-3xl font-bold">{countStats.total}</p>
-                <p className="text-xs text-slate-500">Registrations</p>
+                <p className="text-3xl font-bold">{countStats.totalTickets}</p>
+                <p className="text-xs text-slate-500">Tickets</p>
               </div>
               <div className="mt-4 flex flex-col gap-1 text-sm border-t border-white/5 pt-3">
                 <div className="flex justify-between">
