@@ -493,7 +493,7 @@ export async function retryEmail(logId: string) {
     const log = await prisma.emailLog.findUnique({ where: { id: logId } });
     if (!log) return { success: false, message: 'Log not found' };
 
-    const attendee = await prisma.attendee.findUnique({
+    const attendee = await prisma.attendee.findFirst({
       where: { email: log.to },
       include: {
         registrations: {
