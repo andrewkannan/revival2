@@ -14,7 +14,7 @@ export default async function AdminDashboard() {
   const fillAdultPercentage = Math.min(100, Math.round((totalAdultsTaken / stats.adultCapacity) * 100)) || 0;
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
