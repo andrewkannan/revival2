@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getAdminConfig, updateAdminConfig, getEmailSettings, updateEmailSettings, getEmailTemplate, updateEmailTemplate, wipeDatabase, getReportSettings, updateReportSettings } from '@/actions/admin';
+import { getAdminConfig, updateAdminConfig, getEmailSettings, updateEmailSettings, getEmailTemplate, updateEmailTemplate, getReportSettings, updateReportSettings } from '@/actions/admin';
 import { Save, Loader2, Info, Mail, Settings as SettingsIcon, LayoutTemplate, AlertTriangle, FileText } from 'lucide-react';
 import { TemplateType } from '@prisma/client';
 
