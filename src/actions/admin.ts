@@ -671,26 +671,3 @@ export async function retryEmail(logId: string) {
     return { success: false, message: e.message || 'Server error' };
   }
 }
-
-export async function wipeDatabase(password: string) {
-  if (password !== 'WIPE_REVIVAL_2026') {
-    return { success: false, message: 'Invalid password' };
-  }
-
-  try {
-    // Delete all transactional data
-    await prisma.ticket.deleteMany({});
-    await prisma.registration.deleteMany({});
-    await prisma.attendee.deleteMany({});
-    await prisma.emailLog.deleteMany({});
-
-    // Reset the sequence for orderNumber back to 1
-    // We use a raw query because Prisma does not have a native way to reset sequences.
-    await prisma.$executeRawUnsafe('ALTER SEQUENCE "Registration_orderNumber_seq" RESTART WITH 1');
-
-    return { success: true, message: 'Database wiped and order numbers reset successfully!' };
-  } catch (error) {
-    console.error("Failed to wipe database", error);
-    return { success: false, message: 'Failed to wipe database' };
-  }
-}

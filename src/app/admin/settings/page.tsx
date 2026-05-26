@@ -190,23 +190,7 @@ export default function SettingsPage() {
     setTimeout(() => setMessage({ text: '', type: '' }), 3000);
   };
 
-  const handleWipeDatabase = async () => {
-    const password = window.prompt("DANGER: This will permanently wipe all registrations, tickets, and emails, and reset the order number sequence back to 1. To proceed, type the exact password: WIPE_REVIVAL_2026");
-    if (password === "WIPE_REVIVAL_2026") {
-      setSaving(true);
-      const res = await wipeDatabase(password);
-      if (res.success) {
-        setMessage({ text: res.message || 'Database wiped successfully.', type: 'success' });
-      } else {
-        setMessage({ text: res.message || 'Failed to wipe database.', type: 'error' });
-      }
-      setSaving(false);
-    } else if (password !== null) {
-      alert("Incorrect password. Aborting wipe.");
-    }
-  };
 
-  if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="w-8 h-8 animate-spin text-slate-500" />
@@ -457,29 +441,6 @@ export default function SettingsPage() {
           </div>
         </form>
       )}
-
-      {/* Danger Zone */}
-      <div className="mt-12 bg-red-950/20 border border-red-500/20 rounded-2xl p-6">
-        <div className="flex items-start gap-4">
-          <div className="bg-red-500/10 p-3 rounded-xl border border-red-500/20">
-            <AlertTriangle className="w-6 h-6 text-red-400" />
-          </div>
-          <div>
-            <h2 className="text-xl font-semibold text-red-400">Danger Zone</h2>
-            <p className="text-slate-400 mt-1 mb-4 text-sm max-w-xl">
-              Permanently delete all test registrations, tickets, attendees, and email logs. 
-              This will also reset the Order Number sequence back to <strong>R00001</strong>. This action cannot be undone.
-            </p>
-            <button 
-              onClick={handleWipeDatabase}
-              disabled={saving}
-              className="bg-red-500/10 text-red-400 font-medium px-6 py-2 rounded-lg hover:bg-red-500/20 hover:text-red-300 transition-all border border-red-500/20 disabled:opacity-50"
-            >
-              Wipe Database & Reset Sequence
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
