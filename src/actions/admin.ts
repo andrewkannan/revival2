@@ -330,6 +330,17 @@ export async function getDashboardStats() {
     where: { status: { in: ['PENDING_FOR_PAYMENT', 'PENDING_FOR_REVIEW'] } }
   });
 
+  // Calculate outreach stats
+  const allRegistrations = await prisma.registration.findMany({
+    select: { attendee: { select: { outreach: true } } }
+  });
+  
+  const outreachCounts = allRegistrations.reduce((acc, curr) => {
+    const loc = curr.attendee?.outreach || 'OTHERS';
+    acc[loc] = (acc[loc] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
   return {
     adultCapacity: config.adultCapacity,
     kidsCapacity: config.kidsCapacity,
@@ -339,7 +350,8 @@ export async function getDashboardStats() {
     pendingKids: pendingAgg._sum.kidsTickets || 0,
     totalRegistrations,
     totalPaidAmount: Number(securedAgg._sum.totalAmount || 0),
-    totalPendingAmount: Number(pendingAgg._sum.totalAmount || 0)
+    totalPendingAmount: Number(pendingAgg._sum.totalAmount || 0),
+    outreachCounts
   };
 }
 

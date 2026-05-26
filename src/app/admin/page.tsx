@@ -3,7 +3,7 @@ import { getActiveLocksCount } from '@/lib/ticket-lock';
 import ReminderButton from '@/components/ReminderButton';
 
 export const dynamic = 'force-dynamic';
-import { Users, Ticket, Clock, CheckCircle2, AlertCircle, Banknote } from 'lucide-react';
+import { Users, Ticket, Clock, CheckCircle2, AlertCircle, Banknote, MapPin } from 'lucide-react';
 
 export default async function AdminDashboard() {
   const stats = await getDashboardStats();
@@ -12,8 +12,6 @@ export default async function AdminDashboard() {
   const totalAdultsTaken = stats.securedAdults + stats.pendingAdults + locks.activeAdults;
   const availableAdultSeats = Math.max(0, stats.adultCapacity - totalAdultsTaken);
   const fillAdultPercentage = Math.min(100, Math.round((totalAdultsTaken / stats.adultCapacity) * 100)) || 0;
-
-
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -51,8 +49,6 @@ export default async function AdminDashboard() {
             </div>
           </div>
         </div>
-
-
       </div>
 
       {/* Stats Grid */}
@@ -121,6 +117,25 @@ export default async function AdminDashboard() {
           </div>
           <p className="text-3xl font-bold text-purple-400">{locks.activeAdults}</p>
           <p className="text-sm text-slate-500 mt-1">Tickets</p>
+        </div>
+      </div>
+
+      {/* Outreach Locations */}
+      <div className="pt-6">
+        <h2 className="text-2xl font-bold tracking-tight mb-6">Outreach Locations</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {Object.entries(stats.outreachCounts || {}).sort((a, b) => b[1] - a[1]).map(([location, count]) => (
+            <div key={location} className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col justify-between">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-poster-accent/10 rounded-full flex items-center justify-center">
+                  <MapPin className="w-4 h-4 text-poster-accent" />
+                </div>
+                <h3 className="font-medium text-slate-300 text-sm truncate" title={location.replace('_', ' ')}>{location.replace('_', ' ')}</h3>
+              </div>
+              <p className="text-3xl font-bold">{count}</p>
+              <p className="text-xs text-slate-500 mt-1">Registrations</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
