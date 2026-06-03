@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Upload, Loader2, CheckCircle2 } from 'lucide-react';
 import { uploadReceipt } from '@/actions/registration';
-import imageCompression from 'browser-image-compression';
 import { useRouter } from 'next/navigation';
 
 export default function UploadClient({ 
@@ -19,6 +18,46 @@ export default function UploadClient({
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const router = useRouter();
+
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800;
+          const MAX_HEIGHT = 800;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          resolve(dataUrl);
+        };
+        img.onerror = (err) => reject(err);
+      };
+      reader.onerror = (err) => reject(err);
+    });
+  };
 
   const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,37 +75,19 @@ export default function UploadClient({
         return;
       }
 
-      const options = {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 1920,
-        useWebWorker: true,
-      };
+      const compressedBase64 = await compressImage(file);
       
-      const compressedFile = await imageCompression(file, options);
-      
-      const reader = new FileReader();
-      reader.readAsDataURL(compressedFile);
-      reader.onloadend = async () => {
-        const compressedBase64 = reader.result as string;
-        
-        const formData = new FormData();
-        formData.append('receiptBase64', compressedBase64);
+      const formData = new FormData();
+      formData.append('receiptBase64', compressedBase64);
 
-        const res = await uploadReceipt(registrationId, formData);
+      const res = await uploadReceipt(registrationId, formData);
 
-        if (res.success) {
-          setSuccess(true);
-        } else {
-          setError(res.message || 'Failed to upload receipt.');
-        }
-        setLoading(false);
-      };
-      
-      reader.onerror = () => {
-        setError("Failed to read file.");
-        setLoading(false);
-      };
-
+      if (res.success) {
+        setSuccess(true);
+      } else {
+        setError(res.message || 'Failed to upload receipt.');
+      }
+      setLoading(false);
     } catch (err) {
       console.error(err);
       setError("An unexpected error occurred.");
