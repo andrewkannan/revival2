@@ -2,9 +2,9 @@
 
 import React, { useState, useMemo } from 'react';
 import { RegistrationStatus, Registration, Attendee, OutreachLocation, Ticket } from '@prisma/client';
-import { BadgeCheck, Clock, XCircle, AlertCircle, Search, X, Edit2, Download, FileArchive, QrCode, Trash2 } from 'lucide-react';
+import { BadgeCheck, Clock, XCircle, AlertCircle, Search, X, Edit2, Download, FileArchive, QrCode, Trash2, Mail } from 'lucide-react';
 import JSZip from 'jszip';
-import { deleteRegistration } from '@/actions/admin';
+import { deleteRegistration, sendBulkPaymentReminders, sendPaymentReminderTest } from '@/actions/admin';
 import StatusSelect from '@/components/admin/StatusSelect';
 import EditRegistrationModal, { EditData } from '@/components/admin/EditRegistrationModal';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -29,12 +29,34 @@ export default function RegistrationsTable({ initialData }: Props) {
   const [editingData, setEditingData] = useState<EditData | null>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [isMailing, setIsMailing] = useState(false);
+  const [mailMsg, setMailMsg] = useState('');
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to permanently delete this registration?')) {
       setIsDeleting(id);
       await deleteRegistration(id);
       setIsDeleting(null);
+    }
+  };
+
+  const handleTestEmail = async () => {
+    setIsMailing(true);
+    setMailMsg('Sending test...');
+    const res = await sendPaymentReminderTest();
+    setMailMsg(res.message);
+    setTimeout(() => setMailMsg(''), 4000);
+    setIsMailing(false);
+  };
+
+  const handleBulkEmail = async () => {
+    if (window.confirm('Are you sure you want to send reminder emails to ALL pending users who have not uploaded a receipt?')) {
+      setIsMailing(true);
+      setMailMsg('Sending bulk emails...');
+      const res = await sendBulkPaymentReminders();
+      setMailMsg(res.message);
+      setTimeout(() => setMailMsg(''), 4000);
+      setIsMailing(false);
     }
   };
 
@@ -196,20 +218,39 @@ export default function RegistrationsTable({ initialData }: Props) {
       </div>
 
       {/* Export Actions */}
-      <div className="flex flex-col sm:flex-row justify-end gap-3">
-        <button 
-          onClick={exportCSV} 
-          className="flex items-center justify-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm text-slate-300 hover:text-white transition-colors"
-        >
-          <Download className="w-4 h-4" /> Export CSV (Excel)
-        </button>
-        <button 
-          onClick={exportReceiptsZip} 
-          disabled={isExporting}
-          className="flex items-center justify-center gap-2 px-4 py-2 bg-poster-accent/20 hover:bg-poster-accent/30 text-poster-accent border border-poster-accent/30 rounded-xl text-sm font-medium transition-colors disabled:opacity-50"
-        >
-          <FileArchive className="w-4 h-4" /> {isExporting ? 'Zipping...' : 'Download Receipts (ZIP)'}
-        </button>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div className="flex flex-wrap gap-3">
+          <button 
+            onClick={handleTestEmail}
+            disabled={isMailing}
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-xl text-sm font-medium transition-colors disabled:opacity-50"
+          >
+            <Mail className="w-4 h-4" /> Test Reminder
+          </button>
+          <button 
+            onClick={handleBulkEmail}
+            disabled={isMailing}
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 border border-blue-500/30 rounded-xl text-sm font-medium transition-colors disabled:opacity-50"
+          >
+            <Mail className="w-4 h-4" /> Bulk Remind
+          </button>
+          {mailMsg && <span className="text-sm text-slate-300 flex items-center">{mailMsg}</span>}
+        </div>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button 
+            onClick={exportCSV} 
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm text-slate-300 hover:text-white transition-colors"
+          >
+            <Download className="w-4 h-4" /> Export CSV (Excel)
+          </button>
+          <button 
+            onClick={exportReceiptsZip} 
+            disabled={isExporting}
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-poster-accent/20 hover:bg-poster-accent/30 text-poster-accent border border-poster-accent/30 rounded-xl text-sm font-medium transition-colors disabled:opacity-50"
+          >
+            <FileArchive className="w-4 h-4" /> {isExporting ? 'Zipping...' : 'Download Receipts (ZIP)'}
+          </button>
+        </div>
       </div>
 
       {/* Table & Mobile Cards */}

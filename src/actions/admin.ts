@@ -673,3 +673,109 @@ export async function retryEmail(logId: string) {
     return { success: false, message: e.message || 'Server error' };
   }
 }
+
+export async function sendPaymentReminderTest() {
+  try {
+    const adminConfig = await prisma.adminConfig.findUnique({ where: { id: 1 } });
+    const emailSettings = await prisma.emailSettings.findUnique({ where: { id: 1 } });
+    
+    if (!emailSettings || !emailSettings.username) {
+      return { success: false, message: "SMTP not configured" };
+    }
+
+    const testEmail = emailSettings.username;
+    
+    const html = `
+      <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+        <h2 style="color: #000;">Action Required: Payment Reminder</h2>
+        <p>Hi Test User,</p>
+        <p>We noticed that you have successfully registered for REVIVAL but have not yet uploaded your payment receipt. To secure your tickets, please complete your payment of <strong>RM 50.00</strong>.</p>
+        
+        <div style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #495057;">Bank Details</h3>
+          <p style="margin: 0;"><strong>Bank Name:</strong> Maybank<br>
+          <strong>Account Name:</strong> CALVARY COMMUNITY TT<br>
+          <strong>Account Number:</strong> 551016737305<br>
+          <strong>Payment Reference:</strong> R00000</p>
+        </div>
+
+        <p>Once you have made the transfer, please click the button below to upload your receipt:</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="https://revival.thisiscccbilingual.com/upload/test-id" style="background-color: #cdff64; color: #000; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 6px; display: inline-block;">Upload Payment Receipt</a>
+        </div>
+        
+        <p>If you have already paid, please ignore this email or upload your receipt using the link above.</p>
+        <p>Best regards,<br>The REVIVAL Team</p>
+      </div>
+    `;
+
+    const success = await sendEmail(testEmail, "REVIVAL - Payment Reminder (TEST)", html);
+    
+    if (success) {
+      return { success: true, message: `Test email sent to ${testEmail}` };
+    } else {
+      return { success: false, message: "Failed to send test email" };
+    }
+  } catch (error: any) {
+    console.error("Test email error:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+export async function sendBulkPaymentReminders() {
+  try {
+    const pendingUsers = await prisma.registration.findMany({
+      where: {
+        status: 'PENDING',
+        receiptUrl: null
+      },
+      include: {
+        attendee: true
+      }
+    });
+
+    if (pendingUsers.length === 0) {
+      return { success: true, message: "No pending users without receipts found." };
+    }
+
+    let successCount = 0;
+    
+    for (const reg of pendingUsers) {
+      const orderNum = 'R' + String(reg.orderNumber).padStart(5, '0');
+      const html = `
+        <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+          <h2 style="color: #000;">Action Required: Payment Reminder</h2>
+          <p>Hi ${reg.attendee.name},</p>
+          <p>We noticed that you have successfully registered for REVIVAL but have not yet uploaded your payment receipt. To secure your tickets, please complete your payment of <strong>RM ${reg.totalAmount.toFixed(2)}</strong>.</p>
+          
+          <div style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <h3 style="margin-top: 0; color: #495057;">Bank Details</h3>
+            <p style="margin: 0;"><strong>Bank Name:</strong> Maybank<br>
+            <strong>Account Name:</strong> CALVARY COMMUNITY TT<br>
+            <strong>Account Number:</strong> 551016737305<br>
+            <strong>Payment Reference:</strong> ${orderNum}</p>
+          </div>
+
+          <p>Once you have made the transfer, please click the button below to upload your receipt:</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="https://revival.thisiscccbilingual.com/upload/${reg.id}" style="background-color: #cdff64; color: #000; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 6px; display: inline-block;">Upload Payment Receipt</a>
+          </div>
+          
+          <p>If you have already paid, please ignore this email or upload your receipt using the link above.</p>
+          <p>Best regards,<br>The REVIVAL Team</p>
+        </div>
+      `;
+
+      const success = await sendEmail(reg.attendee.email, \`REVIVAL - Payment Reminder (Order #\${orderNum})\`, html);
+      if (success) successCount++;
+      
+      // Delay to avoid rate limits
+      await new Promise(r => setTimeout(r, 1000));
+    }
+
+    return { success: true, message: \`Successfully sent \${successCount} out of \${pendingUsers.length} reminders.\` };
+  } catch (error: any) {
+    console.error("Bulk email error:", error);
+    return { success: false, message: error.message };
+  }
+}

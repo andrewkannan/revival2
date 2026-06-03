@@ -227,3 +227,27 @@ export async function uploadReceipt(registrationId: string, formData: FormData) 
     return { success: false, message: 'Failed to upload receipt. Please try again.' };
   }
 }
+
+export async function getRegistrationById(id: string) {
+  try {
+    const reg = await prisma.registration.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        orderNumber: true,
+        totalAmount: true,
+        status: true,
+        receiptUrl: true,
+        attendee: {
+          select: {
+            name: true,
+          }
+        }
+      }
+    });
+    return { success: true, data: reg };
+  } catch (error) {
+    console.error("Failed to get registration:", error);
+    return { success: false, message: "Server error" };
+  }
+}
