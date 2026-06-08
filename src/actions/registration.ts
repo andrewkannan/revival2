@@ -217,6 +217,18 @@ export async function uploadReceipt(registrationId: string, formData: FormData) 
       });
       
       sendEmail(registration.attendee.email, template.subject, parsedHtml).catch(e => console.error("Async email error:", e));
+
+      // Notify admin
+      const adminHtml = `
+        <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+          <h2>New Payment Receipt Uploaded</h2>
+          <p><strong>Name:</strong> ${registration.attendee.name}</p>
+          <p><strong>Order Number:</strong> ${formattedOrderNumber}</p>
+          <p><strong>Amount:</strong> RM ${registration.totalAmount}</p>
+          <p>Please log in to the admin dashboard to review and approve this payment.</p>
+        </div>
+      `;
+      sendEmail('kannanandrew101@gmail.com', `New Receipt Uploaded: ${formattedOrderNumber}`, adminHtml).catch(e => console.error("Admin notification error:", e));
     } catch (emailError) {
       console.error('Error with invoice email logic:', emailError);
     }
