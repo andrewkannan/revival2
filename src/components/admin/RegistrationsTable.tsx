@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { RegistrationStatus, Registration, Attendee, OutreachLocation, Ticket } from '@prisma/client';
 import { BadgeCheck, Clock, XCircle, AlertCircle, Search, X, Edit2, Download, FileArchive, QrCode, Trash2, Mail } from 'lucide-react';
 import JSZip from 'jszip';
-import { deleteRegistration, sendBulkPaymentReminders, sendPaymentReminderTest } from '@/actions/admin';
+import { deleteRegistration, sendBulkPaymentReminders, sendPaymentReminderTest, sendIndividualPaymentReminder } from '@/actions/admin';
 import StatusSelect from '@/components/admin/StatusSelect';
 import EditRegistrationModal, { EditData } from '@/components/admin/EditRegistrationModal';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -57,6 +57,17 @@ export default function RegistrationsTable({ initialData }: Props) {
       setMailMsg(res.message);
       setTimeout(() => setMailMsg(''), 4000);
       setIsMailing(false);
+    }
+  };
+
+  const [mailingId, setMailingId] = useState<string | null>(null);
+
+  const handleIndividualEmail = async (id: string, name: string) => {
+    if (window.confirm(`Send payment reminder to ${name}?`)) {
+      setMailingId(id);
+      const res = await sendIndividualPaymentReminder(id);
+      alert(res.message);
+      setMailingId(null);
     }
   };
 
@@ -366,6 +377,16 @@ export default function RegistrationsTable({ initialData }: Props) {
                           >
                             <Trash2 className="w-3.5 h-3.5" /> {isDeleting === reg.id ? '...' : 'Del'}
                           </button>
+                          {reg.status === 'PENDING_FOR_PAYMENT' && !reg.receiptUrl && (
+                            <button
+                              onClick={() => handleIndividualEmail(reg.id, reg.attendee.name)}
+                              disabled={mailingId === reg.id}
+                              className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-blue-400 hover:text-white bg-blue-500/10 hover:bg-blue-500/80 rounded transition-colors border border-blue-500/20 disabled:opacity-50"
+                              title="Send Reminder"
+                            >
+                              <Mail className="w-3.5 h-3.5" /> {mailingId === reg.id ? '...' : 'Remind'}
+                            </button>
+                          )}
                         </div>
                       </div>
                     </td>
@@ -450,6 +471,16 @@ export default function RegistrationsTable({ initialData }: Props) {
                       >
                         <Trash2 className="w-3.5 h-3.5" /> {isDeleting === reg.id ? '...' : 'Del'}
                       </button>
+                      {reg.status === 'PENDING_FOR_PAYMENT' && !reg.receiptUrl && (
+                        <button
+                          onClick={() => handleIndividualEmail(reg.id, reg.attendee.name)}
+                          disabled={mailingId === reg.id}
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-blue-400 hover:text-white bg-blue-500/10 hover:bg-blue-500/80 rounded transition-colors border border-blue-500/20 disabled:opacity-50"
+                          title="Send Reminder"
+                        >
+                          <Mail className="w-3.5 h-3.5" /> {mailingId === reg.id ? '...' : 'Remind'}
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

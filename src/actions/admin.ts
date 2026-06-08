@@ -696,7 +696,7 @@ export async function sendPaymentReminderTest() {
           <p style="margin: 0;"><strong>Bank Name:</strong> Maybank<br>
           <strong>Account Name:</strong> CALVARY COMMUNITY TT<br>
           <strong>Account Number:</strong> 551016737305<br>
-          <strong>Payment Reference:</strong> R00000</p>
+          <strong>Payment Reference:</strong> BIL CONF</p>
         </div>
 
         <p>Once you have made the transfer, please click the button below to upload your receipt:</p>
@@ -753,7 +753,7 @@ export async function sendBulkPaymentReminders() {
             <p style="margin: 0;"><strong>Bank Name:</strong> Maybank<br>
             <strong>Account Name:</strong> CALVARY COMMUNITY TT<br>
             <strong>Account Number:</strong> 551016737305<br>
-            <strong>Payment Reference:</strong> ${orderNum}</p>
+            <strong>Payment Reference:</strong> BIL CONF</p>
           </div>
 
           <p>Once you have made the transfer, please click the button below to upload your receipt:</p>
@@ -776,6 +776,59 @@ export async function sendBulkPaymentReminders() {
     return { success: true, message: `Successfully sent ${successCount} out of ${pendingUsers.length} reminders.` };
   } catch (error: any) {
     console.error("Bulk email error:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+export async function sendIndividualPaymentReminder(registrationId: string) {
+  try {
+    const reg = await prisma.registration.findUnique({
+      where: { id: registrationId },
+      include: { attendee: true }
+    });
+
+    if (!reg) {
+      return { success: false, message: "Registration not found" };
+    }
+
+    if (reg.receiptUrl) {
+      return { success: false, message: "User already uploaded a receipt" };
+    }
+
+    const orderNum = 'R' + String(reg.orderNumber).padStart(5, '0');
+    const html = `
+      <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+        <h2 style="color: #000;">Action Required: Payment Reminder</h2>
+        <p>Hi ${reg.attendee.name},</p>
+        <p>We noticed that you have successfully registered for REVIVAL but have not yet uploaded your payment receipt. To secure your tickets, please complete your payment of <strong>RM ${reg.totalAmount.toFixed(2)}</strong>.</p>
+        
+        <div style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #495057;">Bank Details</h3>
+          <p style="margin: 0;"><strong>Bank Name:</strong> Maybank<br>
+          <strong>Account Name:</strong> CALVARY COMMUNITY TT<br>
+          <strong>Account Number:</strong> 551016737305<br>
+          <strong>Payment Reference:</strong> BIL CONF</p>
+        </div>
+
+        <p>Once you have made the transfer, please click the button below to upload your receipt:</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="https://revival.thisiscccbilingual.com/upload/${reg.id}" style="background-color: #cdff64; color: #000; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 6px; display: inline-block;">Upload Payment Receipt</a>
+        </div>
+        
+        <p>If you have already paid, please ignore this email or upload your receipt using the link above.</p>
+        <p>Best regards,<br>The REVIVAL Team</p>
+      </div>
+    `;
+
+    const success = await sendEmail(reg.attendee.email, `REVIVAL - Payment Reminder (Order #${orderNum})`, html);
+    
+    if (success) {
+      return { success: true, message: `Reminder sent to ${reg.attendee.name}` };
+    } else {
+      return { success: false, message: "Failed to send email" };
+    }
+  } catch (error: any) {
+    console.error("Individual email error:", error);
     return { success: false, message: error.message };
   }
 }
