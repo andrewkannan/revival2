@@ -726,7 +726,7 @@ export async function sendBulkPaymentReminders() {
   try {
     const pendingUsers = await prisma.registration.findMany({
       where: {
-        status: 'PENDING',
+        status: 'PENDING_FOR_PAYMENT',
         receiptUrl: null
       },
       include: {
