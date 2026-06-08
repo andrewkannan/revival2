@@ -2,8 +2,8 @@ import { getRegistrationById } from '@/actions/registration';
 import UploadClient from './UploadClient';
 import Link from 'next/link';
 
-export default async function UploadPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default async function UploadPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const res = await getRegistrationById(id);
 
   if (!res.success || !res.data) {
