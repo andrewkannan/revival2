@@ -46,7 +46,7 @@ export default async function UploadPage({ params }: { params: { id: string } })
         
         <UploadClient 
           registrationId={reg.id} 
-          totalAmount={reg.totalAmount} 
+          totalAmount={Number(reg.totalAmount)} 
           orderNumber={reg.orderNumber} 
         />
       </div>
