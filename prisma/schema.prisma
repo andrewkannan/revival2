@@ -89,6 +89,7 @@ model AdminConfig {
   adultPriceRegular    Decimal  @default(0) @db.Decimal(10, 2)
   kidsPriceRegular     Decimal  @default(0) @db.Decimal(10, 2)
   earlyBirdEndDate     DateTime?
+  liveAnnouncement     String?  // Broadcast message to all attendees via /itinerary
   updatedAt            DateTime @updatedAt
 }
 

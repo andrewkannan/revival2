@@ -25,6 +25,7 @@ export default function SettingsPage() {
     earlyBirdEndDate: '',
     adultPriceEarlyBird: 50,
     adultPriceRegular: 80,
+    liveAnnouncement: '',
   });
 
   const [smtpData, setSmtpData] = useState({
@@ -53,6 +54,7 @@ export default function SettingsPage() {
         earlyBirdEndDate: config.earlyBirdEndDate ? new Date(config.earlyBirdEndDate).toISOString().split('T')[0] : '',
         adultPriceEarlyBird: Number(config.adultPriceEarlyBird),
         adultPriceRegular: Number(config.adultPriceRegular),
+        liveAnnouncement: config.liveAnnouncement || '',
       });
 
       setSmtpData({
@@ -86,7 +88,7 @@ export default function SettingsPage() {
     const { name, value, type, checked } = e.target;
     setGeneralData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : (type === 'date' ? value : Number(value))
+      [name]: type === 'checkbox' ? checked : (type === 'date' || type === 'text') ? value : Number(value)
     }));
   };
 
@@ -101,6 +103,7 @@ export default function SettingsPage() {
       kidsCapacity: 100, // Dummy value since UI is removed
       kidsPriceEarlyBird: 25, // Dummy value
       kidsPriceRegular: 40, // Dummy value
+      liveAnnouncement: generalData.liveAnnouncement || null,
     };
 
     const result = await updateAdminConfig(payload);
@@ -245,6 +248,22 @@ export default function SettingsPage() {
       {/* General Settings Tab */}
       {activeTab === 'general' && (
         <form onSubmit={handleGeneralSubmit} className="space-y-8">
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+            <h2 className="text-xl font-semibold mb-2">Live Announcement</h2>
+            <p className="text-sm text-slate-400 mb-6">Broadcast an urgent message to all attendees on the /itinerary page.</p>
+            <div className="space-y-4">
+              <input 
+                type="text" 
+                name="liveAnnouncement" 
+                value={generalData.liveAnnouncement} 
+                onChange={handleGeneralChange} 
+                placeholder="e.g. Session 2 is delayed by 10 minutes"
+                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" 
+              />
+              <p className="text-xs text-slate-500">Leave blank to hide the announcement banner.</p>
+            </div>
+          </div>
+
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
             <h2 className="text-xl font-semibold mb-6">Capacity & Rules</h2>
             <div className="space-y-6">

@@ -78,6 +78,7 @@ export async function updateAdminConfig(data: {
   adultPriceRegular: number;
   kidsPriceRegular: number;
   earlyBirdEndDate?: Date | null;
+  liveAnnouncement?: string | null;
 }) {
   try {
     await prisma.adminConfig.upsert({
@@ -91,6 +92,7 @@ export async function updateAdminConfig(data: {
     
     revalidatePath('/admin/settings');
     revalidatePath('/'); // revalidate the home page to update prices/availability
+    revalidatePath('/itinerary'); // revalidate itinerary page for live announcements
     
     return { success: true };
   } catch (e) {
