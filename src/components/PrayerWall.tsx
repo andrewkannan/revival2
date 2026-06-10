@@ -18,7 +18,6 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
   const [message, setMessage] = useState('');
   
   const [formData, setFormData] = useState({
-    authorName: '',
     content: ''
   });
 
@@ -33,7 +32,7 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
     
     if (res.success) {
       setMessage(res.message || "Submitted!");
-      setFormData({ authorName: '', content: '' });
+      setFormData({ content: '' });
     } else {
       setMessage(res.message || "Failed to submit.");
     }
@@ -60,16 +59,6 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
       {/* Submission Form */}
       <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 max-w-2xl mx-auto">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Your Name (Optional)</label>
-            <input 
-              type="text" 
-              placeholder="Anonymous"
-              value={formData.authorName}
-              onChange={e => setFormData({ ...formData, authorName: e.target.value })}
-              className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors"
-            />
-          </div>
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">Prayer Request <span className="text-red-400">*</span></label>
             <textarea 
@@ -105,7 +94,6 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
             {prayers.map(prayer => (
               <div key={prayer.id} className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col">
                 <div className="flex-grow space-y-3">
-                  <p className="text-sm font-semibold text-poster-accent">{prayer.authorName}</p>
                   <p className="text-slate-200 leading-relaxed">{prayer.content}</p>
                 </div>
                 <div className="mt-6 flex items-center justify-between pt-4 border-t border-white/5">

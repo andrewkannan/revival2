@@ -55,7 +55,6 @@ export default function SpiritualAdminClient({ initialPrayers, initialTestimonie
           <table className="w-full text-left text-sm text-slate-300">
             <thead className="text-xs uppercase bg-white/5 text-slate-400 border-b border-white/10">
               <tr>
-                <th className="px-6 py-4 font-medium">Author</th>
                 <th className="px-6 py-4 font-medium">Request</th>
                 <th className="px-6 py-4 font-medium text-center">Status</th>
                 <th className="px-6 py-4 font-medium text-right">Actions</th>
@@ -64,14 +63,13 @@ export default function SpiritualAdminClient({ initialPrayers, initialTestimonie
             <tbody>
               {prayers.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-8 text-center text-slate-500">No prayer requests.</td>
+                  <td colSpan={3} className="px-6 py-8 text-center text-slate-500">No prayer requests.</td>
                 </tr>
               ) : (
                 prayers.map(p => (
                   <tr key={p.id} className="border-b border-white/5 hover:bg-white/[0.02]">
-                    <td className="px-6 py-4 whitespace-nowrap font-medium text-white">{p.authorName}</td>
                     <td className="px-6 py-4">
-                      <p className="line-clamp-2 max-w-md">{p.content}</p>
+                      <p className="line-clamp-2 max-w-md text-white">{p.content}</p>
                     </td>
                     <td className="px-6 py-4 text-center">
                       {p.isApproved ? (

@@ -18,7 +18,7 @@ export async function getApprovedPrayers() {
   }
 }
 
-export async function submitPrayerRequest(data: { authorName: string; content: string }) {
+export async function submitPrayerRequest(data: { content: string }) {
   try {
     if (!data.content.trim()) {
       return { success: false, message: "Prayer request cannot be empty." };
@@ -26,7 +26,7 @@ export async function submitPrayerRequest(data: { authorName: string; content: s
 
     await prisma.prayerRequest.create({
       data: {
-        authorName: data.authorName.trim() || "Anonymous",
+        authorName: "Anonymous",
         content: data.content.trim(),
         isApproved: false // Admin must approve
       }
