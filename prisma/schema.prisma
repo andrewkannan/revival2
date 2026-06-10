@@ -145,3 +145,23 @@ model ReportSettings {
   updatedAt     DateTime @updatedAt
 }
 
+// ------------------------------------------------------
+// Spiritual Features (Conference Day)
+// ------------------------------------------------------
+
+model PrayerRequest {
+  id          String   @id @default(uuid())
+  authorName  String?  // Optional, open input
+  content     String
+  prayCount   Int      @default(0)
+  isApproved  Boolean  @default(false) // Requires admin approval to show on live wall
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimony {
+  id          String   @id @default(uuid())
+  authorName  String?  // Optional
+  content     String
+  createdAt   DateTime @default(now())
+}
