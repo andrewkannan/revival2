@@ -108,11 +108,7 @@ export default function TestimonyBox({ initialTestimonies }: { initialTestimonie
       {/* Live Testimony Feed */}
       {testimonies.length > 0 && (
         <div className="max-w-2xl mx-auto mt-16 space-y-6">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="h-[1px] flex-1 bg-white/10"></div>
-            <h3 className="text-lg font-medium text-slate-300 tracking-wider uppercase">Live Testimonies</h3>
-            <div className="h-[1px] flex-1 bg-white/10"></div>
-          </div>
+
 
           <div className="space-y-4">
             {testimonies.map((testimony, index) => (
