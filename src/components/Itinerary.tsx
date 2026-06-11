@@ -39,7 +39,7 @@ export default function Itinerary() {
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, amount: 0.1 }}
           className="text-3xl md:text-5xl font-extrabold mb-6 tracking-[0.15em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-white via-poster-accent-bright to-white"
         >
           Itinerary
@@ -47,7 +47,7 @@ export default function Itinerary() {
         <motion.p 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ delay: 0.1 }}
           className="text-slate-400 font-light text-lg tracking-wide max-w-xl mx-auto"
         >
@@ -66,7 +66,7 @@ export default function Itinerary() {
               <motion.div 
                 initial={{ scale: 0, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
-                viewport={{ once: true, margin: "-100px" }}
+                viewport={{ once: true, amount: 0.1 }}
                 className="absolute -left-[5px] top-2 w-3 h-3 rounded-full bg-poster-accent-bright shadow-[0_0_15px_rgba(140,174,176,0.8)]"
               >
                 <div className="absolute inset-0 bg-poster-accent-bright rounded-full animate-ping opacity-40" />
@@ -75,7 +75,7 @@ export default function Itinerary() {
               <motion.div 
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
+                viewport={{ once: true, amount: 0.1 }}
                 className="pl-10 md:pl-16 mb-10 flex flex-col md:flex-row md:items-end gap-2 md:gap-4"
               >
                 <h3 className="text-3xl md:text-4xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-poster-accent-bright to-white uppercase">
@@ -92,7 +92,7 @@ export default function Itinerary() {
                     key={event.title + event.time}
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-50px" }}
+                    viewport={{ once: true, amount: 0.1 }}
                     transition={{ delay: eventIndex * 0.1, duration: 0.5, ease: "easeOut" }}
                     className="group relative bg-gradient-to-br from-white/[0.03] to-transparent border border-white/[0.05] rounded-3xl p-6 md:p-8 backdrop-blur-md hover:bg-white/[0.06] hover:border-white/10 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-poster-accent/5 overflow-hidden"
                   >

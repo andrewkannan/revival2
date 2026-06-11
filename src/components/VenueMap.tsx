@@ -9,7 +9,7 @@ export default function VenueMap() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
+        viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="mb-8 border-b border-white/10 pb-4 flex items-center gap-3"
       >
@@ -22,7 +22,7 @@ export default function VenueMap() {
       <motion.div 
         initial={{ opacity: 0, scale: 0.95, y: 30 }}
         whileInView={{ opacity: 1, scale: 1, y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
+        viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center text-slate-300 hover:bg-white/[0.07] transition-colors duration-500 hover:shadow-2xl hover:shadow-poster-accent/5"
       >
