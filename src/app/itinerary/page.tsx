@@ -19,13 +19,13 @@ export default async function ItineraryPage() {
       {/* Live Calvary Background */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-black">
         <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#263336]/95 via-[#263336]/80 to-black/95"></div>
-        <div className="absolute inset-0 w-full h-full scale-[1.75] origin-bottom md:scale-100 transition-transform duration-1000">
+        <div className="absolute inset-0 w-full h-full scale-[1.75] origin-center md:scale-100 transition-transform duration-1000">
           <div className="absolute inset-0 w-full h-full animate-[ambientPan_60s_ease-in-out_infinite_alternate] opacity-40">
             <Image 
               src="/backgrounds/calvary-bg.png" 
               alt="Calvary Background" 
               fill 
-              className="object-cover object-bottom"
+              className="object-cover object-center"
               quality={100}
               priority
             />
