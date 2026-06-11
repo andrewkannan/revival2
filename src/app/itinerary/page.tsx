@@ -61,7 +61,7 @@ export default async function ItineraryPage() {
         </div>
       </div>
 
-      <div className="pb-24 divide-y divide-white/10 flex flex-col">
+      <div className="pb-24 divide-y divide-white/10 flex flex-col relative z-10">
         <section>
           <Itinerary />
         </section>
