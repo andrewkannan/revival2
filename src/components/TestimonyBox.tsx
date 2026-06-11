@@ -67,7 +67,7 @@ export default function TestimonyBox({ initialTestimonies }: { initialTestimonie
         <h2 className="text-3xl md:text-4xl font-black uppercase tracking-wider text-white">Testimonies</h2>
         <p className="text-slate-400 max-w-xl mx-auto">
           What did God do in your life during this conference? 
-          Share your story anonymously to encourage others!
+          Share your story to encourage others!
         </p>
       </motion.div>
 
