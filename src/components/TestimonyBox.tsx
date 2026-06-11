@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { submitTestimony } from '@/actions/spiritual';
 import { Loader2, MessageSquare } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function TestimonyBox() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,7 +36,13 @@ export default function TestimonyBox() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 text-white space-y-12">
-      <div className="text-center space-y-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="text-center space-y-4"
+      >
         <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-2">
           <MessageSquare className="w-8 h-8 text-poster-accent" />
         </div>
@@ -44,9 +51,15 @@ export default function TestimonyBox() {
           What did God do in your life during this conference? 
           Share your story to encourage others and the ministry team!
         </p>
-      </div>
+      </motion.div>
 
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 max-w-2xl mx-auto">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+        className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 max-w-2xl mx-auto hover:bg-white/[0.07] hover:border-white/20 transition-all duration-500 hover:shadow-2xl hover:shadow-poster-accent/5"
+      >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">Your Name (Optional)</label>
@@ -82,7 +95,7 @@ export default function TestimonyBox() {
             </p>
           )}
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }

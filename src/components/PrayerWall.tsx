@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { submitPrayerRequest, incrementPrayerCount } from '@/actions/spiritual';
 import { Heart, Loader2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface Prayer {
   id: string;
@@ -51,13 +52,25 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 text-white space-y-12">
-      <div className="text-center space-y-2">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="text-center space-y-2"
+      >
         <h2 className="text-3xl md:text-4xl font-black uppercase tracking-wider text-poster-accent">Live Prayer Wall</h2>
         <p className="text-slate-400">Post a prayer request and stand in faith with others.</p>
-      </div>
+      </motion.div>
 
       {/* Submission Form */}
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 max-w-2xl mx-auto">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+        className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 max-w-2xl mx-auto hover:bg-white/[0.07] hover:border-white/20 transition-all duration-500 hover:shadow-2xl hover:shadow-poster-accent/5"
+      >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">Prayer Request <span className="text-red-400">*</span></label>
@@ -81,7 +94,7 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
             <p className="text-center text-sm text-emerald-400 font-medium">{message}</p>
           )}
         </form>
-      </div>
+      </motion.div>
 
       {/* Feed */}
       <div className="space-y-4">
@@ -91,8 +104,15 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {prayers.map(prayer => (
-              <div key={prayer.id} className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col">
+            {prayers.map((prayer, index) => (
+              <motion.div 
+                key={prayer.id} 
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: index * 0.1 }}
+                className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col hover:bg-white/[0.07] hover:-translate-y-1 transition-all duration-300 hover:shadow-xl hover:shadow-poster-accent/5 hover:border-white/20"
+              >
                 <div className="flex-grow space-y-3">
                   <p className="text-slate-200 leading-relaxed">{prayer.content}</p>
                 </div>
@@ -108,7 +128,7 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
                     <span className="text-sm font-medium">{prayer.prayCount} Praying</span>
                   </button>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         )}
