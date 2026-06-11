@@ -23,7 +23,7 @@ export default async function ItineraryPage() {
       </div>
 
       {/* Sticky Shortcut Navigation - Floating Pill */}
-      <div className="sticky top-6 z-40 px-4 flex justify-center mb-8 pointer-events-none mt-6">
+      <div className="sticky top-6 z-40 px-4 flex justify-center pointer-events-none mt-6">
         <div className="bg-[#1c272a]/70 backdrop-blur-xl border border-white/10 p-1.5 rounded-full flex gap-1 shadow-2xl shadow-black/50 pointer-events-auto">
           <a href="#venue" className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
             <MapPin className="w-4 h-4 text-poster-accent" /> 

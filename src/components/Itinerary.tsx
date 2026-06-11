@@ -31,18 +31,18 @@ const schedule = [
 
 export default function Itinerary() {
   return (
-    <section id="itinerary" className="py-32 px-6 md:px-12 max-w-4xl mx-auto text-white relative scroll-mt-20">
+    <section id="itinerary" className="pt-12 pb-24 px-6 md:px-12 max-w-4xl mx-auto text-white relative scroll-mt-20">
       {/* Background glow effect */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-poster-accent/5 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="text-center mb-24 relative z-10 flex flex-col items-center">
+      <div className="text-center mb-16 relative z-10 flex flex-col items-center">
 
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1 }}
           transition={{ delay: 0.1 }}
-          className="text-3xl md:text-5xl font-extrabold mb-6 tracking-[0.15em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-white via-poster-accent-bright to-white"
+          className="text-3xl md:text-5xl font-extrabold mb-4 tracking-[0.15em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-white via-poster-accent-bright to-white"
         >
           Itinerary
         </motion.h2>
