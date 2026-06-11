@@ -43,7 +43,7 @@ export default async function ItineraryPage() {
         </div>
       </div>
 
-      <div className="space-y-16 md:space-y-32 pb-24 divide-y divide-white/10">
+      <div className="pb-24 divide-y divide-white/10 flex flex-col">
         <section>
           <Itinerary />
           <div id="venue" className="scroll-mt-24">
@@ -51,11 +51,11 @@ export default async function ItineraryPage() {
           </div>
         </section>
 
-        <section id="prayer" className="pt-16 md:pt-32 scroll-mt-24">
+        <section id="prayer" className="py-8 md:py-12 scroll-mt-24">
           <PrayerWall initialPrayers={prayersRes.success ? prayersRes.data : []} />
         </section>
 
-        <section id="testimony" className="pt-16 md:pt-32 scroll-mt-24">
+        <section id="testimony" className="py-8 md:py-12 scroll-mt-24">
           <TestimonyBox initialTestimonies={testimoniesRes.data || []} />
         </section>
       </div>
