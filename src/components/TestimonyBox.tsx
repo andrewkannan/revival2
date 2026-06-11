@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { submitTestimony, incrementTestimonyLike } from '@/actions/spiritual';
-import { Loader2, MessageSquare, Heart } from 'lucide-react';
+import { Loader2, MessageSquare, Heart, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 type Testimony = {
@@ -129,21 +129,46 @@ export default function TestimonyBox({ initialTestimonies }: { initialTestimonie
                     className="absolute inset-0 bg-poster-accent/40 shadow-[0_0_40px_rgba(140,174,176,0.4)] pointer-events-none rounded-2xl z-0"
                   />
                 )}
-                <p className="text-slate-200 leading-relaxed mb-4 text-sm md:text-base relative z-10">
-                  "{testimony.content}"
+                
+                {/* Author Header */}
+                <div className="flex items-center gap-3 mb-4 relative z-10">
+                  <div className="w-10 h-10 rounded-full bg-poster-accent/10 flex items-center justify-center border border-poster-accent/20">
+                    <User className="w-5 h-5 text-poster-accent" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-white text-sm">Conference Attendee</p>
+                    <p className="text-xs text-slate-400">
+                      {new Date(testimony.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Body Content */}
+                <p className="text-slate-200 leading-relaxed mb-4 text-[15px] relative z-10">
+                  {testimony.content}
                 </p>
-                <div className="flex items-center justify-end mt-auto pt-4 border-t border-white/5 relative z-10">
+
+                {/* Footer Action */}
+                <div className="flex items-center mt-2 relative z-10">
                   <button 
                     onClick={() => handleLike(testimony.id)}
                     disabled={likedIds.has(testimony.id)}
-                    className={`flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${
+                    className={`flex items-center gap-1.5 group transition-colors duration-300 ${
                       likedIds.has(testimony.id) 
-                        ? 'bg-poster-accent/20 text-poster-accent border border-poster-accent/40 shadow-[0_0_15px_rgba(140,174,176,0.3)]' 
-                        : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10'
+                        ? 'text-poster-accent' 
+                        : 'text-slate-400 hover:text-poster-accent'
                     }`}
                   >
-                    <Heart className={`w-3.5 h-3.5 ${likedIds.has(testimony.id) ? 'fill-current' : ''}`} />
-                    <span>Praise ({testimony.likeCount})</span>
+                    <div className={`p-2 rounded-full transition-all duration-300 ${
+                      likedIds.has(testimony.id) ? 'bg-poster-accent/20' : 'group-hover:bg-poster-accent/10'
+                    }`}>
+                      <Heart className={`w-4 h-4 transition-transform duration-300 ${
+                        likedIds.has(testimony.id) ? 'fill-current scale-110' : 'group-hover:scale-110'
+                      }`} />
+                    </div>
+                    <span className="text-sm font-medium">
+                      Praise {testimony.likeCount > 0 && `(${testimony.likeCount})`}
+                    </span>
                   </button>
                 </div>
               </motion.div>
