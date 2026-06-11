@@ -1,16 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import { submitTestimony } from '@/actions/spiritual';
-import { Loader2, MessageSquare } from 'lucide-react';
+import { submitTestimony, incrementTestimonyLike } from '@/actions/spiritual';
+import { Loader2, MessageSquare, ThumbsUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function TestimonyBox() {
+type Testimony = {
+  id: string;
+  content: string;
+  likeCount: number;
+  createdAt: Date;
+};
+
+export default function TestimonyBox({ initialTestimonies }: { initialTestimonies: Testimony[] }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState('');
+  const [testimonies, setTestimonies] = useState<Testimony[]>(initialTestimonies);
+  const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
   
   const [formData, setFormData] = useState({
-    authorName: '',
     content: ''
   });
 
@@ -25,13 +33,23 @@ export default function TestimonyBox() {
     
     if (res.success) {
       setMessage(res.message || "Submitted!");
-      setFormData({ authorName: '', content: '' });
+      setFormData({ content: '' });
     } else {
       setMessage(res.message || "Failed to submit.");
     }
     
     setIsSubmitting(false);
     setTimeout(() => setMessage(''), 5000);
+  };
+
+  const handleLike = async (id: string) => {
+    if (likedIds.has(id)) return; // Already liked this session
+
+    // Optimistic UI update
+    setLikedIds(new Set(likedIds).add(id));
+    setTestimonies(prev => prev.map(t => t.id === id ? { ...t, likeCount: t.likeCount + 1 } : t));
+
+    await incrementTestimonyLike(id);
   };
 
   return (
@@ -46,10 +64,10 @@ export default function TestimonyBox() {
         <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-2">
           <MessageSquare className="w-8 h-8 text-poster-accent" />
         </div>
-        <h2 className="text-3xl md:text-4xl font-black uppercase tracking-wider text-white">Share Your Testimony</h2>
+        <h2 className="text-3xl md:text-4xl font-black uppercase tracking-wider text-white">Testimonies</h2>
         <p className="text-slate-400 max-w-xl mx-auto">
           What did God do in your life during this conference? 
-          Share your story to encourage others and the ministry team!
+          Share your story anonymously to encourage others!
         </p>
       </motion.div>
 
@@ -62,20 +80,10 @@ export default function TestimonyBox() {
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Your Name (Optional)</label>
-            <input 
-              type="text" 
-              placeholder="Anonymous"
-              value={formData.authorName}
-              onChange={e => setFormData({ ...formData, authorName: e.target.value })}
-              className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-poster-accent/50 transition-colors"
-            />
-          </div>
-          <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">Your Story <span className="text-red-400">*</span></label>
             <textarea 
               required
-              rows={6}
+              rows={5}
               placeholder="I experienced..."
               value={formData.content}
               onChange={e => setFormData({ ...formData, content: e.target.value })}
@@ -96,6 +104,49 @@ export default function TestimonyBox() {
           )}
         </form>
       </motion.div>
+
+      {/* Live Testimony Feed */}
+      {testimonies.length > 0 && (
+        <div className="max-w-2xl mx-auto mt-16 space-y-6">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="h-[1px] flex-1 bg-white/10"></div>
+            <h3 className="text-lg font-medium text-slate-300 tracking-wider uppercase">Live Testimonies</h3>
+            <div className="h-[1px] flex-1 bg-white/10"></div>
+          </div>
+
+          <div className="space-y-4">
+            {testimonies.map((testimony, index) => (
+              <motion.div 
+                key={testimony.id} 
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: index * 0.1 }}
+                className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col hover:bg-white/[0.07] hover:-translate-y-1 transition-all duration-300 hover:shadow-xl hover:shadow-poster-accent/5 hover:border-white/20"
+              >
+                <p className="text-slate-200 leading-relaxed mb-4 text-sm md:text-base">
+                  "{testimony.content}"
+                </p>
+                <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
+                  <span className="text-xs text-slate-500 font-medium">Anonymous</span>
+                  <button 
+                    onClick={() => handleLike(testimony.id)}
+                    disabled={likedIds.has(testimony.id)}
+                    className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full transition-all duration-300 ${
+                      likedIds.has(testimony.id) 
+                        ? 'bg-poster-accent/20 text-poster-accent border border-poster-accent/30' 
+                        : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white border border-transparent'
+                    }`}
+                  >
+                    <ThumbsUp className={`w-3.5 h-3.5 ${likedIds.has(testimony.id) ? 'fill-current' : ''}`} />
+                    <span>Praise ({testimony.likeCount})</span>
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

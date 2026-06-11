@@ -99,7 +99,20 @@ export async function deletePrayer(id: string) {
 
 // --- Testimony Box Actions ---
 
-export async function submitTestimony(data: { authorName: string; content: string }) {
+export async function getApprovedTestimonies() {
+  try {
+    const testimonies = await prisma.testimony.findMany({
+      where: { isApproved: true },
+      orderBy: { createdAt: 'desc' }
+    });
+    return { success: true, data: testimonies };
+  } catch (error) {
+    console.error("Failed to fetch testimonies:", error);
+    return { success: false, data: [] };
+  }
+}
+
+export async function submitTestimony(data: { content: string }) {
   try {
     if (!data.content.trim()) {
       return { success: false, message: "Testimony cannot be empty." };
@@ -107,19 +120,35 @@ export async function submitTestimony(data: { authorName: string; content: strin
 
     await prisma.testimony.create({
       data: {
-        authorName: data.authorName.trim() || "Anonymous",
-        content: data.content.trim()
+        content: data.content.trim(),
+        isApproved: false // Admin must approve
       }
     });
 
     revalidatePath('/admin/spiritual');
-    return { success: true, message: "Testimony submitted! Praise God!" };
+    return { success: true, message: "Testimony submitted! It will appear on the feed once approved." };
   } catch (error) {
     console.error("Failed to submit testimony:", error);
     return { success: false, message: "Failed to submit testimony." };
   }
 }
 
+export async function incrementTestimonyLike(id: string) {
+  try {
+    await prisma.testimony.update({
+      where: { id },
+      data: { likeCount: { increment: 1 } }
+    });
+    
+    revalidatePath('/itinerary');
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to increment testimony like:", error);
+    return { success: false };
+  }
+}
+
+// Admin only actions
 export async function getTestimonies() {
   try {
     const testimonies = await prisma.testimony.findMany({
@@ -132,12 +161,28 @@ export async function getTestimonies() {
   }
 }
 
+export async function approveTestimony(id: string) {
+  try {
+    await prisma.testimony.update({
+      where: { id },
+      data: { isApproved: true }
+    });
+    revalidatePath('/admin/spiritual');
+    revalidatePath('/itinerary');
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to approve testimony:", error);
+    return { success: false, message: "Failed to approve testimony." };
+  }
+}
+
 export async function deleteTestimony(id: string) {
   try {
     await prisma.testimony.delete({
       where: { id }
     });
     revalidatePath('/admin/spiritual');
+    revalidatePath('/itinerary');
     return { success: true };
   } catch (error) {
     console.error("Failed to delete testimony:", error);

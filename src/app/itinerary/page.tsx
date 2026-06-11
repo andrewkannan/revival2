@@ -1,5 +1,5 @@
 import { getAdminConfig } from '@/actions/admin';
-import { getApprovedPrayers } from '@/actions/spiritual';
+import { getApprovedPrayers, getApprovedTestimonies } from '@/actions/spiritual';
 import AnnouncementBanner from '@/components/AnnouncementBanner';
 import Itinerary from '@/components/Itinerary';
 import VenueMap from '@/components/VenueMap';
@@ -14,6 +14,7 @@ export default async function ItineraryPage() {
   const config = await getAdminConfig();
   const announcement = config?.liveAnnouncement || null;
   const prayersRes = await getApprovedPrayers();
+  const testimoniesRes = await getApprovedTestimonies();
 
   return (
     <main className="min-h-screen bg-[#263336] overflow-x-hidden relative">
@@ -60,7 +61,7 @@ export default async function ItineraryPage() {
         </section>
 
         <section id="testimony" className="pt-16 md:pt-32 scroll-mt-24">
-          <TestimonyBox />
+          <TestimonyBox initialTestimonies={testimoniesRes.data || []} />
         </section>
       </div>
     </main>
