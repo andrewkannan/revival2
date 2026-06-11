@@ -24,7 +24,7 @@ const schedule = [
     day: 'Day 3',
     date: 'Sunday • 28 June 2026',
     events: [
-      { time: '9am - 12pm', title: 'Session 4', description: '' }
+      { time: '8:30am - 12pm', title: 'Session 4', description: '' }
     ]
   }
 ];
