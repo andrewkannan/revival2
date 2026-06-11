@@ -46,9 +46,6 @@ export default async function ItineraryPage() {
       <div className="pb-24 divide-y divide-white/10 flex flex-col">
         <section>
           <Itinerary />
-          <div id="venue" className="scroll-mt-24">
-            <VenueMap />
-          </div>
         </section>
 
         <section id="prayer" className="py-8 md:py-12 scroll-mt-24">
@@ -57,6 +54,10 @@ export default async function ItineraryPage() {
 
         <section id="testimony" className="py-8 md:py-12 scroll-mt-24">
           <TestimonyBox initialTestimonies={testimoniesRes.data || []} />
+        </section>
+
+        <section id="venue" className="py-8 md:py-12 scroll-mt-24">
+          <VenueMap />
         </section>
       </div>
     </main>
