@@ -1,6 +1,4 @@
-import { getAdminConfig } from '@/actions/admin';
 import { getApprovedPrayers, getApprovedTestimonies } from '@/actions/spiritual';
-import AnnouncementBanner from '@/components/AnnouncementBanner';
 import Itinerary from '@/components/Itinerary';
 import VenueMap from '@/components/VenueMap';
 import PrayerWall from '@/components/PrayerWall';
@@ -11,14 +9,11 @@ import Image from 'next/image';
 export const revalidate = 0; // Ensures fresh data for the live announcement and prayers
 
 export default async function ItineraryPage() {
-  const config = await getAdminConfig();
-  const announcement = config?.liveAnnouncement || null;
   const prayersRes = await getApprovedPrayers();
   const testimoniesRes = await getApprovedTestimonies();
 
   return (
     <main className="min-h-screen bg-[#263336] overflow-x-hidden relative">
-      <AnnouncementBanner announcement={announcement} />
       
       {/* Top Logo */}
       <div className="pt-8 flex justify-center px-4 w-full">
@@ -43,7 +38,7 @@ export default async function ItineraryPage() {
           <a href="#testimony" className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
             <MessageSquare className="w-4 h-4 text-poster-accent" /> 
             <span className="hidden sm:inline tracking-wide uppercase">Testimonies</span>
-            <span className="sm:hidden tracking-wide uppercase">Stories</span>
+            <span className="sm:hidden tracking-wide uppercase">Testimonies</span>
           </a>
         </div>
       </div>

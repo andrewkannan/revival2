@@ -249,22 +249,6 @@ export default function SettingsPage() {
       {activeTab === 'general' && (
         <form onSubmit={handleGeneralSubmit} className="space-y-8">
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold mb-2">Live Announcement</h2>
-            <p className="text-sm text-slate-400 mb-6">Broadcast an urgent message to all attendees on the /itinerary page.</p>
-            <div className="space-y-4">
-              <input 
-                type="text" 
-                name="liveAnnouncement" 
-                value={generalData.liveAnnouncement} 
-                onChange={handleGeneralChange} 
-                placeholder="e.g. Session 2 is delayed by 10 minutes"
-                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" 
-              />
-              <p className="text-xs text-slate-500">Leave blank to hide the announcement banner.</p>
-            </div>
-          </div>
-
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
             <h2 className="text-xl font-semibold mb-6">Capacity & Rules</h2>
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -63,7 +63,7 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="text-center space-y-2"
       >
-        <h2 className="text-3xl md:text-4xl font-black uppercase tracking-wider text-poster-accent">Live Prayer Wall</h2>
+        <h2 className="text-3xl md:text-4xl font-black uppercase tracking-wider text-poster-accent">Prayer Wall</h2>
         <p className="text-slate-400">Post a prayer request and stand in faith with others.</p>
       </motion.div>
 
