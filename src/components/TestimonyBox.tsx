@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { submitTestimony, incrementTestimonyLike } from '@/actions/spiritual';
-import { Loader2, MessageSquare, ThumbsUp } from 'lucide-react';
+import { Loader2, MessageSquare, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 type Testimony = {
@@ -122,13 +122,21 @@ export default function TestimonyBox({ initialTestimonies }: { initialTestimonie
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: index * 0.1 }}
-                className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col hover:bg-white/[0.07] hover:-translate-y-1 transition-all duration-300 hover:shadow-xl hover:shadow-poster-accent/5 hover:border-white/20"
+                className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col hover:bg-white/[0.07] hover:-translate-y-1 transition-all duration-300 hover:shadow-xl hover:shadow-poster-accent/5 hover:border-white/20 relative overflow-hidden"
               >
-                <p className="text-slate-200 leading-relaxed mb-4 text-sm md:text-base">
+                {/* Flash Effect on Praise */}
+                {likedIds.has(testimony.id) && (
+                  <motion.div
+                    initial={{ opacity: 0.6, scale: 0.95 }}
+                    animate={{ opacity: 0, scale: 1.05 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="absolute inset-0 bg-poster-accent/30 pointer-events-none rounded-2xl"
+                  />
+                )}
+                <p className="text-slate-200 leading-relaxed mb-4 text-sm md:text-base relative z-10">
                   "{testimony.content}"
                 </p>
-                <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
-                  <span className="text-xs text-slate-500 font-medium">Anonymous</span>
+                <div className="flex items-center justify-end mt-auto pt-4 border-t border-white/5 relative z-10">
                   <button 
                     onClick={() => handleLike(testimony.id)}
                     disabled={likedIds.has(testimony.id)}
@@ -138,7 +146,7 @@ export default function TestimonyBox({ initialTestimonies }: { initialTestimonie
                         : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white border border-transparent'
                     }`}
                   >
-                    <ThumbsUp className={`w-3.5 h-3.5 ${likedIds.has(testimony.id) ? 'fill-current' : ''}`} />
+                    <Heart className={`w-3.5 h-3.5 ${likedIds.has(testimony.id) ? 'fill-current' : ''}`} />
                     <span>Praise ({testimony.likeCount})</span>
                   </button>
                 </div>
