@@ -6,6 +6,7 @@ import VenueMap from '@/components/VenueMap';
 import PrayerWall from '@/components/PrayerWall';
 import TestimonyBox from '@/components/TestimonyBox';
 import { MapPin, Heart, MessageSquare } from 'lucide-react';
+import Image from 'next/image';
 
 export const revalidate = 0; // Ensures fresh data for the live announcement and prayers
 
@@ -18,8 +19,15 @@ export default async function ItineraryPage() {
     <main className="min-h-screen bg-[#263336] overflow-x-hidden relative">
       <AnnouncementBanner announcement={announcement} />
       
+      {/* Top Logo */}
+      <div className="pt-8 flex justify-center px-4 w-full">
+        <div className="relative w-full max-w-[200px] md:max-w-[280px] aspect-[5/1]">
+          <Image src="/hero/revival-logo.png" alt="Revival Logo" fill className="object-contain drop-shadow-xl" priority />
+        </div>
+      </div>
+
       {/* Sticky Shortcut Navigation - Floating Pill */}
-      <div className="sticky top-6 z-40 px-4 flex justify-center mb-8 pointer-events-none mt-4">
+      <div className="sticky top-6 z-40 px-4 flex justify-center mb-8 pointer-events-none mt-6">
         <div className="bg-[#1c272a]/70 backdrop-blur-xl border border-white/10 p-1.5 rounded-full flex gap-1 shadow-2xl shadow-black/50 pointer-events-auto">
           <a href="#venue" className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
             <MapPin className="w-4 h-4 text-poster-accent" /> 

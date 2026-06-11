@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 
 const schedule = [
   {
@@ -37,14 +36,6 @@ export default function Itinerary() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-poster-accent/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="text-center mb-24 relative z-10 flex flex-col items-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1 }}
-          className="relative w-full max-w-[200px] md:max-w-[280px] aspect-[5/1] mb-12"
-        >
-          <Image src="/hero/revival-logo.png" alt="Revival Logo" fill className="object-contain drop-shadow-xl" priority />
-        </motion.div>
 
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
@@ -62,7 +53,7 @@ export default function Itinerary() {
           transition={{ delay: 0.1 }}
           className="text-slate-400 font-light text-lg tracking-wide max-w-xl mx-auto"
         >
-          Plan your weekend. Here's what we have in store for the REVIVAL conference.
+          Here's what we have in store for the REVIVAL conference.
         </motion.p>
       </div>
 

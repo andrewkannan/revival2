@@ -21,7 +21,7 @@ export default function AnnouncementBanner({ announcement }: Props) {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, height: 0, margin: 0 }}
-        className="bg-poster-accent text-black font-semibold px-4 py-3 shadow-lg z-50 relative border-b border-black/10"
+        className="bg-poster-accent text-black font-semibold px-4 py-3 shadow-lg z-50 fixed top-0 left-0 right-0 w-full border-b border-black/10"
       >
         <div className="max-w-4xl mx-auto flex items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
