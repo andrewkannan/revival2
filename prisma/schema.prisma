@@ -163,6 +163,7 @@ model PrayerRequest {
 
 model Testimony {
   id          String   @id @default(uuid())
+  authorName  String?
   content     String
   likeCount   Int      @default(0)
   isApproved  Boolean  @default(false) // Requires admin approval to show on live wall

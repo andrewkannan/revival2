@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 
 type Testimony = {
   id: string;
+  authorName: string | null;
   content: string;
   likeCount: number;
   createdAt: Date;
@@ -19,6 +20,7 @@ export default function TestimonyBox({ initialTestimonies }: { initialTestimonie
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
   
   const [formData, setFormData] = useState({
+    authorName: '',
     content: ''
   });
 
@@ -33,7 +35,7 @@ export default function TestimonyBox({ initialTestimonies }: { initialTestimonie
     
     if (res.success) {
       setMessage(res.message || "Submitted!");
-      setFormData({ content: '' });
+      setFormData({ authorName: '', content: '' });
     } else {
       setMessage(res.message || "Failed to submit.");
     }
@@ -80,6 +82,15 @@ export default function TestimonyBox({ initialTestimonies }: { initialTestimonie
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">Name (Optional)</label>
+            <input 
+              type="text"
+              placeholder="Your Name or Anonymous"
+              value={formData.authorName}
+              onChange={e => setFormData({ ...formData, authorName: e.target.value })}
+              className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-poster-accent/50 transition-colors mb-4"
+            />
+            
             <label className="block text-sm font-medium text-slate-300 mb-2">Your Story <span className="text-red-400">*</span></label>
             <textarea 
               required
@@ -136,7 +147,7 @@ export default function TestimonyBox({ initialTestimonies }: { initialTestimonie
                     <User className="w-5 h-5 text-poster-accent" />
                   </div>
                   <div>
-                    <p className="font-semibold text-white text-sm">Conference Attendee</p>
+                    <p className="font-semibold text-white text-sm">{testimony.authorName || "Conference Attendee"}</p>
                     <p className="text-xs text-slate-400">
                       {new Date(testimony.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </p>

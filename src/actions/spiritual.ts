@@ -19,7 +19,7 @@ export async function getApprovedPrayers() {
   }
 }
 
-export async function submitPrayerRequest(data: { content: string }) {
+export async function submitPrayerRequest(data: { content: string; authorName?: string }) {
   try {
     if (!data.content.trim()) {
       return { success: false, message: "Prayer request cannot be empty." };
@@ -27,7 +27,7 @@ export async function submitPrayerRequest(data: { content: string }) {
 
     await prisma.prayerRequest.create({
       data: {
-        authorName: "Anonymous",
+        authorName: data.authorName?.trim() || "Anonymous",
         content: data.content.trim(),
         isApproved: false // Admin must approve
       }
@@ -40,7 +40,7 @@ export async function submitPrayerRequest(data: { content: string }) {
         const emails = config.notificationEmails.split(',').map(e => e.trim()).filter(Boolean);
         const html = `
           <h2>New Prayer Request Submitted</h2>
-          <p>A new prayer request has been submitted and is pending your approval.</p>
+          <p>A new prayer request has been submitted by <strong>${data.authorName?.trim() || 'Anonymous'}</strong> and is pending your approval.</p>
           <blockquote style="border-left: 4px solid #ccc; padding-left: 10px; font-style: italic;">
             ${data.content.trim()}
           </blockquote>
@@ -135,7 +135,7 @@ export async function getApprovedTestimonies() {
   }
 }
 
-export async function submitTestimony(data: { content: string }) {
+export async function submitTestimony(data: { content: string; authorName?: string }) {
   try {
     if (!data.content.trim()) {
       return { success: false, message: "Testimony cannot be empty." };
@@ -143,6 +143,7 @@ export async function submitTestimony(data: { content: string }) {
 
     await prisma.testimony.create({
       data: {
+        authorName: data.authorName?.trim() || "Anonymous",
         content: data.content.trim(),
         isApproved: false // Admin must approve
       }
@@ -155,7 +156,7 @@ export async function submitTestimony(data: { content: string }) {
         const emails = config.notificationEmails.split(',').map(e => e.trim()).filter(Boolean);
         const html = `
           <h2>New Testimony Submitted</h2>
-          <p>A new testimony has been submitted and is pending your approval.</p>
+          <p>A new testimony has been submitted by <strong>${data.authorName?.trim() || 'Anonymous'}</strong> and is pending your approval.</p>
           <blockquote style="border-left: 4px solid #ccc; padding-left: 10px; font-style: italic;">
             ${data.content.trim()}
           </blockquote>

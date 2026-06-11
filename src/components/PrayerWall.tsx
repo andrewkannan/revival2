@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { submitPrayerRequest, incrementPrayerCount } from '@/actions/spiritual';
-import { Heart, Loader2 } from 'lucide-react';
+import { Heart, Loader2, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface Prayer {
@@ -20,6 +20,7 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
   const [message, setMessage] = useState('');
   
   const [formData, setFormData] = useState({
+    authorName: '',
     content: ''
   });
 
@@ -34,7 +35,7 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
     
     if (res.success) {
       setMessage(res.message || "Submitted!");
-      setFormData({ content: '' });
+      setFormData({ authorName: '', content: '' });
     } else {
       setMessage(res.message || "Failed to submit.");
     }
@@ -77,6 +78,15 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">Name (Optional)</label>
+            <input 
+              type="text"
+              placeholder="Your Name or Anonymous"
+              value={formData.authorName}
+              onChange={e => setFormData({ ...formData, authorName: e.target.value })}
+              className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors mb-4"
+            />
+            
             <label className="block text-sm font-medium text-slate-300 mb-2">Prayer Request <span className="text-red-400">*</span></label>
             <textarea 
               required
@@ -126,24 +136,45 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
                     className="absolute inset-0 bg-poster-accent/40 shadow-[0_0_40px_rgba(140,174,176,0.4)] pointer-events-none rounded-2xl z-0"
                   />
                 )}
-                <div className="flex-grow space-y-3 relative z-10">
-                  <p className="text-slate-200 leading-relaxed">{prayer.content}</p>
+                {/* Author Header */}
+                <div className="flex items-center gap-3 mb-4 relative z-10">
+                  <div className="w-10 h-10 rounded-full bg-poster-accent/10 flex items-center justify-center border border-poster-accent/20">
+                    <User className="w-5 h-5 text-poster-accent" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-white text-sm">{prayer.authorName || "Anonymous"}</p>
+                    <p className="text-xs text-slate-400">
+                      {new Date(prayer.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </p>
+                  </div>
                 </div>
-                <div className="mt-6 flex items-center justify-between pt-4 border-t border-white/5 relative z-10">
-                  <span className="text-xs text-slate-500">
-                    {new Date(prayer.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
+
+                {/* Body Content */}
+                <p className="text-slate-200 leading-relaxed mb-4 text-[15px] relative z-10">
+                  {prayer.content}
+                </p>
+
+                {/* Footer Action */}
+                <div className="flex items-center mt-2 relative z-10">
                   <button 
                     onClick={() => handlePray(prayer.id)}
                     disabled={prayedIds.has(prayer.id)}
-                    className={`flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${
+                    className={`flex items-center gap-1.5 group transition-colors duration-300 ${
                       prayedIds.has(prayer.id) 
-                        ? 'bg-poster-accent/20 text-poster-accent border border-poster-accent/40 shadow-[0_0_15px_rgba(140,174,176,0.3)]' 
-                        : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10'
+                        ? 'text-poster-accent' 
+                        : 'text-slate-400 hover:text-poster-accent'
                     }`}
                   >
-                    <Heart className={`w-3.5 h-3.5 ${prayedIds.has(prayer.id) ? 'fill-current' : ''}`} /> 
-                    <span>{prayer.prayCount} Praying</span>
+                    <div className={`p-2 rounded-full transition-all duration-300 ${
+                      prayedIds.has(prayer.id) ? 'bg-poster-accent/20' : 'group-hover:bg-poster-accent/10'
+                    }`}>
+                      <Heart className={`w-4 h-4 transition-transform duration-300 ${
+                        prayedIds.has(prayer.id) ? 'fill-current scale-110' : 'group-hover:scale-110'
+                      }`} />
+                    </div>
+                    <span className="text-sm font-medium">
+                      Praying {prayer.prayCount > 0 && `(${prayer.prayCount})`}
+                    </span>
                   </button>
                 </div>
               </motion.div>
