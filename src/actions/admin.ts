@@ -185,6 +185,7 @@ export async function updateRegistrationDetails(
     totalAmount: number;
     status: RegistrationStatus;
     receiptBase64?: string | null;
+    receiptBase64_2?: string | null;
     adultTickets?: number;
     kidsTickets?: number;
   }
@@ -201,6 +202,9 @@ export async function updateRegistrationDetails(
     };
     if (data.receiptBase64) {
       updateData.receiptUrl = data.receiptBase64;
+    }
+    if (data.receiptBase64_2 !== undefined) {
+      updateData.receiptUrl2 = data.receiptBase64_2;
     }
     
     if (data.adultTickets !== undefined) {

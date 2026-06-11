@@ -329,12 +329,22 @@ export default function RegistrationsTable({ initialData }: Props) {
                     </td>
                     <td className="px-4 py-4 text-center">
                       {reg.receiptUrl ? (
-                        <button 
-                          onClick={() => setReceiptModal({ url: reg.receiptUrl!, queueNum: formatQueue(reg.orderNumber) })}
-                          className="text-poster-accent hover:text-poster-accent-bright underline text-xs font-medium cursor-pointer transition-colors whitespace-nowrap"
-                        >
-                          View Proof
-                        </button>
+                        <div className="flex flex-col items-center gap-2">
+                          <button 
+                            onClick={() => setReceiptModal({ url: reg.receiptUrl!, queueNum: formatQueue(reg.orderNumber) })}
+                            className="text-poster-accent hover:text-poster-accent-bright underline text-xs font-medium cursor-pointer transition-colors whitespace-nowrap"
+                          >
+                            View Proof 1
+                          </button>
+                          {(reg as any).receiptUrl2 && (
+                            <button 
+                              onClick={() => setReceiptModal({ url: (reg as any).receiptUrl2!, queueNum: formatQueue(reg.orderNumber) + " (2)" })}
+                              className="text-poster-accent hover:text-poster-accent-bright underline text-xs font-medium cursor-pointer transition-colors whitespace-nowrap"
+                            >
+                              View Proof 2
+                            </button>
+                          )}
+                        </div>
                       ) : (
                         <span className="text-slate-500 text-xs whitespace-nowrap">No Receipt</span>
                       )}
@@ -362,6 +372,7 @@ export default function RegistrationsTable({ initialData }: Props) {
                               totalAmount: reg.totalAmount,
                               status: reg.status,
                               receiptUrl: reg.receiptUrl,
+                              receiptUrl2: (reg as any).receiptUrl2 || null,
                               orderNumber: reg.orderNumber,
                               adultTickets: reg.adultTickets,
                               kidsTickets: reg.kidsTickets
@@ -435,12 +446,22 @@ export default function RegistrationsTable({ initialData }: Props) {
                   </div>
                   <div className="flex flex-col items-end gap-2">
                     {reg.receiptUrl ? (
-                      <button 
-                        onClick={() => setReceiptModal({ url: reg.receiptUrl!, queueNum: formatQueue(reg.orderNumber) })}
-                        className="px-3 py-1.5 bg-poster-accent/20 text-poster-accent text-xs font-medium rounded hover:bg-poster-accent/30 transition-colors"
-                      >
-                        View Proof
-                      </button>
+                      <div className="flex flex-col items-end gap-1">
+                        <button 
+                          onClick={() => setReceiptModal({ url: reg.receiptUrl!, queueNum: formatQueue(reg.orderNumber) })}
+                          className="px-3 py-1.5 bg-poster-accent/20 text-poster-accent text-xs font-medium rounded hover:bg-poster-accent/30 transition-colors"
+                        >
+                          View Proof 1
+                        </button>
+                        {(reg as any).receiptUrl2 && (
+                          <button 
+                            onClick={() => setReceiptModal({ url: (reg as any).receiptUrl2!, queueNum: formatQueue(reg.orderNumber) + " (2)" })}
+                            className="px-3 py-1.5 bg-poster-accent/20 text-poster-accent text-xs font-medium rounded hover:bg-poster-accent/30 transition-colors"
+                          >
+                            View Proof 2
+                          </button>
+                        )}
+                      </div>
                     ) : (
                       <span className="text-slate-500 text-xs px-3 py-1.5">No Receipt</span>
                     )}
@@ -456,6 +477,7 @@ export default function RegistrationsTable({ initialData }: Props) {
                           totalAmount: reg.totalAmount,
                           status: reg.status,
                           receiptUrl: reg.receiptUrl,
+                          receiptUrl2: (reg as any).receiptUrl2 || null,
                           orderNumber: reg.orderNumber,
                           adultTickets: reg.adultTickets,
                           kidsTickets: reg.kidsTickets

@@ -17,6 +17,7 @@ export type EditData = {
   totalAmount: string;
   status: RegistrationStatus;
   receiptUrl: string | null;
+  receiptUrl2: string | null;
   adultTickets: number;
   kidsTickets: number;
 };
@@ -39,9 +40,11 @@ export default function EditRegistrationModal({ data, onClose }: Props) {
   });
 
   const [receiptBase64, setReceiptBase64] = useState<string | null>(null);
+  const [receiptBase64_2, setReceiptBase64_2] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef2 = useRef<HTMLInputElement>(null);
 
   const compressImage = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -80,7 +83,7 @@ export default function EditRegistrationModal({ data, onClose }: Props) {
     });
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, isSecond: boolean = false) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -96,7 +99,11 @@ export default function EditRegistrationModal({ data, onClose }: Props) {
 
     try {
       const base64 = await compressImage(file);
-      setReceiptBase64(base64);
+      if (isSecond) {
+        setReceiptBase64_2(base64);
+      } else {
+        setReceiptBase64(base64);
+      }
       setError(null);
     } catch (err) {
       setError('Failed to process image.');
@@ -119,7 +126,8 @@ export default function EditRegistrationModal({ data, onClose }: Props) {
     const result = await updateRegistrationDetails(data.id, data.attendeeId, {
       ...formData,
       totalAmount: amount,
-      receiptBase64
+      receiptBase64,
+      receiptBase64_2
     });
 
     if (result.success) {
@@ -262,7 +270,7 @@ export default function EditRegistrationModal({ data, onClose }: Props) {
               <input 
                 type="file" 
                 ref={fileInputRef} 
-                onChange={handleFileChange} 
+                onChange={(e) => handleFileChange(e, false)} 
                 accept="image/*" 
                 className="hidden" 
               />
@@ -286,6 +294,45 @@ export default function EditRegistrationModal({ data, onClose }: Props) {
                     <Upload className="w-6 h-6 text-slate-400 group-hover:text-poster-accent transition-colors" />
                   </div>
                   <p className="text-sm text-slate-300 font-medium">Click to upload image</p>
+                  <p className="text-xs text-slate-500 mt-1">PNG, JPG up to 10MB</p>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="space-y-2 pt-4 border-t border-white/10">
+            <label className="text-sm font-medium text-slate-300">Upload Second Payment Receipt (Optional)</label>
+            <div 
+              onClick={() => fileInputRef2.current?.click()}
+              className="border-2 border-dashed border-white/20 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-poster-accent hover:bg-white/5 transition-all group"
+            >
+              <input 
+                type="file" 
+                ref={fileInputRef2} 
+                onChange={(e) => handleFileChange(e, true)} 
+                accept="image/*" 
+                className="hidden" 
+              />
+              {receiptBase64_2 ? (
+                <div className="relative group/img">
+                  <img src={receiptBase64_2} alt="New Second Receipt" className="h-32 object-contain rounded-lg" />
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity rounded-lg">
+                    <span className="text-sm font-medium text-white">Change Image</span>
+                  </div>
+                </div>
+              ) : data.receiptUrl2 ? (
+                <div className="relative group/img">
+                  <img src={data.receiptUrl2} alt="Existing Second Receipt" className="h-32 object-contain rounded-lg opacity-50" />
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity rounded-lg">
+                    <span className="text-sm font-medium text-white">Upload New</span>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-3 group-hover:bg-poster-accent/20 transition-colors">
+                    <Upload className="w-6 h-6 text-slate-400 group-hover:text-poster-accent transition-colors" />
+                  </div>
+                  <p className="text-sm text-slate-300 font-medium">Click to upload second receipt</p>
                   <p className="text-xs text-slate-500 mt-1">PNG, JPG up to 10MB</p>
                 </>
               )}

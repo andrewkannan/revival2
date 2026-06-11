@@ -59,6 +59,7 @@ model Registration {
   totalAmount   Decimal            @db.Decimal(10, 2)
   status        RegistrationStatus @default(PENDING_FOR_PAYMENT)
   receiptUrl    String?            // URL for uploaded bank receipt
+  receiptUrl2   String?            // Second URL for uploaded bank receipt (if paid twice)
   payLater      Boolean            @default(false)
   orderNumber   Int                @unique @default(autoincrement())
   qrCodeUrl     String?            // Unified QR code for the entire registration
