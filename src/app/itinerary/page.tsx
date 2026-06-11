@@ -9,14 +9,32 @@ import Image from 'next/image';
 export const revalidate = 0; // Ensures fresh data for the live announcement and prayers
 
 export default async function ItineraryPage() {
-  const prayersRes = await getApprovedPrayers();
-  const testimoniesRes = await getApprovedTestimonies();
+  const [prayersRes, testimoniesRes] = await Promise.all([
+    getApprovedPrayers(),
+    getApprovedTestimonies()
+  ]);
 
   return (
     <main className="min-h-screen bg-[#263336] overflow-x-hidden relative">
+      {/* Live Calvary Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-black">
+        <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#263336]/95 via-[#263336]/80 to-black/95"></div>
+        <div className="absolute inset-0 w-full h-full animate-[ambientPan_60s_ease-in-out_infinite_alternate] opacity-40">
+          <Image 
+            src="/backgrounds/calvary-bg.png" 
+            alt="Calvary Background" 
+            fill 
+            className="object-cover object-bottom"
+            quality={100}
+            priority
+          />
+        </div>
+        {/* Subtle animated fog overlay */}
+        <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-[#263336] to-transparent z-20"></div>
+      </div>
       
       {/* Top Logo */}
-      <div className="pt-8 flex justify-center px-4 w-full">
+      <div className="pt-8 flex justify-center px-4 w-full relative z-10">
         <div className="relative w-full max-w-[200px] md:max-w-[280px] aspect-[5/1]">
           <Image src="/hero/revival-logo.png" alt="Revival Logo" fill className="object-contain drop-shadow-xl" priority />
         </div>
