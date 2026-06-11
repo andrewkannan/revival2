@@ -25,7 +25,7 @@ export default function SettingsPage() {
     earlyBirdEndDate: '',
     adultPriceEarlyBird: 50,
     adultPriceRegular: 80,
-    liveAnnouncement: '',
+    notificationEmails: '',
   });
 
   const [smtpData, setSmtpData] = useState({
@@ -54,7 +54,7 @@ export default function SettingsPage() {
         earlyBirdEndDate: config.earlyBirdEndDate ? new Date(config.earlyBirdEndDate).toISOString().split('T')[0] : '',
         adultPriceEarlyBird: Number(config.adultPriceEarlyBird),
         adultPriceRegular: Number(config.adultPriceRegular),
-        liveAnnouncement: config.liveAnnouncement || '',
+        notificationEmails: config.notificationEmails || '',
       });
 
       setSmtpData({
@@ -103,7 +103,7 @@ export default function SettingsPage() {
       kidsCapacity: 100, // Dummy value since UI is removed
       kidsPriceEarlyBird: 25, // Dummy value
       kidsPriceRegular: 40, // Dummy value
-      liveAnnouncement: generalData.liveAnnouncement || null,
+      notificationEmails: generalData.notificationEmails || null,
     };
 
     const result = await updateAdminConfig(payload);
@@ -248,6 +248,22 @@ export default function SettingsPage() {
       {/* General Settings Tab */}
       {activeTab === 'general' && (
         <form onSubmit={handleGeneralSubmit} className="space-y-8">
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+            <h2 className="text-xl font-semibold mb-2">Notification Emails</h2>
+            <p className="text-sm text-slate-400 mb-6">Receive an email when someone posts a prayer or testimony.</p>
+            <div className="space-y-4">
+              <input 
+                type="text" 
+                name="notificationEmails" 
+                value={generalData.notificationEmails} 
+                onChange={handleGeneralChange} 
+                placeholder="admin1@example.com, admin2@example.com"
+                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" 
+              />
+              <p className="text-xs text-slate-500">Comma-separated list of emails. Leave blank to disable.</p>
+            </div>
+          </div>
+
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
             <h2 className="text-xl font-semibold mb-6">Capacity & Rules</h2>
             <div className="space-y-6">

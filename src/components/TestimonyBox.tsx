@@ -93,9 +93,9 @@ export default function TestimonyBox({ initialTestimonies }: { initialTestimonie
           <button 
             type="submit" 
             disabled={isSubmitting || !formData.content.trim()}
-            className="w-full bg-white text-black font-bold py-3 rounded-xl hover:bg-slate-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full bg-poster-accent text-black font-bold py-3 rounded-xl hover:bg-poster-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Submit Testimony'}
+            {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Post'}
           </button>
           {message && (
             <p className={`text-center text-sm font-medium ${message.includes('Failed') ? 'text-red-400' : 'text-emerald-400'}`}>

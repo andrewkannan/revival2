@@ -92,7 +92,7 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
             disabled={isSubmitting || !formData.content.trim()}
             className="w-full bg-poster-accent text-black font-bold py-3 rounded-xl hover:bg-poster-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Post to Prayer Wall'}
+            {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Post'}
           </button>
           {message && (
             <p className="text-center text-sm text-emerald-400 font-medium">{message}</p>

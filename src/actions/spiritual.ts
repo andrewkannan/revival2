@@ -2,6 +2,7 @@
 
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { sendEmail } from '@/lib/email';
 
 // --- Prayer Wall Actions ---
 
@@ -31,6 +32,28 @@ export async function submitPrayerRequest(data: { content: string }) {
         isApproved: false // Admin must approve
       }
     });
+
+    // Send email notification to admins
+    try {
+      const config = await prisma.adminConfig.findUnique({ where: { id: 1 } });
+      if (config?.notificationEmails) {
+        const emails = config.notificationEmails.split(',').map(e => e.trim()).filter(Boolean);
+        const html = `
+          <h2>New Prayer Request Submitted</h2>
+          <p>A new prayer request has been submitted and is pending your approval.</p>
+          <blockquote style="border-left: 4px solid #ccc; padding-left: 10px; font-style: italic;">
+            ${data.content.trim()}
+          </blockquote>
+          <p><a href="${process.env.NEXT_PUBLIC_BASE_URL || 'https://revival-conference.com'}/admin/spiritual">Click here to review and approve</a></p>
+        `;
+        
+        for (const email of emails) {
+          await sendEmail(email, "New Prayer Request Pending Approval", html);
+        }
+      }
+    } catch (e) {
+      console.error("Failed to send prayer notification email:", e);
+    }
 
     revalidatePath('/admin/spiritual'); // Update admin dashboard
     return { success: true, message: "Prayer request submitted! It will appear on the wall once approved." };
@@ -124,6 +147,28 @@ export async function submitTestimony(data: { content: string }) {
         isApproved: false // Admin must approve
       }
     });
+
+    // Send email notification to admins
+    try {
+      const config = await prisma.adminConfig.findUnique({ where: { id: 1 } });
+      if (config?.notificationEmails) {
+        const emails = config.notificationEmails.split(',').map(e => e.trim()).filter(Boolean);
+        const html = `
+          <h2>New Testimony Submitted</h2>
+          <p>A new testimony has been submitted and is pending your approval.</p>
+          <blockquote style="border-left: 4px solid #ccc; padding-left: 10px; font-style: italic;">
+            ${data.content.trim()}
+          </blockquote>
+          <p><a href="${process.env.NEXT_PUBLIC_BASE_URL || 'https://revival-conference.com'}/admin/spiritual">Click here to review and approve</a></p>
+        `;
+        
+        for (const email of emails) {
+          await sendEmail(email, "New Testimony Pending Approval", html);
+        }
+      }
+    } catch (e) {
+      console.error("Failed to send testimony notification email:", e);
+    }
 
     revalidatePath('/admin/spiritual');
     return { success: true, message: "Testimony submitted! It will appear on the feed once approved." };

@@ -79,6 +79,7 @@ export async function updateAdminConfig(data: {
   kidsPriceRegular: number;
   earlyBirdEndDate?: Date | null;
   liveAnnouncement?: string | null;
+  notificationEmails?: string | null;
 }) {
   try {
     await prisma.adminConfig.upsert({
