@@ -81,7 +81,7 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
             <label className="block text-sm font-medium text-slate-300 mb-2">Name (Optional)</label>
             <input 
               type="text"
-              placeholder="Your Name or Anonymous"
+              placeholder="Your Name (Optional)"
               value={formData.authorName}
               onChange={e => setFormData({ ...formData, authorName: e.target.value })}
               className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors mb-4"
@@ -142,7 +142,7 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
                     <User className="w-5 h-5 text-poster-accent" />
                   </div>
                   <div>
-                    <p className="font-semibold text-white text-sm">{prayer.authorName || "Anonymous"}</p>
+                    <p className="font-semibold text-white text-sm">{prayer.authorName || "Conference Attendee"}</p>
                     <p className="text-xs text-slate-400">
                       {new Date(prayer.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </p>

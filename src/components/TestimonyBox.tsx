@@ -85,7 +85,7 @@ export default function TestimonyBox({ initialTestimonies }: { initialTestimonie
             <label className="block text-sm font-medium text-slate-300 mb-2">Name (Optional)</label>
             <input 
               type="text"
-              placeholder="Your Name or Anonymous"
+              placeholder="Your Name (Optional)"
               value={formData.authorName}
               onChange={e => setFormData({ ...formData, authorName: e.target.value })}
               className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-poster-accent/50 transition-colors mb-4"

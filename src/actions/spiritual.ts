@@ -27,7 +27,7 @@ export async function submitPrayerRequest(data: { content: string; authorName?: 
 
     await prisma.prayerRequest.create({
       data: {
-        authorName: data.authorName?.trim() || "Anonymous",
+        authorName: data.authorName?.trim() || "Conference Attendee",
         content: data.content.trim(),
         isApproved: false // Admin must approve
       }
@@ -40,7 +40,7 @@ export async function submitPrayerRequest(data: { content: string; authorName?: 
         const emails = config.notificationEmails.split(',').map(e => e.trim()).filter(Boolean);
         const html = `
           <h2>New Prayer Request Submitted</h2>
-          <p>A new prayer request has been submitted by <strong>${data.authorName?.trim() || 'Anonymous'}</strong> and is pending your approval.</p>
+          <p>A new prayer request has been submitted by <strong>${data.authorName?.trim() || 'Conference Attendee'}</strong> and is pending your approval.</p>
           <blockquote style="border-left: 4px solid #ccc; padding-left: 10px; font-style: italic;">
             ${data.content.trim()}
           </blockquote>
@@ -143,7 +143,7 @@ export async function submitTestimony(data: { content: string; authorName?: stri
 
     await prisma.testimony.create({
       data: {
-        authorName: data.authorName?.trim() || "Anonymous",
+        authorName: data.authorName?.trim() || "Conference Attendee",
         content: data.content.trim(),
         isApproved: false // Admin must approve
       }
@@ -156,7 +156,7 @@ export async function submitTestimony(data: { content: string; authorName?: stri
         const emails = config.notificationEmails.split(',').map(e => e.trim()).filter(Boolean);
         const html = `
           <h2>New Testimony Submitted</h2>
-          <p>A new testimony has been submitted by <strong>${data.authorName?.trim() || 'Anonymous'}</strong> and is pending your approval.</p>
+          <p>A new testimony has been submitted by <strong>${data.authorName?.trim() || 'Conference Attendee'}</strong> and is pending your approval.</p>
           <blockquote style="border-left: 4px solid #ccc; padding-left: 10px; font-style: italic;">
             ${data.content.trim()}
           </blockquote>
