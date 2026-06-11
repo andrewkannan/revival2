@@ -165,5 +165,5 @@ model Testimony {
   likeCount   Int      @default(0)
   isApproved  Boolean  @default(false) // Requires admin approval to show on live wall
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime @default(now()) @updatedAt
 }
