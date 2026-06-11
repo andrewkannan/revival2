@@ -127,10 +127,10 @@ export default function TestimonyBox({ initialTestimonies }: { initialTestimonie
                 {/* Flash Effect on Praise */}
                 {likedIds.has(testimony.id) && (
                   <motion.div
-                    initial={{ opacity: 0.6, scale: 0.95 }}
+                    initial={{ opacity: 0.8, scale: 0.95 }}
                     animate={{ opacity: 0, scale: 1.05 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="absolute inset-0 bg-poster-accent/30 pointer-events-none rounded-2xl"
+                    className="absolute inset-0 bg-poster-accent/40 shadow-[0_0_40px_rgba(140,174,176,0.4)] pointer-events-none rounded-2xl z-0"
                   />
                 )}
                 <p className="text-slate-200 leading-relaxed mb-4 text-sm md:text-base relative z-10">
@@ -140,10 +140,10 @@ export default function TestimonyBox({ initialTestimonies }: { initialTestimonie
                   <button 
                     onClick={() => handleLike(testimony.id)}
                     disabled={likedIds.has(testimony.id)}
-                    className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full transition-all duration-300 ${
+                    className={`flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${
                       likedIds.has(testimony.id) 
-                        ? 'bg-poster-accent/20 text-poster-accent border border-poster-accent/30' 
-                        : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white border border-transparent'
+                        ? 'bg-poster-accent/20 text-poster-accent border border-poster-accent/40 shadow-[0_0_15px_rgba(140,174,176,0.3)]' 
+                        : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10'
                     }`}
                   >
                     <Heart className={`w-3.5 h-3.5 ${likedIds.has(testimony.id) ? 'fill-current' : ''}`} />

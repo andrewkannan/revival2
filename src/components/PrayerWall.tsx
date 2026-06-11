@@ -15,6 +15,7 @@ interface Prayer {
 
 export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[] }) {
   const [prayers, setPrayers] = useState<Prayer[]>(initialPrayers);
+  const [prayedIds, setPrayedIds] = useState<Set<string>>(new Set());
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState('');
   
@@ -43,7 +44,10 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
   };
 
   const handlePray = async (id: string) => {
+    if (prayedIds.has(id)) return;
+
     // Optimistic update
+    setPrayedIds(new Set(prayedIds).add(id));
     setPrayers(current => 
       current.map(p => p.id === id ? { ...p, prayCount: p.prayCount + 1 } : p)
     );
@@ -111,21 +115,35 @@ export default function PrayerWall({ initialPrayers }: { initialPrayers: Prayer[
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: index * 0.1 }}
-                className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col hover:bg-white/[0.07] hover:-translate-y-1 transition-all duration-300 hover:shadow-xl hover:shadow-poster-accent/5 hover:border-white/20"
+                className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col hover:bg-white/[0.07] hover:-translate-y-1 transition-all duration-300 hover:shadow-xl hover:shadow-poster-accent/5 hover:border-white/20 relative overflow-hidden"
               >
-                <div className="flex-grow space-y-3">
+                {/* Flash Effect on Pray */}
+                {prayedIds.has(prayer.id) && (
+                  <motion.div
+                    initial={{ opacity: 0.8, scale: 0.95 }}
+                    animate={{ opacity: 0, scale: 1.05 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="absolute inset-0 bg-poster-accent/40 shadow-[0_0_40px_rgba(140,174,176,0.4)] pointer-events-none rounded-2xl z-0"
+                  />
+                )}
+                <div className="flex-grow space-y-3 relative z-10">
                   <p className="text-slate-200 leading-relaxed">{prayer.content}</p>
                 </div>
-                <div className="mt-6 flex items-center justify-between pt-4 border-t border-white/5">
+                <div className="mt-6 flex items-center justify-between pt-4 border-t border-white/5 relative z-10">
                   <span className="text-xs text-slate-500">
                     {new Date(prayer.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                   <button 
                     onClick={() => handlePray(prayer.id)}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-colors"
+                    disabled={prayedIds.has(prayer.id)}
+                    className={`flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${
+                      prayedIds.has(prayer.id) 
+                        ? 'bg-poster-accent/20 text-poster-accent border border-poster-accent/40 shadow-[0_0_15px_rgba(140,174,176,0.3)]' 
+                        : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10'
+                    }`}
                   >
-                    <Heart className="w-4 h-4" /> 
-                    <span className="text-sm font-medium">{prayer.prayCount} Praying</span>
+                    <Heart className={`w-3.5 h-3.5 ${prayedIds.has(prayer.id) ? 'fill-current' : ''}`} /> 
+                    <span>{prayer.prayCount} Praying</span>
                   </button>
                 </div>
               </motion.div>
