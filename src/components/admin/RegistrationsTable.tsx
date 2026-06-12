@@ -105,10 +105,17 @@ export default function RegistrationsTable({ initialData }: Props) {
       let hasFiles = false;
       
       filteredAndSorted.forEach(reg => {
-        if (reg.receiptUrl && reg.status === 'SEAT_SECURED') {
-          hasFiles = true;
-          const base64Data = reg.receiptUrl.split(',')[1] || reg.receiptUrl;
-          zip.file(`${formatQueue(reg.orderNumber)}_${reg.attendee.name.replace(/[^a-zA-Z0-9]/g, '_')}_Receipt.jpg`, base64Data, { base64: true });
+        if (reg.status === 'SEAT_SECURED') {
+          if (reg.receiptUrl) {
+            hasFiles = true;
+            const base64Data = reg.receiptUrl.split(',')[1] || reg.receiptUrl;
+            zip.file(`${formatQueue(reg.orderNumber)}_${reg.attendee.name.replace(/[^a-zA-Z0-9]/g, '_')}_Receipt.jpg`, base64Data, { base64: true });
+          }
+          if ((reg as any).receiptUrl2) {
+            hasFiles = true;
+            const base64Data2 = (reg as any).receiptUrl2.split(',')[1] || (reg as any).receiptUrl2;
+            zip.file(`${formatQueue(reg.orderNumber)}_${reg.attendee.name.replace(/[^a-zA-Z0-9]/g, '_')}_Receipt_2.jpg`, base64Data2, { base64: true });
+          }
         }
       });
 
