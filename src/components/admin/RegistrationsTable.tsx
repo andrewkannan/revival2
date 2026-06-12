@@ -103,7 +103,7 @@ export default function RegistrationsTable({ initialData }: Props) {
       let hasFiles = false;
       
       filteredAndSorted.forEach(reg => {
-        if (reg.receiptUrl) {
+        if (reg.receiptUrl && reg.status === 'SEAT_SECURED') {
           hasFiles = true;
           const base64Data = reg.receiptUrl.split(',')[1] || reg.receiptUrl;
           zip.file(`${formatQueue(reg.orderNumber)}_${reg.attendee.name.replace(/[^a-zA-Z0-9]/g, '_')}_Receipt.jpg`, base64Data, { base64: true });
@@ -111,7 +111,7 @@ export default function RegistrationsTable({ initialData }: Props) {
       });
 
       if (!hasFiles) {
-        alert("No receipts found in the current filtered list.");
+        alert("No receipts found for SEAT_SECURED registrations in the current list.");
         setIsExporting(false);
         return;
       }
