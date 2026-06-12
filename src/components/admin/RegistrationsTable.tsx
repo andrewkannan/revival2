@@ -174,14 +174,13 @@ export default function RegistrationsTable({ initialData }: Props) {
         }
       }
 
-      // Date Filter (based on seatSecuredAt or createdAt)
+      // Date Filter (based purely on seatSecuredAt)
       if (dateFrom || dateTo) {
-        // Use seatSecuredAt if SEAT_SECURED, else fallback to createdAt
-        const regDate = reg.status === 'SEAT_SECURED' && (reg as any).seatSecuredAt 
-          ? new Date((reg as any).seatSecuredAt) 
-          : new Date(reg.createdAt);
+        if (!((reg as any).seatSecuredAt)) {
+          return false; // If filtering by date, exclude registrations that don't have a seat secured date
+        }
         
-        // Reset time for accurate date comparison
+        const regDate = new Date((reg as any).seatSecuredAt);
         regDate.setHours(0, 0, 0, 0);
 
         if (dateFrom) {
