@@ -98,26 +98,67 @@ export default function RegistrationsTable({ initialData }: Props) {
     document.body.removeChild(link);
   };
 
+  const imprintTextOnImage = (base64Str: string, text: string): Promise<string> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = base64Str.startsWith('data:') ? base64Str : `data:image/jpeg;base64,${base64Str}`;
+      
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(base64Str.split(',')[1] || base64Str);
+          return;
+        }
+        
+        ctx.drawImage(img, 0, 0);
+        
+        // Draw background for text at the top
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        const barHeight = Math.max(50, img.height * 0.05);
+        ctx.fillRect(0, 0, img.width, barHeight);
+        
+        // Draw text
+        ctx.fillStyle = 'white';
+        const fontSize = Math.max(20, barHeight * 0.5);
+        ctx.font = `bold ${fontSize}px sans-serif`;
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, Math.max(20, img.width * 0.02), barHeight / 2);
+        
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+        resolve(dataUrl.split(',')[1]);
+      };
+      
+      img.onerror = () => {
+        resolve(base64Str.split(',')[1] || base64Str);
+      };
+    });
+  };
+
   const exportReceiptsZip = async () => {
     setIsExporting(true);
     try {
       const zip = new JSZip();
       let hasFiles = false;
       
-      filteredAndSorted.forEach(reg => {
+      for (const reg of filteredAndSorted) {
         if (reg.status === 'SEAT_SECURED') {
           if (reg.receiptUrl) {
             hasFiles = true;
-            const base64Data = reg.receiptUrl.split(',')[1] || reg.receiptUrl;
-            zip.file(`${formatQueue(reg.orderNumber)}_${reg.attendee.name.replace(/[^a-zA-Z0-9]/g, '_')}_Receipt.jpg`, base64Data, { base64: true });
+            const filename = `${formatQueue(reg.orderNumber)}_${reg.attendee.name.replace(/[^a-zA-Z0-9]/g, '_')}_Receipt.jpg`;
+            const imprintedBase64 = await imprintTextOnImage(reg.receiptUrl, filename);
+            zip.file(filename, imprintedBase64, { base64: true });
           }
           if ((reg as any).receiptUrl2) {
             hasFiles = true;
-            const base64Data2 = (reg as any).receiptUrl2.split(',')[1] || (reg as any).receiptUrl2;
-            zip.file(`${formatQueue(reg.orderNumber)}_${reg.attendee.name.replace(/[^a-zA-Z0-9]/g, '_')}_Receipt_2.jpg`, base64Data2, { base64: true });
+            const filename2 = `${formatQueue(reg.orderNumber)}_${reg.attendee.name.replace(/[^a-zA-Z0-9]/g, '_')}_Receipt_2.jpg`;
+            const imprintedBase642 = await imprintTextOnImage((reg as any).receiptUrl2, filename2);
+            zip.file(filename2, imprintedBase642, { base64: true });
           }
         }
-      });
+      }
 
       if (!hasFiles) {
         alert("No receipts found for SEAT_SECURED registrations in the current list.");
