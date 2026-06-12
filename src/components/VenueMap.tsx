@@ -24,15 +24,15 @@ export default function VenueMap() {
         whileInView={{ opacity: 1, scale: 1, y: 0 }}
         viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center text-slate-300 hover:bg-white/[0.07] transition-colors duration-500 hover:shadow-2xl hover:shadow-poster-accent/5"
+        className="w-full relative rounded-2xl overflow-hidden border border-white/10 hover:border-white/20 transition-colors duration-500 hover:shadow-2xl hover:shadow-poster-accent/10"
       >
-        <p className="mb-4 text-sm sm:text-base">
-          This is a placeholder for the venue floor plan. 
-          Upload an image of your floor plan (Sanctuary, Restrooms, Dining) and replace this section in the code.
-        </p>
-        <div className="w-full aspect-video bg-black/40 rounded-xl border border-white/5 flex items-center justify-center overflow-hidden relative group">
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-          <span className="text-slate-500 font-medium tracking-widest uppercase">Map Image Placeholder</span>
+        <div className="relative w-full aspect-[16/9]">
+          <img 
+            src="/isometric-venue.png" 
+            alt="3D Venue Map" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.05] to-transparent opacity-0 hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
         </div>
       </motion.div>
     </section>
