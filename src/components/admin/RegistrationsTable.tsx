@@ -24,6 +24,8 @@ export default function RegistrationsTable({ initialData }: Props) {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<RegistrationStatus | 'ALL'>('ALL');
   const [outreachFilter, setOutreachFilter] = useState<OutreachLocation | 'ALL'>('ALL');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
   const [receiptModal, setReceiptModal] = useState<{ url: string; queueNum: string } | null>(null);
   const [ticketsModal, setTicketsModal] = useState<{ reg: RegistrationWithAttendee } | null>(null);
   const [editingData, setEditingData] = useState<EditData | null>(null);
@@ -171,6 +173,29 @@ export default function RegistrationsTable({ initialData }: Props) {
           return false;
         }
       }
+
+      // Date Filter (based on seatSecuredAt or createdAt)
+      if (dateFrom || dateTo) {
+        // Use seatSecuredAt if SEAT_SECURED, else fallback to createdAt
+        const regDate = reg.status === 'SEAT_SECURED' && (reg as any).seatSecuredAt 
+          ? new Date((reg as any).seatSecuredAt) 
+          : new Date(reg.createdAt);
+        
+        // Reset time for accurate date comparison
+        regDate.setHours(0, 0, 0, 0);
+
+        if (dateFrom) {
+          const from = new Date(dateFrom);
+          from.setHours(0, 0, 0, 0);
+          if (regDate < from) return false;
+        }
+        if (dateTo) {
+          const to = new Date(dateTo);
+          to.setHours(23, 59, 59, 999);
+          if (regDate > to) return false;
+        }
+      }
+
       return true;
     });
 
@@ -182,7 +207,7 @@ export default function RegistrationsTable({ initialData }: Props) {
     });
 
     return result;
-  }, [initialData, search, statusFilter, outreachFilter]);
+  }, [initialData, search, statusFilter, outreachFilter, dateFrom, dateTo]);
 
   return (
     <div className="space-y-6">
@@ -226,6 +251,33 @@ export default function RegistrationsTable({ initialData }: Props) {
           <option value="SIMPANG_RENGGAM">Simpang Renggam</option>
           <option value="OTHERS">Others</option>
         </select>
+      </div>
+
+      <div className="flex flex-col md:flex-row gap-4 bg-white/5 p-4 rounded-2xl border border-white/10 items-center">
+        <span className="text-sm text-slate-400 font-medium whitespace-nowrap">Filter by Date:</span>
+        <input 
+          type="date" 
+          value={dateFrom} 
+          onChange={(e) => setDateFrom(e.target.value)} 
+          className="bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-white/30"
+          title="From Date"
+        />
+        <span className="text-sm text-slate-400">to</span>
+        <input 
+          type="date" 
+          value={dateTo} 
+          onChange={(e) => setDateTo(e.target.value)} 
+          className="bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-white/30"
+          title="To Date"
+        />
+        {(dateFrom || dateTo) && (
+          <button 
+            onClick={() => { setDateFrom(''); setDateTo(''); }}
+            className="text-xs text-red-400 hover:text-red-300 ml-2"
+          >
+            Clear Dates
+          </button>
+        )}
       </div>
 
       {/* Export Actions */}
