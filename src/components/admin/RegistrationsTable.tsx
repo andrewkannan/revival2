@@ -360,6 +360,11 @@ export default function RegistrationsTable({ initialData }: Props) {
                           </button>
                         )}
                         <StatusSelect registrationId={reg.id} currentStatus={reg.status} />
+                        {reg.status === 'SEAT_SECURED' && (reg as any).seatSecuredAt && (
+                          <div className="text-[10px] text-emerald-400/70 -mt-1 mb-1">
+                            Secured: {new Date((reg as any).seatSecuredAt).toLocaleDateString('en-GB')}
+                          </div>
+                        )}
                         <div className="flex items-center gap-2">
                           <button 
                             onClick={() => setEditingData({
@@ -527,6 +532,11 @@ export default function RegistrationsTable({ initialData }: Props) {
                       </button>
                     )}
                     <StatusSelect registrationId={reg.id} currentStatus={reg.status} />
+                    {reg.status === 'SEAT_SECURED' && (reg as any).seatSecuredAt && (
+                      <div className="text-[10px] text-emerald-400/70 -mt-1 mb-1">
+                        Secured: {new Date((reg as any).seatSecuredAt).toLocaleDateString('en-GB')}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

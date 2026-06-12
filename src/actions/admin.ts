@@ -106,7 +106,10 @@ export async function updateRegistrationStatus(id: string, status: RegistrationS
   try {
     const registration = await prisma.registration.update({
       where: { id },
-      data: { status },
+      data: { 
+        status,
+        seatSecuredAt: status === 'SEAT_SECURED' ? new Date() : undefined
+      },
       include: { attendee: true, tickets: true }
     });
     
