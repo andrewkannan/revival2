@@ -776,14 +776,18 @@ export async function sendBulkPaymentReminders() {
         </div>
       `;
 
-      const success = await sendEmail(reg.attendee.email, `REVIVAL - Payment Reminder (Order #${orderNum})`, html);
-      if (success) successCount++;
-      
-      // Delay to avoid rate limits
-      await new Promise(r => setTimeout(r, 1000));
+      await prisma.emailQueue.create({
+        data: {
+          to: reg.attendee.email,
+          subject: `REVIVAL - Payment Reminder (Order #${orderNum})`,
+          html: html,
+          status: 'PENDING'
+        }
+      });
+      successCount++;
     }
 
-    return { success: true, message: `Successfully sent ${successCount} out of ${pendingUsers.length} reminders.` };
+    return { success: true, message: `Successfully queued ${successCount} reminders to be sent at 2 per minute.` };
   } catch (error: any) {
     console.error("Bulk email error:", error);
     return { success: false, message: error.message };

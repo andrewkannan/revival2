@@ -22,6 +22,12 @@ enum OutreachLocation {
   OTHERS
 }
 
+enum EmailStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
 enum RegistrationStatus {
   PENDING_FOR_PAYMENT // waiting for payment
   PENDING_FOR_REVIEW  // admin will review
@@ -78,6 +84,19 @@ model Ticket {
   scanned        Boolean      @default(false)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+}
+
+model EmailQueue {
+  id        String      @id @default(uuid())
+  to        String
+  subject   String
+  html      String      @db.Text
+  status    EmailStatus @default(PENDING)
+  attempts  Int         @default(0)
+  error     String?     @db.Text
+  createdAt DateTime    @default(now())
+  sentAt    DateTime?
+  updatedAt DateTime    @updatedAt
 }
 
 // Single-row table to handle admin capacity updates & dynamic prices

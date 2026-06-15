@@ -40,7 +40,46 @@ export async function register() {
         console.error("[AutoReport] Error checking/sending report:", e);
       }
     });
-    
+    // Process email queue every minute (rate limit: 2 per minute)
+    const { sendEmail } = await import('./lib/email');
+    cron.schedule('* * * * *', async () => {
+      try {
+        const pendingEmails = await prisma.emailQueue.findMany({
+          where: { status: 'PENDING' },
+          orderBy: { createdAt: 'asc' },
+          take: 2
+        });
+
+        if (pendingEmails.length > 0) {
+          console.log(`[EmailQueue] Processing ${pendingEmails.length} emails...`);
+          
+          for (const email of pendingEmails) {
+            try {
+              const success = await sendEmail(email.to, email.subject, email.html);
+              if (success) {
+                await prisma.emailQueue.update({
+                  where: { id: email.id },
+                  data: { status: 'SENT', sentAt: new Date(), attempts: { increment: 1 } }
+                });
+              } else {
+                await prisma.emailQueue.update({
+                  where: { id: email.id },
+                  data: { status: 'FAILED', attempts: { increment: 1 }, error: "sendEmail returned false" }
+                });
+              }
+            } catch (err: any) {
+              await prisma.emailQueue.update({
+                where: { id: email.id },
+                data: { status: 'FAILED', attempts: { increment: 1 }, error: err.message }
+              });
+            }
+          }
+        }
+      } catch (e) {
+        console.error("[EmailQueue] Error processing queue:", e);
+      }
+    });
+
     console.log("[AutoReport] Cron scheduler initialized.");
   }
 }
