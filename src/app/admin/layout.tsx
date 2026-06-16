@@ -26,8 +26,8 @@ export default function AdminLayout({
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Do not show sidebar on the login page
-  if (pathname === '/admin/login') {
+  // Do not show sidebar on the login or scanner page
+  if (pathname === '/admin/login' || pathname === '/admin/scanner') {
     return <>{children}</>;
   }
 
