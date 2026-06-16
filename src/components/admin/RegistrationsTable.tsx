@@ -418,6 +418,18 @@ export default function RegistrationsTable({ initialData }: Props) {
                           </svg>
                         </a>
                       </div>
+                      {reg.tickets && reg.tickets.length > 1 && (
+                        <div className="mt-3 pt-3 border-t border-white/5 space-y-1">
+                          <div className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1">Allocated Tickets</div>
+                          {reg.tickets.map((t, i) => (
+                            <div key={t.id} className="text-xs text-slate-400 flex items-center gap-1.5">
+                              <span className="opacity-50">#{i+1}</span>
+                              <span className="text-slate-300 truncate max-w-[150px]" title={t.attendeeName || 'Pending'}>{t.attendeeName || 'Pending'}</span>
+                              {t.ticketType === 'KIDS' && <span className="text-[9px] px-1 bg-orange-500/20 text-orange-400 rounded">KIDS</span>}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap">
                       <div className="font-medium text-white mb-0.5">RM {reg.totalAmount}</div>
@@ -558,6 +570,18 @@ export default function RegistrationsTable({ initialData }: Props) {
                         </svg>
                       </a>
                     </div>
+                    {reg.tickets && reg.tickets.length > 1 && (
+                      <div className="mt-3 pt-3 border-t border-white/5 space-y-1">
+                        <div className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1">Allocated Tickets</div>
+                        {reg.tickets.map((t, i) => (
+                          <div key={t.id} className="text-xs text-slate-400 flex items-center gap-1.5">
+                            <span className="opacity-50">#{i+1}</span>
+                            <span className="text-slate-300 truncate max-w-[150px]" title={t.attendeeName || 'Pending'}>{t.attendeeName || 'Pending'}</span>
+                            {t.ticketType === 'KIDS' && <span className="text-[9px] px-1 bg-orange-500/20 text-orange-400 rounded">KIDS</span>}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <div className="flex flex-col items-end gap-2">
                     {reg.receiptUrl ? (
