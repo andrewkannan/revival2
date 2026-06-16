@@ -589,6 +589,19 @@ export async function getEmailLogs() {
   }
 }
 
+export async function getEmailQueue() {
+  try {
+    const queue = await prisma.emailQueue.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 100
+    });
+    return { success: true, queue };
+  } catch (error: any) {
+    console.error("Error fetching email queue:", error);
+    return { success: false, queue: [], message: error.message };
+  }
+}
+
 export async function retryEmail(logId: string) {
   try {
     const log = await prisma.emailLog.findUnique({ where: { id: logId } });
