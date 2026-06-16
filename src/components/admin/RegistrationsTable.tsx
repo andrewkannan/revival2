@@ -424,7 +424,9 @@ export default function RegistrationsTable({ initialData }: Props) {
                           {reg.tickets.map((t, i) => (
                             <div key={t.id} className="text-xs text-slate-400 flex items-center gap-1.5">
                               <span className="opacity-50">#{i+1}</span>
-                              <span className="text-slate-300 truncate max-w-[150px]" title={t.attendeeName || 'Pending'}>{t.attendeeName || 'Pending'}</span>
+                              <span className="text-slate-300 truncate max-w-[150px]" title={t.attendeeName || (i === 0 ? reg.attendee.name : 'Pending')}>
+                                {t.attendeeName || (i === 0 ? reg.attendee.name : 'Pending')}
+                              </span>
                               {t.ticketType === 'KIDS' && <span className="text-[9px] px-1 bg-orange-500/20 text-orange-400 rounded">KIDS</span>}
                             </div>
                           ))}
@@ -576,7 +578,9 @@ export default function RegistrationsTable({ initialData }: Props) {
                         {reg.tickets.map((t, i) => (
                           <div key={t.id} className="text-xs text-slate-400 flex items-center gap-1.5">
                             <span className="opacity-50">#{i+1}</span>
-                            <span className="text-slate-300 truncate max-w-[150px]" title={t.attendeeName || 'Pending'}>{t.attendeeName || 'Pending'}</span>
+                            <span className="text-slate-300 truncate max-w-[150px]" title={t.attendeeName || (i === 0 ? reg.attendee.name : 'Pending')}>
+                              {t.attendeeName || (i === 0 ? reg.attendee.name : 'Pending')}
+                            </span>
                             {t.ticketType === 'KIDS' && <span className="text-[9px] px-1 bg-orange-500/20 text-orange-400 rounded">KIDS</span>}
                           </div>
                         ))}

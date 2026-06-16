@@ -162,11 +162,24 @@ export async function finalizeRegistration(data: RegistrationData, sessionId: st
 
       // 3. Create Tickets
       const ticketsData = [];
+      let isFirstTicket = true;
       for(let i=0; i<data.adultTickets; i++) {
-        ticketsData.push({ registrationId: registration.id, ticketType: 'ADULT' as const });
+        ticketsData.push({ 
+          registrationId: registration.id, 
+          ticketType: 'ADULT' as const,
+          attendeeName: isFirstTicket ? attendee.name : null,
+          attendeeEmail: isFirstTicket ? attendee.email : null
+        });
+        isFirstTicket = false;
       }
       for(let i=0; i<data.kidsTickets; i++) {
-        ticketsData.push({ registrationId: registration.id, ticketType: 'KIDS' as const });
+        ticketsData.push({ 
+          registrationId: registration.id, 
+          ticketType: 'KIDS' as const,
+          attendeeName: isFirstTicket ? attendee.name : null,
+          attendeeEmail: isFirstTicket ? attendee.email : null
+        });
+        isFirstTicket = false;
       }
 
       if (ticketsData.length > 0) {
