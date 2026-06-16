@@ -846,3 +846,26 @@ export async function sendIndividualPaymentReminder(registrationId: string) {
     return { success: false, message: error.message };
   }
 }
+
+export async function allocateTickets(
+  registrationId: string, 
+  updates: { ticketId: string, attendeeName: string, attendeeEmail: string }[]
+) {
+  try {
+    for (const update of updates) {
+      await prisma.ticket.update({
+        where: { id: update.ticketId },
+        data: {
+          attendeeName: update.attendeeName,
+          attendeeEmail: update.attendeeEmail
+        }
+      });
+    }
+
+    revalidatePath('/admin');
+    return { success: true, message: "Tickets allocated successfully!" };
+  } catch (error: any) {
+    console.error("Ticket allocation error:", error);
+    return { success: false, message: error.message };
+  }
+}

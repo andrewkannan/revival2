@@ -2,11 +2,12 @@
 
 import React, { useState, useMemo } from 'react';
 import { RegistrationStatus, Registration, Attendee, OutreachLocation, Ticket } from '@prisma/client';
-import { BadgeCheck, Clock, XCircle, AlertCircle, Search, X, Edit2, Download, FileArchive, QrCode, Trash2, Mail } from 'lucide-react';
+import { BadgeCheck, Clock, XCircle, AlertCircle, Search, X, Edit2, Download, FileArchive, QrCode, Trash2, Mail, Users } from 'lucide-react';
 import JSZip from 'jszip';
 import { deleteRegistration, sendBulkPaymentReminders, sendPaymentReminderTest, sendIndividualPaymentReminder } from '@/actions/admin';
 import StatusSelect from '@/components/admin/StatusSelect';
 import EditRegistrationModal, { EditData } from '@/components/admin/EditRegistrationModal';
+import AllocateTicketsModal from '@/components/admin/AllocateTicketsModal';
 import { motion, AnimatePresence } from 'framer-motion';
 
 type RegistrationWithAttendee = Omit<Registration, 'totalAmount'> & { 
@@ -63,6 +64,7 @@ export default function RegistrationsTable({ initialData }: Props) {
   };
 
   const [mailingId, setMailingId] = useState<string | null>(null);
+  const [allocateModal, setAllocateModal] = useState<RegistrationWithAttendee | null>(null);
 
   const handleIndividualEmail = async (id: string, name: string) => {
     if (window.confirm(`Send payment reminder to ${name}?`)) {
@@ -502,6 +504,15 @@ export default function RegistrationsTable({ initialData }: Props) {
                               <Mail className="w-3.5 h-3.5" /> {mailingId === reg.id ? '...' : 'Remind'}
                             </button>
                           )}
+                          {(reg.adultTickets + reg.kidsTickets > 1) && (
+                            <button
+                              onClick={() => setAllocateModal(reg)}
+                              className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-purple-400 hover:text-white bg-purple-500/10 hover:bg-purple-500/80 rounded transition-colors border border-purple-500/20"
+                              title="Allocate Tickets"
+                            >
+                              <Users className="w-3.5 h-3.5" /> Allocate
+                            </button>
+                          )}
                         </div>
                       </div>
                     </td>
@@ -636,6 +647,14 @@ export default function RegistrationsTable({ initialData }: Props) {
                         Secured: {new Date((reg as any).seatSecuredAt).toLocaleDateString('en-GB')}
                       </div>
                     )}
+                    {(reg.adultTickets + reg.kidsTickets > 1) && (
+                      <button
+                        onClick={() => setAllocateModal(reg)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-purple-400 hover:text-white bg-purple-500/10 hover:bg-purple-500/80 rounded transition-colors border border-purple-500/20"
+                      >
+                        <Users className="w-3.5 h-3.5" /> Allocate
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -733,6 +752,15 @@ export default function RegistrationsTable({ initialData }: Props) {
           <EditRegistrationModal 
             data={editingData} 
             onClose={() => setEditingData(null)} 
+          />
+        )}
+
+        {allocateModal && (
+          <AllocateTicketsModal
+            registrationId={allocateModal.id}
+            orderNumber={allocateModal.orderNumber}
+            tickets={allocateModal.tickets}
+            onClose={() => setAllocateModal(null)}
           />
         )}
       </AnimatePresence>

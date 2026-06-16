@@ -82,6 +82,8 @@ model Ticket {
   ticketType     TicketType
   qrCodeUrl      String?      // Unique QR code image URL or encoded string
   scanned        Boolean      @default(false)
+  attendeeName   String?
+  attendeeEmail  String?
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 }
