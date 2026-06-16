@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { getRegistrationByTicketId, toggleRegistrationCheckin } from '@/actions/admin';
 import { Registration, Attendee, Ticket } from '@prisma/client';
-import { BadgeCheck, Clock, CheckCircle2, User, Loader2 } from 'lucide-react';
+import { BadgeCheck, Clock, CheckCircle2, User, Loader2, XCircle } from 'lucide-react';
 
 const formatQueue = (num: number) => 'R' + String(num).padStart(5, '0');
 
