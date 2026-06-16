@@ -418,7 +418,7 @@ export default function RegistrationsTable({ initialData }: Props) {
                           </svg>
                         </a>
                       </div>
-                      {reg.tickets && reg.tickets.length > 1 && (
+                      {reg.status === 'SEAT_SECURED' && reg.tickets && reg.tickets.length > 1 && (
                         <div className="mt-3 pt-3 border-t border-white/5 space-y-1">
                           <div className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1">Allocated Tickets</div>
                           {reg.tickets.map((t, i) => (
@@ -518,7 +518,7 @@ export default function RegistrationsTable({ initialData }: Props) {
                               <Mail className="w-3.5 h-3.5" /> {mailingId === reg.id ? '...' : 'Remind'}
                             </button>
                           )}
-                          {(reg.adultTickets + reg.kidsTickets > 1) && (
+                          {reg.status === 'SEAT_SECURED' && (reg.adultTickets + reg.kidsTickets > 1) && (
                             <button
                               onClick={() => setAllocateModal(reg)}
                               className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-purple-400 hover:text-white bg-purple-500/10 hover:bg-purple-500/80 rounded transition-colors border border-purple-500/20"
@@ -572,7 +572,7 @@ export default function RegistrationsTable({ initialData }: Props) {
                         </svg>
                       </a>
                     </div>
-                    {reg.tickets && reg.tickets.length > 1 && (
+                    {reg.status === 'SEAT_SECURED' && reg.tickets && reg.tickets.length > 1 && (
                       <div className="mt-3 pt-3 border-t border-white/5 space-y-1">
                         <div className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1">Allocated Tickets</div>
                         {reg.tickets.map((t, i) => (
@@ -675,7 +675,7 @@ export default function RegistrationsTable({ initialData }: Props) {
                         Secured: {new Date((reg as any).seatSecuredAt).toLocaleDateString('en-GB')}
                       </div>
                     )}
-                    {(reg.adultTickets + reg.kidsTickets > 1) && (
+                    {reg.status === 'SEAT_SECURED' && (reg.adultTickets + reg.kidsTickets > 1) && (
                       <button
                         onClick={() => setAllocateModal(reg)}
                         className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-purple-400 hover:text-white bg-purple-500/10 hover:bg-purple-500/80 rounded transition-colors border border-purple-500/20"
