@@ -751,26 +751,40 @@ export default function RegistrationsTable({ initialData }: Props) {
                   <X className="w-5 h-5" />
                 </button>
               </div>
-              <div className="overflow-auto p-6 bg-black/50 flex justify-center">
-                <div className="bg-white max-w-sm w-full rounded-2xl overflow-hidden shadow-2xl relative border-2 border-white/10">
-                  <div className="bg-[#0f172a] p-6 text-center text-white">
-                    <h2 className="m-0 text-2xl tracking-widest font-bold">REVIVAL 2026</h2>
-                    <p className="m-0 mt-1 text-slate-400 text-sm">Official Conference Pass</p>
+              <div className="overflow-auto p-6 bg-black/50 flex flex-col items-center gap-6">
+                {(ticketsModal.reg.tickets && ticketsModal.reg.tickets.length > 0 
+                  ? ticketsModal.reg.tickets 
+                  : Array.from({ length: ticketsModal.reg.adultTickets + ticketsModal.reg.kidsTickets }).map((_, i) => ({
+                      id: `legacy-${i}`,
+                      ticketType: i < ticketsModal.reg.adultTickets ? 'ADULT' : 'KIDS',
+                      attendeeName: i === 0 ? ticketsModal.reg.attendee.name : 'Pending'
+                    }))
+                ).map((ticket: any, index: number) => (
+                  <div key={ticket.id} className="bg-white max-w-sm w-full rounded-2xl overflow-hidden shadow-2xl relative border-2 border-white/10 shrink-0">
+                    <div className="bg-[#0f172a] p-6 text-center text-white relative">
+                      <h2 className="m-0 text-2xl tracking-widest font-bold">REVIVAL 2026</h2>
+                      <p className="m-0 mt-1 text-slate-400 text-sm flex items-center justify-center gap-2">
+                        Official Conference Pass 
+                        {ticket.ticketType === 'KIDS' && <span className="text-[10px] bg-orange-500 text-white px-1.5 py-0.5 rounded font-bold tracking-normal">KIDS</span>}
+                      </p>
+                    </div>
+                    <div className="p-8 bg-white flex justify-center">
+                      {(ticketsModal.reg as any).qrCodeUrl ? (
+                        <img src={(ticketsModal.reg as any).qrCodeUrl} alt="QR Code" className="w-48 h-48 object-contain" />
+                      ) : (
+                        <div className="w-48 h-48 flex items-center justify-center border-2 border-dashed border-slate-300 rounded-lg text-slate-400 text-sm text-center p-4">
+                          QR code missing or not yet generated
+                        </div>
+                      )}
+                    </div>
+                    <div className="bg-slate-50 border-t-2 border-dashed border-slate-300 p-6 text-center flex flex-col gap-1">
+                      <p className="m-0 font-bold text-2xl text-slate-900 truncate px-2" title={ticket.attendeeName || (index === 0 ? ticketsModal.reg.attendee.name : 'Pending')}>
+                        {ticket.attendeeName || (index === 0 ? ticketsModal.reg.attendee.name : 'Pending')}
+                      </p>
+                      <p className="m-0 text-slate-500 font-mono tracking-widest">{formatQueue(ticketsModal.reg.orderNumber)}</p>
+                    </div>
                   </div>
-                  <div className="p-8 bg-white flex justify-center">
-                    {(ticketsModal.reg as any).qrCodeUrl ? (
-                      <img src={(ticketsModal.reg as any).qrCodeUrl} alt="QR Code" className="w-48 h-48 object-contain" />
-                    ) : (
-                      <div className="w-48 h-48 flex items-center justify-center border-2 border-dashed border-slate-300 rounded-lg text-slate-400 text-sm text-center p-4">
-                        QR code missing or not yet generated
-                      </div>
-                    )}
-                  </div>
-                  <div className="bg-slate-50 border-t-2 border-dashed border-slate-300 p-6 text-center">
-                    <p className="m-0 font-bold text-xl text-slate-900 mb-1">Order #{ticketsModal.reg.orderNumber}</p>
-                    <p className="m-0 text-slate-500 text-sm">Admit {ticketsModal.reg.adultTickets + ticketsModal.reg.kidsTickets} {(ticketsModal.reg.adultTickets + ticketsModal.reg.kidsTickets) === 1 ? 'Person' : 'People'}</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </motion.div>
           </motion.div>
