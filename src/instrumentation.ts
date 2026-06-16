@@ -55,7 +55,19 @@ export async function register() {
           
           for (const email of pendingEmails) {
             try {
-              const success = await sendEmail(email.to, email.subject, email.html);
+              let finalHtml = email.html;
+              let attachments = [];
+              const match = finalHtml.match(/<script type="application\/json" id="attachments">(.*?)<\/script>/);
+              if (match) {
+                try {
+                  attachments = JSON.parse(match[1]);
+                  finalHtml = finalHtml.replace(match[0], '');
+                } catch (e) {
+                  console.error("Failed to parse attachments JSON", e);
+                }
+              }
+
+              const success = await sendEmail(email.to, email.subject, finalHtml, attachments);
               if (success) {
                 await prisma.emailQueue.update({
                   where: { id: email.id },

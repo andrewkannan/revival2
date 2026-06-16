@@ -849,20 +849,82 @@ export async function sendIndividualPaymentReminder(registrationId: string) {
 
 export async function allocateTickets(
   registrationId: string, 
-  updates: { ticketId: string, attendeeName: string, attendeeEmail: string }[]
+  updates: { ticketId: string, attendeeName: string, attendeeEmail: string, ticketType?: string }[]
 ) {
   try {
+    const reg = await prisma.registration.findUnique({ where: { id: registrationId }, include: { attendee: true } });
+    if (!reg) throw new Error("Registration not found");
+
+    const template = await getEmailTemplate('E_TICKET');
+    const formattedOrderNumber = 'R' + String(reg.orderNumber).padStart(5, '0');
+
     for (const update of updates) {
-      await prisma.ticket.update({
+      let ticket = await prisma.ticket.update({
         where: { id: update.ticketId },
         data: {
           attendeeName: update.attendeeName,
           attendeeEmail: update.attendeeEmail
         }
       });
+
+      if (update.attendeeEmail && update.attendeeEmail.trim() !== '') {
+        // Generate QR Code if it doesn't exist
+        let qrCodeUrl = ticket.qrCodeUrl;
+        if (!qrCodeUrl) {
+          qrCodeUrl = await QRCode.toDataURL(ticket.id);
+          await prisma.ticket.update({
+            where: { id: ticket.id },
+            data: { qrCodeUrl }
+          });
+        }
+
+        const parsedHtml = parseTemplate(template.bodyHtml, {
+          name: update.attendeeName || 'Attendee',
+          orderNumber: formattedOrderNumber
+        });
+
+        const attachments = [{
+          filename: `revival-ticket-${formattedOrderNumber}-${ticket.id.substring(0,6)}.png`,
+          content: qrCodeUrl.split("base64,")[1],
+          encoding: 'base64',
+          cid: `ticket_master`
+        }];
+
+        const passHtml = `
+          <div style="max-width: 400px; margin: 20px auto; border: 2px solid #e5e7eb; border-radius: 16px; overflow: hidden; font-family: sans-serif; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <div style="background-color: #0f172a; color: white; padding: 20px; text-align: center; position: relative;">
+              <h2 style="margin: 0; font-size: 24px; letter-spacing: 2px;">REVIVAL 2026</h2>
+              <p style="margin: 5px 0 0; color: #94a3b8; font-size: 14px;">
+                Official Conference Pass 
+                ${ticket.ticketType === 'KIDS' ? '<span style="background-color:#f97316; color:white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-left: 8px;">KIDS</span>' : ''}
+              </p>
+            </div>
+            <div style="padding: 30px 20px; background-color: white; text-align: center;">
+              <img src="cid:ticket_master" alt="QR Code" style="width: 200px; height: 200px; margin: 0 auto; display: block;" />
+            </div>
+            <div style="background-color: #f8fafc; border-top: 2px dashed #cbd5e1; padding: 20px; text-align: center;">
+              <p style="margin: 0 0 5px; font-weight: bold; font-size: 24px; color: #0f172a;">${update.attendeeName || 'Attendee'}</p>
+              <p style="margin: 0; color: #64748b; font-size: 14px; letter-spacing: 2px; font-family: monospace;">${formattedOrderNumber}</p>
+            </div>
+          </div>
+          <script type="application/json" id="attachments">${JSON.stringify(attachments)}</script>
+        `;
+
+        const finalHtml = parsedHtml + '<br/>' + passHtml;
+
+        await prisma.emailQueue.create({
+          data: {
+            to: update.attendeeEmail,
+            subject: template.subject,
+            html: finalHtml,
+            status: 'PENDING'
+          }
+        });
+      }
     }
 
     revalidatePath('/admin');
+    revalidatePath('/admin/emails/queue');
     return { success: true, message: "Tickets allocated successfully!" };
   } catch (error: any) {
     console.error("Ticket allocation error:", error);
