@@ -90,7 +90,7 @@ export default function AllocateTicketsModal({ registrationId, orderNumber, tick
                 <span className="px-2.5 py-1 text-xs font-bold bg-white/10 text-white rounded-md">
                   Ticket {idx + 1}
                 </span>
-                <span className={\`text-xs font-bold \${ticket.ticketType === 'ADULT' ? 'text-blue-400' : 'text-orange-400'}\`}>
+                <span className={`text-xs font-bold ${ticket.ticketType === 'ADULT' ? 'text-blue-400' : 'text-orange-400'}`}>
                   {ticket.ticketType}
                 </span>
               </div>
