@@ -93,12 +93,9 @@ export default function ScannerPage() {
 
   return (
     <div className="min-h-screen bg-black text-white p-4 md:p-8">
-      <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="max-w-6xl mx-auto space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">QR Code Check-In</h1>
-            <p className="text-slate-400 mt-2">Scan an attendee's E-Ticket to bring up their registration details and track collections.</p>
-          </div>
+          <h1 className="text-3xl font-bold tracking-tight">QR Code Check-In</h1>
           <Link href="/admin/registrations" className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors font-medium whitespace-nowrap">
             <ArrowLeft className="w-4 h-4" />
             <span className="hidden sm:inline">Back to Dashboard</span>
