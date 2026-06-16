@@ -760,6 +760,7 @@ export default function RegistrationsTable({ initialData }: Props) {
             registrationId={allocateModal.id}
             orderNumber={allocateModal.orderNumber}
             tickets={allocateModal.tickets}
+            attendee={allocateModal.attendee}
             onClose={() => setAllocateModal(null)}
           />
         )}

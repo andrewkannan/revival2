@@ -3,23 +3,24 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { X, Save, User, Mail, Users } from 'lucide-react';
-import { Ticket, TicketType } from '@prisma/client';
+import { Ticket, TicketType, Attendee } from '@prisma/client';
 import { allocateTickets } from '@/actions/admin';
 
 interface Props {
   registrationId: string;
   orderNumber: number;
   tickets: Ticket[];
+  attendee: Attendee;
   onClose: () => void;
 }
 
-export default function AllocateTicketsModal({ registrationId, orderNumber, tickets, onClose }: Props) {
+export default function AllocateTicketsModal({ registrationId, orderNumber, tickets, attendee, onClose }: Props) {
   const [formData, setFormData] = useState(
-    tickets.map(t => ({
+    tickets.map((t, index) => ({
       ticketId: t.id,
       ticketType: t.ticketType,
-      attendeeName: t.attendeeName || '',
-      attendeeEmail: t.attendeeEmail || ''
+      attendeeName: t.attendeeName || (index === 0 ? attendee.name : ''),
+      attendeeEmail: t.attendeeEmail || (index === 0 ? attendee.email : '')
     }))
   );
   const [isSaving, setIsSaving] = useState(false);
