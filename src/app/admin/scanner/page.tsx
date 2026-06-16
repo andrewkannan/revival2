@@ -142,17 +142,6 @@ export default function ScannerPage() {
               </div>
               
               <div className="p-6 flex-1 flex flex-col gap-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-black/30 rounded-xl p-4 border border-white/5">
-                    <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Email</p>
-                    <p className="text-sm text-slate-300 truncate">{reg.attendee.email}</p>
-                  </div>
-                  <div className="bg-black/30 rounded-xl p-4 border border-white/5">
-                    <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Phone</p>
-                    <p className="text-sm text-slate-300 truncate">{reg.attendee.phone}</p>
-                  </div>
-                </div>
-
                 <div className="bg-black/40 border border-white/10 rounded-xl p-6">
                   <h3 className="text-sm uppercase tracking-wider text-slate-400 font-semibold mb-4">Collection Tracking</h3>
                   <div className="flex flex-col gap-3">
