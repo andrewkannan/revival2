@@ -868,7 +868,6 @@ export async function allocateTickets(
     const reg = await prisma.registration.findUnique({ where: { id: registrationId }, include: { attendee: true } });
     if (!reg) throw new Error("Registration not found");
 
-    const template = await getEmailTemplate('E_TICKET');
     const formattedOrderNumber = 'R' + String(reg.orderNumber).padStart(5, '0');
 
     for (const update of updates) {
@@ -891,10 +890,15 @@ export async function allocateTickets(
           });
         }
 
-        const parsedHtml = parseTemplate(template.bodyHtml, {
-          name: update.attendeeName || 'Attendee',
-          orderNumber: formattedOrderNumber
-        });
+        const parsedHtml = `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+            <h2>Here is your REVIVAL 2026 Ticket!</h2>
+            <p>Hi ${update.attendeeName || 'Attendee'},</p>
+            <p>A ticket for REVIVAL 2026 has been successfully allocated to you by the main purchaser (${reg.attendee.name}).</p>
+            <p>Please find your official E-Ticket attached below. Present the QR code at the registration desk for check-in on the day of the event.</p>
+            <br>
+          </div>
+        `;
 
         const attachments = [{
           filename: `revival-ticket-${formattedOrderNumber}-${ticket.id.substring(0,6)}.png`,
@@ -928,7 +932,7 @@ export async function allocateTickets(
         await prisma.emailQueue.create({
           data: {
             to: update.attendeeEmail,
-            subject: template.subject,
+            subject: 'REVIVAL 2026 - Your E-Ticket',
             html: finalHtml,
             status: 'PENDING'
           }
