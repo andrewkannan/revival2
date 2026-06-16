@@ -70,6 +70,9 @@ model Registration {
   orderNumber   Int                @unique @default(autoincrement())
   qrCodeUrl     String?            // Unified QR code for the entire registration
   seatSecuredAt DateTime?          // When the seat was marked as secured
+  wristbandCollected   Boolean            @default(false)
+  starterPackCollected Boolean            @default(false)
+  checkedInAt          DateTime?
   tickets       Ticket[]
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @updatedAt

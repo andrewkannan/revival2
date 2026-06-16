@@ -948,3 +948,59 @@ export async function allocateTickets(
     return { success: false, message: error.message };
   }
 }
+
+export async function toggleRegistrationCheckin(
+  registrationId: string, 
+  field: 'wristbandCollected' | 'starterPackCollected',
+  value: boolean
+) {
+  try {
+    const updateData: any = { [field]: value };
+    
+    // Auto-set checkedInAt on the first item collected
+    if (value === true) {
+      const reg = await prisma.registration.findUnique({ where: { id: registrationId } });
+      if (reg && !reg.checkedInAt) {
+        updateData.checkedInAt = new Date();
+      }
+    }
+
+    await prisma.registration.update({
+      where: { id: registrationId },
+      data: updateData
+    });
+    
+    revalidatePath('/admin');
+    revalidatePath('/admin/registrations');
+    revalidatePath('/admin/scanner');
+    return { success: true };
+  } catch (error: any) {
+    console.error("Checkin toggle error:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+export async function getRegistrationByTicketId(ticketId: string) {
+  try {
+    const ticket = await prisma.ticket.findUnique({
+      where: { id: ticketId },
+      include: {
+        registration: {
+          include: {
+            attendee: true,
+            tickets: true
+          }
+        }
+      }
+    });
+
+    if (!ticket) {
+      return { success: false, message: "Invalid QR Code: Ticket not found." };
+    }
+
+    return { success: true, registration: ticket.registration };
+  } catch (error: any) {
+    console.error("Error fetching registration by ticket:", error);
+    return { success: false, message: error.message };
+  }
+}

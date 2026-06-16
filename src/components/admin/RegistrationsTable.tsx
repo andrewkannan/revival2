@@ -4,15 +4,51 @@ import React, { useState, useMemo } from 'react';
 import { RegistrationStatus, Registration, Attendee, OutreachLocation, Ticket } from '@prisma/client';
 import { BadgeCheck, Clock, XCircle, AlertCircle, Search, X, Edit2, Download, FileArchive, QrCode, Trash2, Mail, Users } from 'lucide-react';
 import JSZip from 'jszip';
-import { deleteRegistration, sendBulkPaymentReminders, sendPaymentReminderTest, sendIndividualPaymentReminder } from '@/actions/admin';
+import { deleteRegistration, sendBulkPaymentReminders, sendPaymentReminderTest, sendIndividualPaymentReminder, toggleRegistrationCheckin } from '@/actions/admin';
 import StatusSelect from '@/components/admin/StatusSelect';
 import EditRegistrationModal, { EditData } from '@/components/admin/EditRegistrationModal';
 import AllocateTicketsModal from '@/components/admin/AllocateTicketsModal';
 import { motion, AnimatePresence } from 'framer-motion';
 
+function CheckinControls({ 
+  reg, 
+  onToggle 
+}: { 
+  reg: RegistrationWithAttendee, 
+  onToggle: (id: string, field: 'wristbandCollected' | 'starterPackCollected', val: boolean) => void 
+}) {
+  return (
+    <div className="flex flex-col gap-2 p-3 bg-black/40 border border-white/5 rounded-lg mt-2">
+      <div className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1 flex items-center justify-between">
+        Conference Check-In
+        {reg.checkedInAt && <span className="text-emerald-500 font-normal">In: {new Date(reg.checkedInAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>}
+      </div>
+      <div className="flex items-center gap-2">
+        <button 
+          onClick={() => onToggle(reg.id, 'wristbandCollected', !reg.wristbandCollected)}
+          className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 text-xs font-medium rounded transition-colors border ${reg.wristbandCollected ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10'}`}
+        >
+          {reg.wristbandCollected ? <BadgeCheck className="w-3.5 h-3.5" /> : <Clock className="w-3.5 h-3.5" />}
+          Wristband
+        </button>
+        <button 
+          onClick={() => onToggle(reg.id, 'starterPackCollected', !reg.starterPackCollected)}
+          className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 text-xs font-medium rounded transition-colors border ${reg.starterPackCollected ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10'}`}
+        >
+          {reg.starterPackCollected ? <BadgeCheck className="w-3.5 h-3.5" /> : <Clock className="w-3.5 h-3.5" />}
+          Starter Pack
+        </button>
+      </div>
+    </div>
+  );
+}
+
 type RegistrationWithAttendee = Omit<Registration, 'totalAmount'> & { 
   totalAmount: string;
   orderNumber: number;
+  wristbandCollected: boolean;
+  starterPackCollected: boolean;
+  checkedInAt: Date | null;
   attendee: Attendee; 
   tickets: Ticket[];
 };
@@ -48,8 +84,14 @@ export default function RegistrationsTable({ initialData }: Props) {
     setMailMsg('Sending test...');
     const res = await sendPaymentReminderTest();
     setMailMsg(res.message);
-    setTimeout(() => setMailMsg(''), 4000);
-    setIsMailing(false);
+    setTimeout(() => {
+      setIsMailing(false);
+      setMailMsg('');
+    }, 3000);
+  };
+
+  const handleToggleCheckin = async (id: string, field: 'wristbandCollected' | 'starterPackCollected', val: boolean) => {
+    await toggleRegistrationCheckin(id, field, val);
   };
 
   const handleBulkEmail = async () => {
@@ -528,6 +570,9 @@ export default function RegistrationsTable({ initialData }: Props) {
                             </button>
                           )}
                         </div>
+                        {reg.status === 'SEAT_SECURED' && (
+                          <CheckinControls reg={reg} onToggle={handleToggleCheckin} />
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -680,11 +725,14 @@ export default function RegistrationsTable({ initialData }: Props) {
                         onClick={() => setAllocateModal(reg)}
                         className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-purple-400 hover:text-white bg-purple-500/10 hover:bg-purple-500/80 rounded transition-colors border border-purple-500/20"
                       >
-                        <Users className="w-3.5 h-3.5" /> Allocate
                       </button>
                     )}
                   </div>
                 </div>
+
+                {reg.status === 'SEAT_SECURED' && (
+                  <CheckinControls reg={reg} onToggle={handleToggleCheckin} />
+                )}
               </div>
             ))
           )}

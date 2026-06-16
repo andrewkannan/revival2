@@ -13,6 +13,7 @@ const navigation = [
   { name: 'Registrations', href: '/admin/registrations', icon: Users },
   { name: 'Email Logs', href: '/admin/emails', icon: Mail },
   { name: 'Email Queue', href: '/admin/emails/queue', icon: Mail },
+  { name: 'Scanner', href: '/admin/scanner', icon: LayoutDashboard },
   { name: 'Spiritual', href: '/admin/spiritual', icon: Heart },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
 ];
