@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Html5QrcodeScanner } from 'html5-qrcode';
+import { useState, useEffect, useRef } from 'react';
+import { Html5Qrcode } from 'html5-qrcode';
 import { getRegistrationByTicketId, toggleRegistrationCheckin } from '@/actions/admin';
 import { Registration, Attendee, Ticket } from '@prisma/client';
 import { BadgeCheck, Clock, CheckCircle2, User, Loader2, XCircle } from 'lucide-react';
@@ -14,35 +14,37 @@ type RegData = Registration & {
 };
 
 export default function ScannerPage() {
-  const [scanResult, setScanResult] = useState<string | null>(null);
+  const lastScanned = useRef<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [reg, setReg] = useState<RegData | null>(null);
 
   useEffect(() => {
-    const scanner = new Html5QrcodeScanner(
-      "reader",
-      { fps: 10, qrbox: { width: 250, height: 250 } },
-      /* verbose= */ false
-    );
+    const html5QrCode = new Html5Qrcode("reader");
 
-    scanner.render(
+    html5QrCode.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 250, height: 250 } },
       (decodedText) => {
-        // Debounce / prevent rapid scanning of same code
-        if (decodedText !== scanResult) {
-          setScanResult(decodedText);
+        if (decodedText !== lastScanned.current) {
+          lastScanned.current = decodedText;
           handleScan(decodedText);
         }
       },
       (error) => {
-        // Ignore constant error streams from scanning frame
+        // ignore continuous scanning errors
       }
-    );
+    ).catch((err) => {
+      console.error("Camera error:", err);
+      setError("Please grant camera permissions to use the scanner.");
+    });
 
     return () => {
-      scanner.clear().catch(console.error);
+      if (html5QrCode.isScanning) {
+        html5QrCode.stop().then(() => html5QrCode.clear()).catch(console.error);
+      }
     };
-  }, [scanResult]);
+  }, []);
 
   const handleScan = async (ticketId: string) => {
     setLoading(true);
@@ -54,7 +56,7 @@ export default function ScannerPage() {
       setReg(res.registration as RegData);
     } else {
       setError(res.message || 'Invalid QR code.');
-      setTimeout(() => setScanResult(null), 3000); // Allow rescan after 3s
+      setTimeout(() => { lastScanned.current = null; }, 3000); // Allow rescan after 3s
     }
     
     setLoading(false);
@@ -75,7 +77,7 @@ export default function ScannerPage() {
   };
 
   const resetScanner = () => {
-    setScanResult(null);
+    lastScanned.current = null;
     setReg(null);
     setError('');
   };
