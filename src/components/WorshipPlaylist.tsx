@@ -3,7 +3,6 @@
 import { Music, PlayCircle, Disc } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import ReactPlayer from 'react-player';
 
 export default function WorshipPlaylist({ playlistUrl }: { playlistUrl: string }) {
   const [mounted, setMounted] = useState(false);
@@ -43,22 +42,36 @@ export default function WorshipPlaylist({ playlistUrl }: { playlistUrl: string }
             </div>
           </div>
 
-          {/* YouTube iframe container */}
-          <div className="w-full md:w-1/2 shrink-0 relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white/5 aspect-video bg-black flex items-center justify-center">
-            <ReactPlayer 
-              url={playlistUrl}
-              width="100%"
-              height="100%"
-              controls={true}
-              config={{
-                youtube: {
-                  // @ts-ignore - react-player types are slightly misaligned with their actual API
-                  playerVars: { 
-                    origin: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'
-                  }
-                }
-              }}
-            />
+          {/* Listen on YouTube Redirect Panel */}
+          <div className="w-full md:w-1/2 shrink-0 relative flex items-center justify-center">
+            <a 
+              href={playlistUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative flex flex-col items-center justify-center w-full aspect-video rounded-3xl overflow-hidden bg-gradient-to-br from-[#ff0000]/10 to-[#ff0000]/30 border border-[#ff0000]/20 hover:border-[#ff0000]/40 transition-all duration-500 shadow-2xl"
+            >
+              <div className="absolute inset-0 bg-[#0f171a]/50 group-hover:bg-[#0f171a]/30 transition-colors duration-500"></div>
+              
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-500">
+                <div className="w-32 h-32 rounded-full bg-[#ff0000]/40 blur-[40px]"></div>
+              </div>
+              
+              <div className="relative z-10 flex flex-col items-center gap-5 transform group-hover:-translate-y-2 transition-transform duration-500">
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-[#ff0000] to-[#cc0000] text-white flex items-center justify-center shadow-[0_0_30px_rgba(255,0,0,0.3)] group-hover:shadow-[0_0_50px_rgba(255,0,0,0.6)] transition-shadow duration-500 relative">
+                  {/* YouTube style play triangle */}
+                  <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[16px] border-l-white border-b-[10px] border-b-transparent ml-2"></div>
+                </div>
+                
+                <div className="text-center space-y-1">
+                  <h3 className="text-xl md:text-2xl font-bold tracking-tight text-white group-hover:text-white transition-colors duration-300">
+                    Listen on YouTube
+                  </h3>
+                  <p className="text-sm font-medium text-white/50 group-hover:text-white/70 transition-colors duration-300 flex items-center justify-center gap-1.5">
+                    Opens playlist in new tab <PlayCircle className="w-3 h-3" />
+                  </p>
+                </div>
+              </div>
+            </a>
           </div>
 
         </div>
