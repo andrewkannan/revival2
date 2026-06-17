@@ -36,7 +36,7 @@ export default function PrayerWall() {
 
   return (
     <div className="max-w-2xl mx-auto px-4">
-      <div className="bg-[#1c272a]/90 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden min-h-[400px]">
+      <div className="bg-[#1c272a]/90 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden min-h-[400px] [-webkit-mask-image:-webkit-radial-gradient(white,black)]">
         
         {/* Glow effect */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-poster-accent/10 rounded-full blur-[80px] pointer-events-none"></div>

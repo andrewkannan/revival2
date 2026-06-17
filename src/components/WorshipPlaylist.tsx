@@ -15,7 +15,7 @@ export default function WorshipPlaylist({ playlistUrl }: { playlistUrl: string }
 
   return (
     <div className="max-w-4xl mx-auto px-4">
-      <div className="bg-[#1c272a]/90 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden group">
+      <div className="bg-[#1c272a]/90 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden group [-webkit-mask-image:-webkit-radial-gradient(white,black)]">
         
         {/* Glow effect */}
         <div className="absolute -top-32 -right-32 w-96 h-96 bg-poster-accent/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-poster-accent/20 transition-colors duration-700"></div>
