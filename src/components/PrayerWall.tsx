@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { submitPrayerRequest } from '@/actions/spiritual';
-import { Heart, Loader2, CheckCircle2 } from 'lucide-react';
+import { Heart, Loader2, CheckCircle2, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function PrayerWall() {
@@ -107,7 +107,7 @@ export default function PrayerWall() {
                 disabled={isSubmitting || !formData.content.trim()}
                 className="w-full bg-gradient-to-r from-poster-accent to-poster-accent-bright text-poster-bg font-bold py-4 rounded-xl hover:scale-[1.02] transition-all duration-300 flex items-center justify-center shadow-[0_0_20px_rgba(205,255,100,0.3)] disabled:opacity-50 disabled:hover:scale-100"
               >
-                {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Send Prayer'}
+                {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Send Prayer <ArrowRight className="w-5 h-5 ml-2" /></>}
               </button>
             </motion.form>
           )}
