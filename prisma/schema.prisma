@@ -120,6 +120,7 @@ model AdminConfig {
   instagramUrl         String?
   tiktokUrl            String?
   youtubeUrl           String?
+  playlistUrl          String?
   updatedAt            DateTime @updatedAt
 }
 

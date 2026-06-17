@@ -60,6 +60,12 @@ export default async function DbUpdatePage({
       } catch (e) {
         result.push("youtubeUrl already exists");
       }
+      try {
+        await prisma.$executeRawUnsafe(`ALTER TABLE "AdminConfig" ADD COLUMN "playlistUrl" TEXT;`);
+        result.push("Added playlistUrl to AdminConfig");
+      } catch (e) {
+        result.push("playlistUrl already exists");
+      }
       
       revalidatePath('/admin/db-update');
     } catch (error: any) {

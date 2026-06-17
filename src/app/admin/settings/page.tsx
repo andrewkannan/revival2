@@ -29,6 +29,7 @@ export default function SettingsPage() {
     instagramUrl: '',
     tiktokUrl: '',
     youtubeUrl: '',
+    playlistUrl: '',
   });
 
   const [smtpData, setSmtpData] = useState({
@@ -61,6 +62,7 @@ export default function SettingsPage() {
         instagramUrl: config.instagramUrl || '',
         tiktokUrl: config.tiktokUrl || '',
         youtubeUrl: config.youtubeUrl || '',
+        playlistUrl: config.playlistUrl || '',
       });
 
       setSmtpData({
@@ -113,6 +115,7 @@ export default function SettingsPage() {
       instagramUrl: generalData.instagramUrl || null,
       tiktokUrl: generalData.tiktokUrl || null,
       youtubeUrl: generalData.youtubeUrl || null,
+      playlistUrl: generalData.playlistUrl || null,
     };
 
     const result = await updateAdminConfig(payload);
@@ -274,10 +277,14 @@ export default function SettingsPage() {
           </div>
 
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold mb-6">Social Media Links</h2>
-            <p className="text-sm text-slate-400 mb-6">Links for the transparent social media icons on the itinerary page. Leave blank to hide the icon.</p>
+            <h2 className="text-xl font-semibold mb-6">Social Media & Features</h2>
+            <p className="text-sm text-slate-400 mb-6">Configure external links for the itinerary page.</p>
             <div className="space-y-4">
               <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Worship Playlist URL (YouTube)</label>
+                <input type="text" name="playlistUrl" value={generalData.playlistUrl} onChange={handleGeneralChange} placeholder="https://youtube.com/playlist?list=..." className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" />
+              </div>
+              <div className="pt-4 border-t border-white/5">
                 <label className="block text-sm font-medium text-slate-300 mb-2">Instagram URL</label>
                 <input type="text" name="instagramUrl" value={generalData.instagramUrl} onChange={handleGeneralChange} placeholder="https://instagram.com/..." className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" />
               </div>

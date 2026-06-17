@@ -83,6 +83,7 @@ export async function updateAdminConfig(data: {
   instagramUrl?: string | null;
   tiktokUrl?: string | null;
   youtubeUrl?: string | null;
+  playlistUrl?: string | null;
 }) {
   try {
     await prisma.adminConfig.upsert({

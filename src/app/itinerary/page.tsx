@@ -6,7 +6,8 @@ import PhotoAlbum from '@/components/PhotoAlbum';
 import PrayerWall from '@/components/PrayerWall';
 import TestimonyBox from '@/components/TestimonyBox';
 import SowPanel from '@/components/SowPanel';
-import { Image as ImageIcon, Heart, MessageSquare } from 'lucide-react';
+import WorshipPlaylist from '@/components/WorshipPlaylist';
+import { Image as ImageIcon, Heart, MessageSquare, Music } from 'lucide-react';
 import Image from 'next/image';
 
 export const revalidate = 0; // Ensures fresh data for the live announcement and prayers
@@ -77,7 +78,13 @@ export default async function ItineraryPage() {
 
       {/* Sticky Shortcut Navigation - Floating Pill */}
       <div className="sticky top-6 z-40 px-2 sm:px-4 flex justify-center pointer-events-none mt-6">
-        <div className="bg-[#1c272a]/70 backdrop-blur-xl border border-white/10 p-1.5 sm:p-1.5 rounded-3xl sm:rounded-full flex flex-wrap justify-center gap-1 sm:gap-1 shadow-2xl shadow-black/50 pointer-events-auto max-w-[400px] sm:max-w-none">
+        <div className="bg-[#1c272a]/70 backdrop-blur-xl border border-white/10 p-1.5 sm:p-1.5 rounded-3xl sm:rounded-full flex flex-wrap justify-center gap-1 sm:gap-1 shadow-2xl shadow-black/50 pointer-events-auto max-w-[450px] sm:max-w-none">
+          {adminConfig?.playlistUrl && (
+            <a href="#worship" className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-2.5 rounded-full text-[10px] sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
+              <Music className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-poster-accent shrink-0" /> 
+              <span className="tracking-wide uppercase">Playlist</span>
+            </a>
+          )}
           <a href="#photos" className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-2.5 rounded-full text-[10px] sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
             <ImageIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-poster-accent shrink-0" /> 
             <span className="tracking-wide uppercase">Gallery</span>
@@ -102,6 +109,12 @@ export default async function ItineraryPage() {
         <section>
           <Itinerary />
         </section>
+
+        {adminConfig?.playlistUrl && (
+          <section id="worship" className="py-8 md:py-12 scroll-mt-24">
+            <WorshipPlaylist playlistUrl={adminConfig.playlistUrl} />
+          </section>
+        )}
 
         <section id="photos" className="py-8 md:py-12 scroll-mt-24">
           <PhotoAlbum photos={photosRes.success ? photosRes.data! : []} />
