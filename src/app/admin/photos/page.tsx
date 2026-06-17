@@ -25,6 +25,52 @@ export default function AdminPhotosPage() {
     setIsLoading(false);
   };
 
+  const compressImageFile = (file: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 1920;
+          const MAX_HEIGHT = 1920;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const newFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", { type: 'image/jpeg' });
+              resolve(newFile);
+            } else {
+              reject(new Error("Canvas to Blob failed"));
+            }
+          }, 'image/jpeg', 0.8);
+        };
+        img.onerror = (err) => reject(err);
+      };
+      reader.onerror = (err) => reject(err);
+    });
+  };
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -33,23 +79,29 @@ export default function AdminPhotosPage() {
     setError(null);
 
     try {
-      const uploadPromises = Array.from(files).map(async (file) => {
-        const formData = new FormData();
-        formData.append('file', file);
-        return uploadPhoto(formData);
-      });
+      let failedCount = 0;
       
-      const results = await Promise.all(uploadPromises);
-      
-      const successfulUploads = results.filter(r => r.success).map(r => r.photo);
-      const failedCount = results.filter(r => !r.success).length;
-
-      if (successfulUploads.length > 0) {
-        setPhotos(prev => [...successfulUploads, ...prev]);
+      for (const file of Array.from(files)) {
+        try {
+          const compressedFile = await compressImageFile(file);
+          const formData = new FormData();
+          formData.append('file', compressedFile);
+          
+          const r = await uploadPhoto(formData);
+          if (r.success && r.photo) {
+            // Update UI immediately for each successful photo
+            setPhotos(prev => [r.photo, ...prev]);
+          } else {
+            failedCount++;
+          }
+        } catch (e) {
+          console.error(e);
+          failedCount++;
+        }
       }
       
       if (failedCount > 0) {
-        setError(`Failed to upload ${failedCount} photo(s).`);
+        setError(`Failed to upload ${failedCount} photo(s). Check your AWS credentials or network.`);
       }
 
     } catch (err: any) {
