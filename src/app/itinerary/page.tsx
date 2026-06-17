@@ -6,6 +6,7 @@ import PrayerWall from '@/components/PrayerWall';
 import TestimonyBox from '@/components/TestimonyBox';
 import SowPanel from '@/components/SowPanel';
 import WorshipPlaylist from '@/components/WorshipPlaylist';
+import CountdownLock from '@/components/CountdownLock';
 import { Image as ImageIcon, Heart, MessageSquare, Music, Sprout } from 'lucide-react';
 import Image from 'next/image';
 
@@ -113,15 +114,21 @@ export default async function ItineraryPage() {
         )}
 
         <section id="prayers" className="scroll-mt-24">
-          <PrayerWall />
+          <CountdownLock title="Prayer Wall Unlocks in">
+            <PrayerWall />
+          </CountdownLock>
         </section>
 
         <section id="photos" className="scroll-mt-24">
-          <PhotoAlbum photos={photosRes.success ? photosRes.data! : []} />
+          <CountdownLock title="Gallery Unlocks in">
+            <PhotoAlbum photos={photosRes.success ? photosRes.data! : []} />
+          </CountdownLock>
         </section>
 
         <section id="testimonies" className="scroll-mt-24">
-          <TestimonyBox />
+          <CountdownLock title="Testimonies Unlock in">
+            <TestimonyBox />
+          </CountdownLock>
         </section>
 
         <section id="sow" className="scroll-mt-24">
