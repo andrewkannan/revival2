@@ -202,7 +202,7 @@ export default function AdminPhotosPage() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {photos.map(photo => (
-              <div key={photo.id} className="relative group rounded-xl overflow-hidden bg-black/40 border border-white/10 aspect-square">
+              <div key={photo.id} className="relative group rounded-xl overflow-hidden bg-black/40 border border-white/10 aspect-[8.5/11]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img 
                   src={photo.imageUrl} 
