@@ -51,11 +51,13 @@ export default function PhotoAlbum({ photos }: { photos: Photo[] }) {
             centeredSlides={true}
             slidesPerView={'auto'}
             initialSlide={Math.floor(photos.length / 2)}
+            speed={800}
+            touchRatio={1.5}
             coverflowEffect={{
-              rotate: 20, // Reduced rotation for a sleeker curve
+              rotate: 15, 
               stretch: 0,
-              depth: 250, // More depth
-              modifier: 1.5,
+              depth: 150,
+              modifier: 1.2,
               slideShadows: true,
             }}
             pagination={{ clickable: true, dynamicBullets: true }}
