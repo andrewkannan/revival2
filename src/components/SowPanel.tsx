@@ -178,7 +178,10 @@ export default function SowPanel() {
                     <button
                       key={preset}
                       type="button"
-                      onClick={() => setAmount(preset.toString())}
+                      onClick={() => {
+                        const current = parseFloat(amount || "0");
+                        setAmount((current + preset).toString());
+                      }}
                       className={`py-3 rounded-xl border text-sm font-medium transition-all ${
                         amount === preset.toString()
                           ? 'bg-poster-accent/20 border-poster-accent text-poster-accent shadow-[0_0_15px_rgba(205,255,100,0.15)]'
