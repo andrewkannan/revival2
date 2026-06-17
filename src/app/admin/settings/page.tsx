@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { getAdminConfig, updateAdminConfig, getEmailSettings, updateEmailSettings, getEmailTemplate, updateEmailTemplate, getReportSettings, updateReportSettings } from '@/actions/admin';
 import { Save, Loader2, Info, Mail, Settings as SettingsIcon, LayoutTemplate, AlertTriangle, FileText } from 'lucide-react';
 import { TemplateType } from '@prisma/client';
+import AnticipationEmailButton from '@/components/AnticipationEmailButton';
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
@@ -259,8 +260,11 @@ export default function SettingsPage() {
 
       {/* General Settings Tab */}
       {activeTab === 'general' && (
-        <form onSubmit={handleGeneralSubmit} className="space-y-8">
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+        <div className="space-y-8">
+          <AnticipationEmailButton />
+          
+          <form onSubmit={handleGeneralSubmit} className="space-y-8">
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
             <h2 className="text-xl font-semibold mb-2">Notification Emails</h2>
             <p className="text-sm text-slate-400 mb-6">Receive an email when someone posts a prayer or testimony.</p>
             <div className="space-y-4">
@@ -347,6 +351,7 @@ export default function SettingsPage() {
             {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />} Save General Settings
           </button>
         </form>
+        </div>
       )}
 
       {/* SMTP Tab */}
