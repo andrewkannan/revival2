@@ -38,9 +38,6 @@ export default function PhotoAlbum({ photos }: { photos: Photo[] }) {
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-poster-accent/10 rounded-full blur-[100px] pointer-events-none"></div>
 
         <div className="text-center mb-12 relative z-10 px-4">
-          <div className="w-16 h-16 bg-gradient-to-br from-poster-accent/20 to-poster-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-poster-accent/30 shadow-[0_0_30px_rgba(205,255,100,0.2)]">
-            <ImageIcon className="w-8 h-8 text-poster-accent animate-pulse" />
-          </div>
           <h2 className="text-4xl md:text-6xl font-black uppercase tracking-[0.1em] md:tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-white via-poster-accent to-white drop-shadow-[0_0_25px_rgba(205,255,100,0.4)] mb-4">
             Revival Gallery
           </h2>
