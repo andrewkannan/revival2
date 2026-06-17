@@ -50,7 +50,6 @@ export default async function AdminSowingPage() {
               <tr>
                 <th className="px-6 py-4 font-semibold uppercase tracking-wider text-xs">Date</th>
                 <th className="px-6 py-4 font-semibold uppercase tracking-wider text-xs">Name</th>
-                <th className="px-6 py-4 font-semibold uppercase tracking-wider text-xs">Outreach</th>
                 <th className="px-6 py-4 font-semibold uppercase tracking-wider text-xs">Amount</th>
                 <th className="px-6 py-4 font-semibold uppercase tracking-wider text-xs">Receipt</th>
               </tr>
@@ -58,7 +57,7 @@ export default async function AdminSowingPage() {
             <tbody className="divide-y divide-white/5">
               {sowings.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
+                  <td colSpan={4} className="px-6 py-12 text-center text-slate-500">
                     <Heart className="w-8 h-8 mx-auto mb-3 opacity-20" />
                     <p>No sowing records found.</p>
                   </td>
@@ -72,9 +71,6 @@ export default async function AdminSowingPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap font-medium text-white">
                       {sowing.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-slate-300">
-                      {sowing.outreach.replace('_', ' ')}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap font-mono font-bold text-poster-accent-bright text-base">
                       RM {Number(sowing.amount).toFixed(2)}

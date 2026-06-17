@@ -23,7 +23,6 @@ export default async function DbUpdatePage({
         CREATE TABLE IF NOT EXISTS "Sowing" (
           "id" TEXT NOT NULL,
           "name" TEXT NOT NULL,
-          "outreach" "OutreachLocation" NOT NULL,
           "amount" DECIMAL(10,2) NOT NULL,
           "receiptUrl" TEXT NOT NULL,
           "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

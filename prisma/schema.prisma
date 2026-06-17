@@ -199,7 +199,6 @@ model Testimony {
 model Sowing {
   id         String           @id @default(uuid())
   name       String
-  outreach   OutreachLocation
   amount     Decimal          @db.Decimal(10, 2)
   receiptUrl String
   createdAt  DateTime         @default(now())

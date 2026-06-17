@@ -6,7 +6,6 @@ import { revalidatePath } from 'next/cache';
 
 export async function submitSowing(data: {
   name: string;
-  outreach: OutreachLocation;
   amount: number;
   receiptUrl: string;
 }) {
@@ -14,7 +13,6 @@ export async function submitSowing(data: {
     const sowing = await prisma.sowing.create({
       data: {
         name: data.name,
-        outreach: data.outreach,
         amount: data.amount,
         receiptUrl: data.receiptUrl,
       }
