@@ -107,7 +107,7 @@ export default function Hero() {
       {/* CALL TO ACTION BUTTON */}
       <motion.div
         initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}
-        className="z-20 mt-2 mb-4 md:mb-8"
+        className="z-20 mt-2 mb-4 md:mb-8 flex flex-col items-center gap-4 md:gap-5"
       >
         <button 
           onClick={() => document.getElementById('registration')?.scrollIntoView({ behavior: 'smooth' })}
@@ -115,6 +115,13 @@ export default function Hero() {
         >
           Secure your place today
         </button>
+        <a 
+          href="/itinerary"
+          className="group flex items-center gap-2 text-poster-accent font-bold uppercase tracking-widest text-xs md:text-sm border border-poster-accent/30 px-6 py-2.5 rounded-full hover:bg-poster-accent/10 hover:border-poster-accent/60 transition-all duration-300"
+        >
+          View Itinerary & Hub
+          <span className="group-hover:translate-x-1 transition-transform">→</span>
+        </a>
       </motion.div>
 
       {/* PANEL 2 - BOTTOM */}
