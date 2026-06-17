@@ -995,7 +995,20 @@ export async function getRegistrationByTicketId(ticketId: string) {
     });
 
     if (!ticket) {
-      return { success: false, message: "Invalid QR Code: Ticket not found." };
+      // Fallback: Check if the scanned QR code is actually a Registration ID (Master QR Code)
+      const reg = await prisma.registration.findUnique({
+        where: { id: ticketId },
+        include: {
+          attendee: true,
+          tickets: true
+        }
+      });
+      
+      if (reg) {
+        return { success: true, registration: reg };
+      }
+
+      return { success: false, message: "Invalid QR Code: Registration or Ticket not found." };
     }
 
     return { success: true, registration: ticket.registration };

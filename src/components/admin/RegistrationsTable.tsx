@@ -817,8 +817,10 @@ export default function RegistrationsTable({ initialData }: Props) {
                       </p>
                     </div>
                     <div className="p-8 bg-white flex justify-center">
-                      {(ticketsModal.reg as any).qrCodeUrl ? (
-                        <img src={(ticketsModal.reg as any).qrCodeUrl} alt="QR Code" className="w-48 h-48 object-contain" />
+                      {ticket.qrCodeUrl ? (
+                        <img src={ticket.qrCodeUrl} alt="Ticket QR Code" className="w-48 h-48 object-contain" />
+                      ) : (ticketsModal.reg as any).qrCodeUrl ? (
+                        <img src={(ticketsModal.reg as any).qrCodeUrl} alt="Master QR Code" className="w-48 h-48 object-contain" />
                       ) : (
                         <div className="w-48 h-48 flex items-center justify-center border-2 border-dashed border-slate-300 rounded-lg text-slate-400 text-sm text-center p-4">
                           QR code missing or not yet generated
