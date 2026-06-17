@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { submitSowing } from '@/actions/sowing';
-import { Upload, CheckCircle2, Heart, Loader2, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Upload, CheckCircle2, Sprout, Loader2, ArrowRight, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SowPanel() {
@@ -115,7 +115,7 @@ export default function SowPanel() {
 
         <div className="text-center mb-8 relative z-10">
           <div className="w-16 h-16 bg-gradient-to-br from-poster-accent/20 to-poster-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-poster-accent/30 shadow-[0_0_30px_rgba(205,255,100,0.2)]">
-            <Heart className="w-8 h-8 text-poster-accent animate-pulse" />
+            <Sprout className="w-8 h-8 text-poster-accent animate-pulse" />
           </div>
           <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent mb-3">Sow to the Ministry</h2>
           <p className="text-slate-400 mb-2">Partner with us in spreading the Gospel.</p>
