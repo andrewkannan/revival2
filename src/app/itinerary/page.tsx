@@ -82,13 +82,13 @@ export default async function ItineraryPage() {
               <span className="tracking-widest uppercase">Playlist</span>
             </a>
           )}
-          <a href="#photos" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 flex-1 sm:flex-none sm:px-6 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-[9px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300">
-            <ImageIcon className="w-4 h-4 sm:w-4 sm:h-4 text-poster-accent" /> 
-            <span className="tracking-widest uppercase">Gallery</span>
-          </a>
           <a href="#prayers" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 flex-1 sm:flex-none sm:px-6 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-[9px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300">
             <Heart className="w-4 h-4 sm:w-4 sm:h-4 text-poster-accent" /> 
             <span className="tracking-widest uppercase">Prayers</span>
+          </a>
+          <a href="#photos" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 flex-1 sm:flex-none sm:px-6 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-[9px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300">
+            <ImageIcon className="w-4 h-4 sm:w-4 sm:h-4 text-poster-accent" /> 
+            <span className="tracking-widest uppercase">Gallery</span>
           </a>
           <a href="#testimonies" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 flex-1 sm:flex-none sm:px-6 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-[9px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300">
             <MessageSquare className="w-4 h-4 sm:w-4 sm:h-4 text-poster-accent" /> 
@@ -112,12 +112,12 @@ export default async function ItineraryPage() {
           </section>
         )}
 
-        <section id="photos" className="scroll-mt-24">
-          <PhotoAlbum photos={photosRes.success ? photosRes.data! : []} />
-        </section>
-
         <section id="prayers" className="scroll-mt-24">
           <PrayerWall />
+        </section>
+
+        <section id="photos" className="scroll-mt-24">
+          <PhotoAlbum photos={photosRes.success ? photosRes.data! : []} />
         </section>
 
         <section id="testimonies" className="scroll-mt-24">
