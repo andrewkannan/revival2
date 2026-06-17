@@ -79,7 +79,7 @@ export default async function ItineraryPage() {
           {adminConfig?.playlistUrl && (
             <a href="#worship" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 flex-1 sm:flex-none sm:px-6 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-[9px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300">
               <Music className="w-4 h-4 sm:w-4 sm:h-4 text-poster-accent" /> 
-              <span className="tracking-widest uppercase">Worship</span>
+              <span className="tracking-widest uppercase">Playlist</span>
             </a>
           )}
           <a href="#photos" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 flex-1 sm:flex-none sm:px-6 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-[9px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300">
@@ -92,7 +92,7 @@ export default async function ItineraryPage() {
           </a>
           <a href="#testimonies" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 flex-1 sm:flex-none sm:px-6 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-[9px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300">
             <MessageSquare className="w-4 h-4 sm:w-4 sm:h-4 text-poster-accent" /> 
-            <span className="tracking-widest uppercase">Stories</span>
+            <span className="tracking-widest uppercase">Testimony</span>
           </a>
           <a href="#sow" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 flex-1 sm:flex-none sm:px-6 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-[9px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300">
             <Sprout className="w-4 h-4 sm:w-4 sm:h-4 text-poster-accent" /> 
