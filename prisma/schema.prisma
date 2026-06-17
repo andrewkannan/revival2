@@ -203,3 +203,9 @@ model Sowing {
   receiptUrl String
   createdAt  DateTime         @default(now())
 }
+
+model Photo {
+  id        String   @id @default(uuid())
+  imageUrl  String   @db.Text
+  createdAt DateTime @default(now())
+}

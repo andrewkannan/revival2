@@ -30,6 +30,16 @@ export default async function DbUpdatePage({
         );
       `);
       result.push("Successfully checked/added Sowing table");
+
+      await prisma.$executeRawUnsafe(`
+        CREATE TABLE IF NOT EXISTS "Photo" (
+          "id" TEXT NOT NULL,
+          "imageUrl" TEXT NOT NULL,
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          CONSTRAINT "Photo_pkey" PRIMARY KEY ("id")
+        );
+      `);
+      result.push("Successfully checked/added Photo table");
       
       revalidatePath('/admin/db-update');
     } catch (error: any) {

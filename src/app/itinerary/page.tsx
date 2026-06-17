@@ -1,19 +1,20 @@
 import { getApprovedPrayers, getApprovedTestimonies } from '@/actions/spiritual';
+import { getPhotos } from '@/actions/photos';
 import Itinerary from '@/components/Itinerary';
-import VenueMap from '@/components/VenueMap';
+import PhotoAlbum from '@/components/PhotoAlbum';
 import PrayerWall from '@/components/PrayerWall';
 import TestimonyBox from '@/components/TestimonyBox';
-import { MapPin, Heart, MessageSquare } from 'lucide-react';
-import Image from 'next/image';
-
 import SowPanel from '@/components/SowPanel';
+import { Image as ImageIcon, Heart, MessageSquare } from 'lucide-react';
+import Image from 'next/image';
 
 export const revalidate = 0; // Ensures fresh data for the live announcement and prayers
 
 export default async function ItineraryPage() {
-  const [prayersRes, testimoniesRes] = await Promise.all([
+  const [prayersRes, testimoniesRes, photosRes] = await Promise.all([
     getApprovedPrayers(),
-    getApprovedTestimonies()
+    getApprovedTestimonies(),
+    getPhotos()
   ]);
 
   return (
@@ -47,10 +48,10 @@ export default async function ItineraryPage() {
       {/* Sticky Shortcut Navigation - Floating Pill */}
       <div className="sticky top-6 z-40 px-4 flex justify-center pointer-events-none mt-6">
         <div className="bg-[#1c272a]/70 backdrop-blur-xl border border-white/10 p-1.5 rounded-full flex gap-1 shadow-2xl shadow-black/50 pointer-events-auto">
-          <a href="#venue" className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
-            <MapPin className="w-4 h-4 text-poster-accent" /> 
-            <span className="hidden sm:inline tracking-wide uppercase">Venue Map</span>
-            <span className="sm:hidden tracking-wide uppercase">Map</span>
+          <a href="#photos" className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
+            <ImageIcon className="w-4 h-4 text-poster-accent" /> 
+            <span className="hidden sm:inline tracking-wide uppercase">Photos</span>
+            <span className="sm:hidden tracking-wide uppercase">Photos</span>
           </a>
           <a href="#prayer" className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
             <Heart className="w-4 h-4 text-poster-accent" /> 
@@ -75,6 +76,10 @@ export default async function ItineraryPage() {
           <Itinerary />
         </section>
 
+        <section id="photos" className="py-8 md:py-12 scroll-mt-24">
+          <PhotoAlbum photos={photosRes.success ? photosRes.data! : []} />
+        </section>
+
         <section id="prayer" className="py-8 md:py-12 scroll-mt-24">
           <PrayerWall initialPrayers={prayersRes.success ? prayersRes.data : []} />
         </section>
@@ -85,10 +90,6 @@ export default async function ItineraryPage() {
 
         <section id="sow" className="py-8 md:py-12 scroll-mt-24">
           <SowPanel />
-        </section>
-
-        <section id="venue" className="py-8 md:py-12 scroll-mt-24">
-          <VenueMap />
         </section>
       </div>
     </main>

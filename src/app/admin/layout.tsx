@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, Settings, LogOut, ChevronLeft, ChevronRight, Mail, Heart } from 'lucide-react';
+import { LayoutDashboard, Users, Settings, LogOut, ChevronLeft, ChevronRight, Mail, Heart, Image as ImageIcon } from 'lucide-react';
 import { logoutAdmin } from '@/actions/admin';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -16,6 +16,7 @@ const navigation = [
   { name: 'Scanner', href: '/admin/scanner', icon: LayoutDashboard },
   { name: 'Spiritual', href: '/admin/spiritual', icon: Heart },
   { name: 'Sowing', href: '/admin/sowing', icon: Heart },
+  { name: 'Photos', href: '/admin/photos', icon: ImageIcon },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 
