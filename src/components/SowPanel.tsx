@@ -114,11 +114,12 @@ export default function SowPanel() {
         <div className="absolute top-0 right-0 w-64 h-64 bg-poster-accent/10 rounded-full blur-[80px] pointer-events-none"></div>
 
         <div className="text-center mb-8 relative z-10">
-          <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10 shadow-lg">
-            <Heart className="w-8 h-8 text-poster-accent" />
+          <div className="w-16 h-16 bg-gradient-to-br from-poster-accent/20 to-poster-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-poster-accent/30 shadow-[0_0_30px_rgba(205,255,100,0.2)]">
+            <Heart className="w-8 h-8 text-poster-accent animate-pulse" />
           </div>
-          <h2 className="text-3xl font-bold text-white mb-2">Sow to the Ministry</h2>
-          <p className="text-slate-400">Partner with us in spreading the Gospel.</p>
+          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent mb-3">Sow to the Ministry</h2>
+          <p className="text-slate-400 mb-2">Partner with us in spreading the Gospel.</p>
+          <p className="text-xs text-poster-accent/80 italic tracking-wide max-w-sm mx-auto">"Honor the Lord with your wealth, with the firstfruits of all your crops." - Proverbs 3:9</p>
         </div>
 
         <AnimatePresence mode="wait">
@@ -130,16 +131,16 @@ export default function SowPanel() {
               exit={{ opacity: 0, scale: 0.95 }}
               className="text-center py-12"
             >
-              <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(16,185,129,0.2)]">
                 <CheckCircle2 className="w-10 h-10 text-emerald-400" />
               </div>
               <h3 className="text-2xl font-bold text-white mb-4">Thank You for Your Generosity!</h3>
               <p className="text-slate-300 mb-8 leading-relaxed">
                 May the Lord bless you abundantly for your faithful sowing. Your giving empowers us to reach more lives for Jesus. 
                 <br /><br />
-                <span className="italic">"And God is able to bless you abundantly, so that in all things at all times, having all that you need, you will abound in every good work." - 2 Corinthians 9:8</span>
+                <span className="italic text-poster-accent/80">"And God is able to bless you abundantly, so that in all things at all times, having all that you need, you will abound in every good work." - 2 Corinthians 9:8</span>
               </p>
-              <button onClick={resetForm} className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-xl transition-colors">
+              <button onClick={resetForm} className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-xl transition-all hover:scale-105">
                 Sow Again
               </button>
             </motion.div>
@@ -153,42 +154,61 @@ export default function SowPanel() {
               className="space-y-6 relative z-10"
             >
               {error && (
-                <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-xl text-red-200 text-sm">
+                <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-xl text-red-200 text-sm flex items-center">
                   {error}
                 </div>
               )}
 
               <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Name</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Name</label>
                 <input 
                   required 
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   type="text" 
-                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" 
-                  placeholder="John Doe" 
+                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-poster-accent/50 focus:ring-1 focus:ring-poster-accent/50 transition-all" 
+                  placeholder="e.g. John Doe" 
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Amount (RM)</label>
-                <input 
-                  required 
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  type="number" 
-                  step="0.01" 
-                  min="1" 
-                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 font-mono" 
-                  placeholder="100.00" 
-                />
+                <label className="block text-sm font-medium text-slate-300 mb-3">Amount (RM)</label>
+                <div className="grid grid-cols-3 gap-3 mb-4">
+                  {[50, 100, 500].map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      onClick={() => setAmount(preset.toString())}
+                      className={`py-3 rounded-xl border text-sm font-medium transition-all ${
+                        amount === preset.toString()
+                          ? 'bg-poster-accent/20 border-poster-accent text-poster-accent shadow-[0_0_15px_rgba(205,255,100,0.15)]'
+                          : 'bg-black/30 border-white/10 text-slate-400 hover:bg-white/5 hover:text-white hover:border-white/20'
+                      }`}
+                    >
+                      RM {preset}
+                    </button>
+                  ))}
+                </div>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">RM</span>
+                  <input 
+                    required 
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    type="number" 
+                    step="0.01" 
+                    min="1" 
+                    className="w-full bg-black/50 border border-white/10 rounded-xl pl-12 pr-4 py-3.5 text-white focus:outline-none focus:border-poster-accent/50 focus:ring-1 focus:ring-poster-accent/50 transition-all font-mono text-lg" 
+                    placeholder="Other Amount" 
+                  />
+                </div>
               </div>
 
               <button 
                 type="submit" 
-                className="w-full bg-poster-accent text-poster-bg font-bold py-4 rounded-xl hover:bg-poster-accent-bright transition-all duration-300 flex items-center justify-center shadow-xl shadow-poster-accent/20"
+                className="w-full bg-gradient-to-r from-poster-accent to-poster-accent-bright text-poster-bg font-bold py-4 rounded-xl hover:scale-[1.02] transition-all duration-300 flex items-center justify-center shadow-[0_0_20px_rgba(205,255,100,0.3)] mt-8"
               >
-                Next <ArrowRight className="w-5 h-5 ml-2" />
+                Continue to Payment <ArrowRight className="w-5 h-5 ml-2" />
               </button>
             </motion.form>
           ) : (
