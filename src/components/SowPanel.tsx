@@ -174,7 +174,7 @@ export default function SowPanel() {
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-3">Amount (RM)</label>
                 <div className="grid grid-cols-3 gap-3 mb-4">
-                  {[50, 100, 500].map((preset) => (
+                  {[20, 50, 100, 200, 500, 1000].map((preset) => (
                     <button
                       key={preset}
                       type="button"
