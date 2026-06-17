@@ -226,7 +226,12 @@ export default function SowPanel() {
                 </div>
               )}
 
-              <div className="bg-black/40 p-5 rounded-2xl border border-white/10 font-mono text-sm space-y-3">
+              <div className="text-center space-y-2 mb-2">
+                <h3 className="text-xl font-bold text-white">Payment Instructions</h3>
+                <p className="text-sm text-slate-400">Please transfer your sowing amount to the account below, then upload the receipt to confirm.</p>
+              </div>
+
+              <div className="bg-black/40 p-5 rounded-2xl border border-white/10 font-mono text-sm space-y-3 shadow-xl">
                 <div className="flex justify-between items-center pb-3 border-b border-white/5">
                   <span className="text-slate-400">Total Amount</span>
                   <span className="font-bold text-emerald-400 text-lg">RM {parseFloat(amount).toFixed(2)}</span>
@@ -245,7 +250,7 @@ export default function SowPanel() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-slate-400">Reference</span>
-                  <span className="font-bold tracking-widest text-poster-accent-bright">SOWING</span>
+                  <span className="font-bold tracking-widest text-poster-accent-bright">BIL CONF</span>
                 </div>
               </div>
 
