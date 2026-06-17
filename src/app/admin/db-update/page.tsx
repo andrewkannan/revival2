@@ -11,13 +11,26 @@ export default async function DbUpdatePage({
   if (searchParams.run === 'true') {
     try {
       await prisma.$executeRawUnsafe(`ALTER TABLE "Registration" ADD COLUMN IF NOT EXISTS "wristbandCollected" BOOLEAN NOT NULL DEFAULT false;`);
-      result.push("Successfully added wristbandCollected column");
+      result.push("Successfully checked/added wristbandCollected column");
       
       await prisma.$executeRawUnsafe(`ALTER TABLE "Registration" ADD COLUMN IF NOT EXISTS "starterPackCollected" BOOLEAN NOT NULL DEFAULT false;`);
-      result.push("Successfully added starterPackCollected column");
+      result.push("Successfully checked/added starterPackCollected column");
 
       await prisma.$executeRawUnsafe(`ALTER TABLE "Registration" ADD COLUMN IF NOT EXISTS "checkedInAt" TIMESTAMP(3);`);
-      result.push("Successfully added checkedInAt column");
+      result.push("Successfully checked/added checkedInAt column");
+
+      await prisma.$executeRawUnsafe(`
+        CREATE TABLE IF NOT EXISTS "Sowing" (
+          "id" TEXT NOT NULL,
+          "name" TEXT NOT NULL,
+          "outreach" "OutreachLocation" NOT NULL,
+          "amount" DECIMAL(10,2) NOT NULL,
+          "receiptUrl" TEXT NOT NULL,
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          CONSTRAINT "Sowing_pkey" PRIMARY KEY ("id")
+        );
+      `);
+      result.push("Successfully checked/added Sowing table");
       
       revalidatePath('/admin/db-update');
     } catch (error: any) {
