@@ -1,20 +1,22 @@
 import { getApprovedPrayers, getApprovedTestimonies } from '@/actions/spiritual';
 import { getPhotos } from '@/actions/photos';
+import { getAdminConfig } from '@/actions/admin';
 import Itinerary from '@/components/Itinerary';
 import PhotoAlbum from '@/components/PhotoAlbum';
 import PrayerWall from '@/components/PrayerWall';
 import TestimonyBox from '@/components/TestimonyBox';
 import SowPanel from '@/components/SowPanel';
-import { Image as ImageIcon, Heart, MessageSquare } from 'lucide-react';
+import { Image as ImageIcon, Heart, MessageSquare, Instagram, Youtube } from 'lucide-react';
 import Image from 'next/image';
 
 export const revalidate = 0; // Ensures fresh data for the live announcement and prayers
 
 export default async function ItineraryPage() {
-  const [prayersRes, testimoniesRes, photosRes] = await Promise.all([
+  const [prayersRes, testimoniesRes, photosRes, adminConfig] = await Promise.all([
     getApprovedPrayers(),
     getApprovedTestimonies(),
-    getPhotos()
+    getPhotos(),
+    getAdminConfig()
   ]);
 
   return (
@@ -39,9 +41,30 @@ export default async function ItineraryPage() {
       </div>
       
       {/* Top Logo */}
-      <div className="pt-8 flex justify-center px-4 w-full relative z-10">
-        <div className="relative w-full max-w-[200px] md:max-w-[280px] aspect-[5/1]">
+      <div className="pt-8 flex flex-col items-center px-4 w-full relative z-10">
+        <div className="relative w-full max-w-[200px] md:max-w-[280px] aspect-[5/1] mb-6">
           <Image src="/hero/revival-logo.png" alt="Revival Logo" fill className="object-contain drop-shadow-xl" priority />
+        </div>
+
+        {/* Social Media Links */}
+        <div className="flex gap-4 items-center">
+          {adminConfig?.instagramUrl && (
+            <a href={adminConfig.instagramUrl} target="_blank" rel="noreferrer" className="p-2.5 bg-white/5 hover:bg-white/20 border border-white/10 rounded-full text-white transition-all hover:scale-110">
+              <Instagram className="w-5 h-5" />
+            </a>
+          )}
+          {adminConfig?.tiktokUrl && (
+            <a href={adminConfig.tiktokUrl} target="_blank" rel="noreferrer" className="p-2.5 bg-white/5 hover:bg-white/20 border border-white/10 rounded-full text-white transition-all hover:scale-110">
+              <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 15.68a6.34 6.34 0 0 0 6.27 6.36 6.34 6.34 0 0 0 6.25-6.36V8.05a8.36 8.36 0 0 0 4.39 1.44V6.15a5.22 5.22 0 0 1-2.32-.46z"></path>
+              </svg>
+            </a>
+          )}
+          {adminConfig?.youtubeUrl && (
+            <a href={adminConfig.youtubeUrl} target="_blank" rel="noreferrer" className="p-2.5 bg-white/5 hover:bg-white/20 border border-white/10 rounded-full text-white transition-all hover:scale-110">
+              <Youtube className="w-5 h-5" />
+            </a>
+          )}
         </div>
       </div>
 

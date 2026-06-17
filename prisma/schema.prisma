@@ -117,6 +117,9 @@ model AdminConfig {
   earlyBirdEndDate     DateTime?
   liveAnnouncement     String?  // Broadcast message to all attendees via /itinerary
   notificationEmails   String?  // Comma-separated admin emails for prayer/testimony notifications
+  instagramUrl         String?
+  tiktokUrl            String?
+  youtubeUrl           String?
   updatedAt            DateTime @updatedAt
 }
 

@@ -26,6 +26,9 @@ export default function SettingsPage() {
     adultPriceEarlyBird: 50,
     adultPriceRegular: 80,
     notificationEmails: '',
+    instagramUrl: '',
+    tiktokUrl: '',
+    youtubeUrl: '',
   });
 
   const [smtpData, setSmtpData] = useState({
@@ -55,6 +58,9 @@ export default function SettingsPage() {
         adultPriceEarlyBird: Number(config.adultPriceEarlyBird),
         adultPriceRegular: Number(config.adultPriceRegular),
         notificationEmails: config.notificationEmails || '',
+        instagramUrl: config.instagramUrl || '',
+        tiktokUrl: config.tiktokUrl || '',
+        youtubeUrl: config.youtubeUrl || '',
       });
 
       setSmtpData({
@@ -104,6 +110,9 @@ export default function SettingsPage() {
       kidsPriceEarlyBird: 25, // Dummy value
       kidsPriceRegular: 40, // Dummy value
       notificationEmails: generalData.notificationEmails || null,
+      instagramUrl: generalData.instagramUrl || null,
+      tiktokUrl: generalData.tiktokUrl || null,
+      youtubeUrl: generalData.youtubeUrl || null,
     };
 
     const result = await updateAdminConfig(payload);
@@ -261,6 +270,25 @@ export default function SettingsPage() {
                 className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" 
               />
               <p className="text-xs text-slate-500">Comma-separated list of emails. Leave blank to disable.</p>
+            </div>
+          </div>
+
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+            <h2 className="text-xl font-semibold mb-6">Social Media Links</h2>
+            <p className="text-sm text-slate-400 mb-6">Links for the transparent social media icons on the itinerary page. Leave blank to hide the icon.</p>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Instagram URL</label>
+                <input type="text" name="instagramUrl" value={generalData.instagramUrl} onChange={handleGeneralChange} placeholder="https://instagram.com/..." className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">TikTok URL</label>
+                <input type="text" name="tiktokUrl" value={generalData.tiktokUrl} onChange={handleGeneralChange} placeholder="https://tiktok.com/..." className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">YouTube URL</label>
+                <input type="text" name="youtubeUrl" value={generalData.youtubeUrl} onChange={handleGeneralChange} placeholder="https://youtube.com/..." className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" />
+              </div>
             </div>
           </div>
 

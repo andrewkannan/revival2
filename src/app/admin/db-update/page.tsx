@@ -40,6 +40,26 @@ export default async function DbUpdatePage({
         );
       `);
       result.push("Successfully checked/added Photo table");
+
+      // Add social links columns if they don't exist
+      try {
+        await prisma.$executeRawUnsafe(`ALTER TABLE "AdminConfig" ADD COLUMN "instagramUrl" TEXT;`);
+        result.push("Added instagramUrl to AdminConfig");
+      } catch (e) {
+        result.push("instagramUrl already exists");
+      }
+      try {
+        await prisma.$executeRawUnsafe(`ALTER TABLE "AdminConfig" ADD COLUMN "tiktokUrl" TEXT;`);
+        result.push("Added tiktokUrl to AdminConfig");
+      } catch (e) {
+        result.push("tiktokUrl already exists");
+      }
+      try {
+        await prisma.$executeRawUnsafe(`ALTER TABLE "AdminConfig" ADD COLUMN "youtubeUrl" TEXT;`);
+        result.push("Added youtubeUrl to AdminConfig");
+      } catch (e) {
+        result.push("youtubeUrl already exists");
+      }
       
       revalidatePath('/admin/db-update');
     } catch (error: any) {

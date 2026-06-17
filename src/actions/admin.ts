@@ -80,6 +80,9 @@ export async function updateAdminConfig(data: {
   earlyBirdEndDate?: Date | null;
   liveAnnouncement?: string | null;
   notificationEmails?: string | null;
+  instagramUrl?: string | null;
+  tiktokUrl?: string | null;
+  youtubeUrl?: string | null;
 }) {
   try {
     await prisma.adminConfig.upsert({
