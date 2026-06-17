@@ -6,7 +6,7 @@ import PrayerWall from '@/components/PrayerWall';
 import TestimonyBox from '@/components/TestimonyBox';
 import SowPanel from '@/components/SowPanel';
 import WorshipPlaylist from '@/components/WorshipPlaylist';
-import { Image as ImageIcon, Heart, MessageSquare, Music } from 'lucide-react';
+import { Image as ImageIcon, Heart, MessageSquare, Music, Sprout } from 'lucide-react';
 import Image from 'next/image';
 
 export const revalidate = 0; // Ensures fresh data for the live announcement and prayers
@@ -73,30 +73,30 @@ export default async function ItineraryPage() {
         </div>
       </div>
 
-      {/* Sticky Shortcut Navigation - Floating Pill */}
-      <div className="sticky top-6 z-40 px-2 sm:px-4 flex justify-center pointer-events-none mt-6">
-        <div className="bg-[#1c272a]/70 backdrop-blur-xl border border-white/10 p-1 sm:p-1.5 rounded-3xl sm:rounded-full flex flex-wrap justify-center gap-1 shadow-2xl shadow-black/50 pointer-events-auto max-w-[450px] sm:max-w-none">
+      {/* Sleek Shortcut Navigation - Scrollable Dock on Mobile */}
+      <div className="sticky top-4 sm:top-6 z-50 px-2 sm:px-4 flex justify-center pointer-events-none mt-4 sm:mt-6">
+        <div className="bg-[#1c272a]/85 backdrop-blur-2xl border border-white/10 p-1.5 rounded-full flex items-center gap-1 sm:gap-2 shadow-[0_10px_40px_rgba(0,0,0,0.5)] pointer-events-auto max-w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] snap-x snap-mandatory">
           {adminConfig?.playlistUrl && (
-            <a href="#worship" className="flex items-center gap-1 sm:gap-2 px-2.5 sm:px-6 py-2 sm:py-2.5 rounded-full text-[9px] sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
-              <Music className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-poster-accent shrink-0" /> 
-              <span className="tracking-wide uppercase">Playlist</span>
+            <a href="#worship" className="snap-center flex items-center gap-1.5 px-4 sm:px-6 py-2.5 rounded-full text-[11px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300 shrink-0">
+              <Music className="w-4 h-4 text-poster-accent" /> 
+              <span className="tracking-widest uppercase">Worship</span>
             </a>
           )}
-          <a href="#photos" className="flex items-center gap-1 sm:gap-2 px-2.5 sm:px-6 py-2 sm:py-2.5 rounded-full text-[9px] sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
-            <ImageIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-poster-accent shrink-0" /> 
-            <span className="tracking-wide uppercase">Gallery</span>
+          <a href="#photos" className="snap-center flex items-center gap-1.5 px-4 sm:px-6 py-2.5 rounded-full text-[11px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300 shrink-0">
+            <ImageIcon className="w-4 h-4 text-poster-accent" /> 
+            <span className="tracking-widest uppercase">Gallery</span>
           </a>
-          <a href="#prayers" className="flex items-center gap-1 sm:gap-2 px-2.5 sm:px-6 py-2 sm:py-2.5 rounded-full text-[9px] sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
-            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-poster-accent shrink-0" /> 
-            <span className="tracking-wide uppercase">Prayers</span>
+          <a href="#prayers" className="snap-center flex items-center gap-1.5 px-4 sm:px-6 py-2.5 rounded-full text-[11px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300 shrink-0">
+            <Heart className="w-4 h-4 text-poster-accent" /> 
+            <span className="tracking-widest uppercase">Prayers</span>
           </a>
-          <a href="#testimonies" className="flex items-center gap-1 sm:gap-2 px-2.5 sm:px-6 py-2 sm:py-2.5 rounded-full text-[9px] sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
-            <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-poster-accent shrink-0" /> 
-            <span className="tracking-wide uppercase">Testimonies</span>
+          <a href="#testimonies" className="snap-center flex items-center gap-1.5 px-4 sm:px-6 py-2.5 rounded-full text-[11px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300 shrink-0">
+            <MessageSquare className="w-4 h-4 text-poster-accent" /> 
+            <span className="tracking-widest uppercase">Testimonies</span>
           </a>
-          <a href="#sow" className="flex items-center gap-1 sm:gap-2 px-2.5 sm:px-6 py-2 sm:py-2.5 rounded-full text-[9px] sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
-            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-poster-accent shrink-0" /> 
-            <span className="tracking-wide uppercase">Sow</span>
+          <a href="#sow" className="snap-center flex items-center gap-1.5 px-4 sm:px-6 py-2.5 rounded-full text-[11px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300 shrink-0">
+            <Sprout className="w-4 h-4 text-poster-accent" /> 
+            <span className="tracking-widest uppercase">Sow</span>
           </a>
         </div>
       </div>
