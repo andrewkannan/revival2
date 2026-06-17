@@ -1030,16 +1030,16 @@ export async function sendTestAnticipationEmail(testEmail: string) {
         <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">Hi Admin,</p>
         <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">We are exactly 7 days away from REVIVAL! We can't wait to see what God is going to do in our midst next week.</p>
         
-        <div style="margin: 40px 0;">
-          <a href="https://revival.thisiscccbilingual.com/itinerary">
-            <!-- Free Sendric timer configured for 26th June 2026 19:00 (GMT+8) -->
-            <img src="https://gen.sendric.com/image/s/countdown" alt="Countdown to REVIVAL" style="display: block; margin: 0 auto; max-width: 100%; border-radius: 10px;" />
-          </a>
+        <div style="margin: 40px 0; padding: 20px; border: 2px solid #cdff64; border-radius: 15px; display: inline-block;">
+          <h1 style="color: #cdff64; font-size: 32px; margin: 0; letter-spacing: 2px;">7 DAYS LEFT</h1>
         </div>
 
         <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">We want to give you early access to the official <strong>REVIVAL Itinerary & Experience Hub</strong>. Here, you can check out the full schedule, listen to our worship playlist to prepare your heart, and even share a testimony or drop a prayer request ahead of time!</p>
         
-        <a href="https://revival.thisiscccbilingual.com/itinerary" style="display: inline-block; background-color: #cdff64; color: #0f171a; font-weight: bold; padding: 16px 32px; border-radius: 12px; text-decoration: none; margin: 30px 0;">Access the Itinerary Hub</a>
+        <div style="margin: 30px 0;">
+          <a href="https://revival.thisiscccbilingual.com/itinerary" style="display: inline-block; background-color: #cdff64; color: #0f171a; font-weight: bold; padding: 16px 32px; border-radius: 12px; text-decoration: none;">View Itinerary & Experience Hub</a>
+          <p style="font-size: 14px; color: #cbd5e1; margin-top: 10px;">Experience the preparation.</p>
+        </div>
         
         <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">Start preparing your hearts, and we will see you very soon!</p>
         <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">The REVIVAL Team</p>
@@ -1050,7 +1050,7 @@ export async function sendTestAnticipationEmail(testEmail: string) {
 
     const success = await sendEmail(
       testEmail,
-      "⏳ The countdown begins! REVIVAL is almost here.",
+      "7 Days to REVIVAL: Your Exclusive Itinerary Access",
       html
     );
 
@@ -1097,16 +1097,16 @@ export async function sendMassAnticipationEmail() {
           <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">Hi ${name},</p>
           <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">We are exactly 7 days away from REVIVAL! We can't wait to see what God is going to do in our midst next week.</p>
           
-          <div style="margin: 40px 0;">
-            <a href="https://revival.thisiscccbilingual.com/itinerary">
-              <!-- Free Sendric timer configured for 26th June 2026 19:00 (GMT+8) -->
-              <img src="https://gen.sendric.com/image/s/countdown" alt="Countdown to REVIVAL" style="display: block; margin: 0 auto; max-width: 100%; border-radius: 10px;" />
-            </a>
+          <div style="margin: 40px 0; padding: 20px; border: 2px solid #cdff64; border-radius: 15px; display: inline-block;">
+            <h1 style="color: #cdff64; font-size: 32px; margin: 0; letter-spacing: 2px;">7 DAYS LEFT</h1>
           </div>
 
           <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">We want to give you early access to the official <strong>REVIVAL Itinerary & Experience Hub</strong>. Here, you can check out the full schedule, listen to our worship playlist to prepare your heart, and even share a testimony or drop a prayer request ahead of time!</p>
           
-          <a href="https://revival.thisiscccbilingual.com/itinerary" style="display: inline-block; background-color: #cdff64; color: #0f171a; font-weight: bold; padding: 16px 32px; border-radius: 12px; text-decoration: none; margin: 30px 0;">Access the Itinerary Hub</a>
+          <div style="margin: 30px 0;">
+            <a href="https://revival.thisiscccbilingual.com/itinerary" style="display: inline-block; background-color: #cdff64; color: #0f171a; font-weight: bold; padding: 16px 32px; border-radius: 12px; text-decoration: none;">Check out the Revival Itinerary</a>
+            <p style="font-size: 14px; color: #cbd5e1; margin-top: 10px; font-weight: bold;">Click now!</p>
+          </div>
           
           <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">Start preparing your hearts, and we will see you very soon!</p>
           <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">The REVIVAL Team</p>
@@ -1116,7 +1116,7 @@ export async function sendMassAnticipationEmail() {
       await prisma.emailQueue.create({
         data: {
           to: email,
-          subject: "⏳ The countdown begins! REVIVAL is almost here.",
+          subject: "7 Days to REVIVAL: Your Exclusive Itinerary Access",
           html: html,
           status: 'PENDING'
         }
