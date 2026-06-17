@@ -208,7 +208,7 @@ export default function SowPanel() {
                 type="submit" 
                 className="w-full bg-gradient-to-r from-poster-accent to-poster-accent-bright text-poster-bg font-bold py-4 rounded-xl hover:scale-[1.02] transition-all duration-300 flex items-center justify-center shadow-[0_0_20px_rgba(205,255,100,0.3)] mt-8"
               >
-                Continue to Payment <ArrowRight className="w-5 h-5 ml-2" />
+                Continue to Payment
               </button>
             </motion.form>
           ) : (
