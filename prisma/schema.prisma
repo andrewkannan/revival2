@@ -121,6 +121,8 @@ model AdminConfig {
   tiktokUrl            String?
   youtubeUrl           String?
   playlistUrl          String?
+  isHubLocked          Boolean  @default(true)
+  hubUnlockTime        DateTime?
   updatedAt            DateTime @updatedAt
 }
 

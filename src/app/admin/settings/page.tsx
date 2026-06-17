@@ -31,6 +31,8 @@ export default function SettingsPage() {
     tiktokUrl: '',
     youtubeUrl: '',
     playlistUrl: '',
+    isHubLocked: true,
+    hubUnlockTime: '',
   });
 
   const [smtpData, setSmtpData] = useState({
@@ -64,6 +66,8 @@ export default function SettingsPage() {
         tiktokUrl: config.tiktokUrl || '',
         youtubeUrl: config.youtubeUrl || '',
         playlistUrl: config.playlistUrl || '',
+        isHubLocked: config.isHubLocked ?? true,
+        hubUnlockTime: config.hubUnlockTime ? new Date(config.hubUnlockTime).toISOString().slice(0, 16) : '',
       });
 
       setSmtpData({
@@ -109,6 +113,7 @@ export default function SettingsPage() {
     const payload = {
       ...generalData,
       earlyBirdEndDate: generalData.earlyBirdEndDate ? new Date(generalData.earlyBirdEndDate) : null,
+      hubUnlockTime: generalData.hubUnlockTime ? new Date(generalData.hubUnlockTime) : null,
       kidsCapacity: 100, // Dummy value since UI is removed
       kidsPriceEarlyBird: 25, // Dummy value
       kidsPriceRegular: 40, // Dummy value
@@ -277,6 +282,39 @@ export default function SettingsPage() {
                 className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" 
               />
               <p className="text-xs text-slate-500">Comma-separated list of emails. Leave blank to disable.</p>
+            </div>
+          </div>
+
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+            <h2 className="text-xl font-semibold mb-6">Hub Lock Settings</h2>
+            <div className="space-y-6">
+              <label className="flex items-center gap-3 cursor-pointer p-4 bg-black/30 border border-white/10 rounded-xl hover:bg-white/5 transition-colors">
+                <input 
+                  type="checkbox" 
+                  name="isHubLocked" 
+                  checked={generalData.isHubLocked} 
+                  onChange={handleGeneralChange}
+                  className="w-5 h-5 accent-poster-accent"
+                />
+                <div>
+                  <span className="font-medium block text-white">Lock Itinerary Hub Sections</span>
+                  <span className="text-xs text-slate-400">If checked, Prayers, Gallery, and Testimonies will be locked behind a countdown.</span>
+                </div>
+              </label>
+
+              {generalData.isHubLocked && (
+                <div>
+                  <label className="block text-sm text-slate-300 mb-1">Unlock Date & Time</label>
+                  <input 
+                    type="datetime-local" 
+                    name="hubUnlockTime" 
+                    value={generalData.hubUnlockTime} 
+                    onChange={handleGeneralChange}
+                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" 
+                  />
+                  <p className="text-xs text-slate-500 mt-2">The panels will automatically unlock at this exact time.</p>
+                </div>
+              )}
             </div>
           </div>
 

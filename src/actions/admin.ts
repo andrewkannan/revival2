@@ -51,7 +51,6 @@ export async function getAdminConfig() {
   });
 
   if (!config) {
-    // Create default config if it doesn't exist
     config = await prisma.adminConfig.create({
       data: {
         id: 1,
@@ -59,14 +58,33 @@ export async function getAdminConfig() {
         kidsCapacity: 100,
         isEarlyBird: true,
         adultPriceEarlyBird: 50,
-        kidsPriceEarlyBird: 25,
+        kidsPriceEarlyBird: 30,
         adultPriceRegular: 80,
-        kidsPriceRegular: 40,
+        kidsPriceRegular: 50,
+        isHubLocked: true,
+        hubUnlockTime: new Date('2026-06-26T12:00:00+08:00')
       }
     });
   }
 
-  return config;
+  return {
+    adultCapacity: config.adultCapacity,
+    kidsCapacity: config.kidsCapacity,
+    isEarlyBird: config.isEarlyBird,
+    adultPriceEarlyBird: Number(config.adultPriceEarlyBird),
+    kidsPriceEarlyBird: Number(config.kidsPriceEarlyBird),
+    adultPriceRegular: Number(config.adultPriceRegular),
+    kidsPriceRegular: Number(config.kidsPriceRegular),
+    earlyBirdEndDate: config.earlyBirdEndDate ? config.earlyBirdEndDate.toISOString() : null,
+    liveAnnouncement: config.liveAnnouncement,
+    notificationEmails: config.notificationEmails || '',
+    instagramUrl: config.instagramUrl || '',
+    tiktokUrl: config.tiktokUrl || '',
+    youtubeUrl: config.youtubeUrl || '',
+    playlistUrl: config.playlistUrl || '',
+    isHubLocked: config.isHubLocked,
+    hubUnlockTime: config.hubUnlockTime ? config.hubUnlockTime.toISOString() : null,
+  };
 }
 
 export async function updateAdminConfig(data: {
@@ -84,6 +102,8 @@ export async function updateAdminConfig(data: {
   tiktokUrl?: string | null;
   youtubeUrl?: string | null;
   playlistUrl?: string | null;
+  isHubLocked?: boolean;
+  hubUnlockTime?: Date | null;
 }) {
   try {
     await prisma.adminConfig.upsert({

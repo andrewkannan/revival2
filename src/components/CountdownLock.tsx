@@ -7,14 +7,16 @@ interface CountdownLockProps {
   children: React.ReactNode;
   unlockTime?: string;
   title?: string;
+  isLocked?: boolean;
 }
 
 export default function CountdownLock({ 
   children, 
   unlockTime = '2026-06-26T12:00:00+08:00',
-  title = "Unlocks in"
+  title = "Unlocks in",
+  isLocked: externalIsLocked = true
 }: CountdownLockProps) {
-  const [isLocked, setIsLocked] = useState(true);
+  const [isLocked, setIsLocked] = useState(externalIsLocked);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -25,6 +27,12 @@ export default function CountdownLock({
 
   useEffect(() => {
     setMounted(true);
+
+    if (!externalIsLocked) {
+      setIsLocked(false);
+      return;
+    }
+
     const targetDate = new Date(unlockTime).getTime();
 
     const updateTimer = () => {
@@ -49,7 +57,7 @@ export default function CountdownLock({
     const timerId = setInterval(updateTimer, 1000);
 
     return () => clearInterval(timerId);
-  }, [unlockTime]);
+  }, [unlockTime, externalIsLocked]);
 
   if (!mounted) {
     return (

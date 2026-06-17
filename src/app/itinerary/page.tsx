@@ -114,19 +114,31 @@ export default async function ItineraryPage() {
         )}
 
         <section id="prayers" className="scroll-mt-24">
-          <CountdownLock title="Prayer Wall Unlocks in">
+          <CountdownLock 
+            title="Prayer Wall Unlocks in" 
+            isLocked={adminConfig?.isHubLocked} 
+            unlockTime={adminConfig?.hubUnlockTime ? new Date(adminConfig.hubUnlockTime).toISOString() : undefined}
+          >
             <PrayerWall />
           </CountdownLock>
         </section>
 
         <section id="photos" className="scroll-mt-24">
-          <CountdownLock title="Gallery Unlocks in">
+          <CountdownLock 
+            title="Gallery Unlocks in"
+            isLocked={adminConfig?.isHubLocked} 
+            unlockTime={adminConfig?.hubUnlockTime ? new Date(adminConfig.hubUnlockTime).toISOString() : undefined}
+          >
             <PhotoAlbum photos={photosRes.success ? photosRes.data! : []} />
           </CountdownLock>
         </section>
 
         <section id="testimonies" className="scroll-mt-24">
-          <CountdownLock title="Testimonies Unlock in">
+          <CountdownLock 
+            title="Testimonies Unlock in"
+            isLocked={adminConfig?.isHubLocked} 
+            unlockTime={adminConfig?.hubUnlockTime ? new Date(adminConfig.hubUnlockTime).toISOString() : undefined}
+          >
             <TestimonyBox />
           </CountdownLock>
         </section>
