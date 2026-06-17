@@ -52,6 +52,7 @@ export default function WorshipPlaylist({ playlistUrl }: { playlistUrl: string }
               controls={true}
               config={{
                 youtube: {
+                  // @ts-ignore - react-player types are slightly misaligned with their actual API
                   playerVars: { 
                     origin: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'
                   }
