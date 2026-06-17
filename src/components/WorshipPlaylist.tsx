@@ -14,8 +14,8 @@ export default function WorshipPlaylist({ playlistUrl }: { playlistUrl: string }
   if (!playlistUrl || !mounted) return null;
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4">
-      <div className="bg-[#1c272a]/80 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 md:p-8 shadow-2xl relative overflow-hidden group">
+    <div className="max-w-4xl mx-auto px-4">
+      <div className="bg-[#1c272a]/90 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden group">
         
         {/* Glow effect */}
         <div className="absolute -top-32 -right-32 w-96 h-96 bg-poster-accent/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-poster-accent/20 transition-colors duration-700"></div>
@@ -48,7 +48,7 @@ export default function WorshipPlaylist({ playlistUrl }: { playlistUrl: string }
               href={playlistUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative flex flex-col items-center justify-center w-full aspect-video rounded-3xl overflow-hidden bg-gradient-to-br from-[#ff0000]/10 to-[#ff0000]/30 border border-[#ff0000]/20 hover:border-[#ff0000]/40 transition-all duration-500 shadow-2xl"
+              className="group relative flex flex-col items-center justify-center w-full aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-[#ff0000]/10 to-[#ff0000]/30 border border-[#ff0000]/20 hover:border-[#ff0000]/40 transition-all duration-500 shadow-2xl"
             >
               <div className="absolute inset-0 bg-[#0f171a]/50 group-hover:bg-[#0f171a]/30 transition-colors duration-500"></div>
               
