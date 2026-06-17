@@ -6,6 +6,8 @@ import TestimonyBox from '@/components/TestimonyBox';
 import { MapPin, Heart, MessageSquare } from 'lucide-react';
 import Image from 'next/image';
 
+import SowPanel from '@/components/SowPanel';
+
 export const revalidate = 0; // Ensures fresh data for the live announcement and prayers
 
 export default async function ItineraryPage() {
@@ -60,6 +62,11 @@ export default async function ItineraryPage() {
             <span className="hidden sm:inline tracking-wide uppercase">Testimonies</span>
             <span className="sm:hidden tracking-wide uppercase">Testimonies</span>
           </a>
+          <a href="#sow" className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
+            <Heart className="w-4 h-4 text-poster-accent" /> 
+            <span className="hidden sm:inline tracking-wide uppercase">Sow</span>
+            <span className="sm:hidden tracking-wide uppercase">Sow</span>
+          </a>
         </div>
       </div>
 
@@ -74,6 +81,10 @@ export default async function ItineraryPage() {
 
         <section id="testimony" className="py-8 md:py-12 scroll-mt-24">
           <TestimonyBox initialTestimonies={testimoniesRes.data || []} />
+        </section>
+
+        <section id="sow" className="py-8 md:py-12 scroll-mt-24">
+          <SowPanel />
         </section>
 
         <section id="venue" className="py-8 md:py-12 scroll-mt-24">

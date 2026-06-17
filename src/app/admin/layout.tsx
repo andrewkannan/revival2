@@ -15,6 +15,7 @@ const navigation = [
   { name: 'Email Queue', href: '/admin/emails/queue', icon: Mail },
   { name: 'Scanner', href: '/admin/scanner', icon: LayoutDashboard },
   { name: 'Spiritual', href: '/admin/spiritual', icon: Heart },
+  { name: 'Sowing', href: '/admin/sowing', icon: Heart },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 
