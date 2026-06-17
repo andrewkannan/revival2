@@ -1069,10 +1069,7 @@ export async function sendMassAnticipationEmail() {
   try {
     const registrations = await prisma.registration.findMany({
       where: {
-        OR: [
-          { status: 'APPROVED' },
-          { status: 'COMPLETED' }
-        ]
+        status: 'SEAT_SECURED'
       },
       include: {
         attendee: true
@@ -1090,7 +1087,7 @@ export async function sendMassAnticipationEmail() {
 
     for (const reg of registrations) {
       const email = reg.attendee.email;
-      const name = reg.attendee.firstName;
+      const name = reg.attendee.name.split(' ')[0] || 'Friend';
 
       if (!email) continue;
 
@@ -1116,25 +1113,20 @@ export async function sendMassAnticipationEmail() {
         </div>
       `;
 
-      const success = await sendEmail(
-        email,
-        "⏳ The countdown begins! REVIVAL is almost here.",
-        html
-      );
-
-      if (success) {
-        successCount++;
-      } else {
-        failCount++;
-      }
-
-      // Small delay to prevent rate limits
-      await new Promise(r => setTimeout(r, 200));
+      await prisma.emailQueue.create({
+        data: {
+          to: email,
+          subject: "⏳ The countdown begins! REVIVAL is almost here.",
+          html: html,
+          status: 'PENDING'
+        }
+      });
+      successCount++;
     }
 
     return { 
       success: true, 
-      message: \`Successfully sent \${successCount} emails. Failed: \${failCount}\` 
+      message: `Successfully queued ${successCount} emails to be sent at 2 per minute.` 
     };
   } catch (error: any) {
     console.error("Mass email error:", error);

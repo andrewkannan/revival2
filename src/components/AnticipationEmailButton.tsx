@@ -82,7 +82,7 @@ export default function AnticipationEmailButton() {
             </button>
           </div>
           {testStatus && (
-            <p className={\`text-xs flex items-center gap-1 \${testStatus.success ? 'text-emerald-400' : 'text-red-400'}\`}>
+            <p className={`text-xs flex items-center gap-1 ${testStatus.success ? 'text-emerald-400' : 'text-red-400'}`}>
               {testStatus.success ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
               {testStatus.message}
             </p>
@@ -124,7 +124,7 @@ export default function AnticipationEmailButton() {
           )}
 
           {massStatus && (
-            <p className={\`text-xs flex items-center gap-1 \${massStatus.success ? 'text-emerald-400' : 'text-red-400'}\`}>
+            <p className={`text-xs flex items-center gap-1 ${massStatus.success ? 'text-emerald-400' : 'text-red-400'}`}>
               {massStatus.success ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
               {massStatus.message}
             </p>
