@@ -1050,7 +1050,7 @@ export async function sendTestAnticipationEmail(testEmail: string) {
 
     const success = await sendEmail(
       testEmail,
-      "7 Days to REVIVAL: Your Exclusive Itinerary Access",
+      "7 Days to REVIVAL 2026",
       html
     );
 
@@ -1116,7 +1116,7 @@ export async function sendMassAnticipationEmail() {
       await prisma.emailQueue.create({
         data: {
           to: email,
-          subject: "7 Days to REVIVAL: Your Exclusive Itinerary Access",
+          subject: "7 Days to REVIVAL 2026",
           html: html,
           status: 'PENDING'
         }
