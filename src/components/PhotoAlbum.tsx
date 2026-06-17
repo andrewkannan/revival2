@@ -32,8 +32,10 @@ export default function PhotoAlbum({ photos }: { photos: Photo[] }) {
   return (
     <div className="w-full relative py-8 overflow-hidden">
       <div className="text-center mb-12 relative z-10 px-4">
-        <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">Conference <span className="text-poster-accent">Gallery</span></h2>
-        <p className="text-slate-400 max-w-2xl mx-auto text-lg">Swipe to relive the moments of Revival 2026</p>
+        <h2 className="text-3xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent mb-4">
+          Gallery
+        </h2>
+        <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">Swipe to relive the moments of Revival 2026</p>
       </div>
 
       <div className="w-full relative max-w-[1400px] mx-auto px-4 pb-12">

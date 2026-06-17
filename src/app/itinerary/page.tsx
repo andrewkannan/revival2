@@ -77,24 +77,24 @@ export default async function ItineraryPage() {
 
       {/* Sticky Shortcut Navigation - Floating Pill */}
       <div className="sticky top-6 z-40 px-4 flex justify-center pointer-events-none mt-6">
-        <div className="bg-[#1c272a]/70 backdrop-blur-xl border border-white/10 p-1.5 rounded-full flex gap-1 shadow-2xl shadow-black/50 pointer-events-auto">
-          <a href="#photos" className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
-            <ImageIcon className="w-4 h-4 text-poster-accent" /> 
-            <span className="hidden sm:inline tracking-wide uppercase">Photos</span>
-            <span className="sm:hidden tracking-wide uppercase">Photos</span>
+        <div className="bg-[#1c272a]/70 backdrop-blur-xl border border-white/10 p-1.5 rounded-full flex gap-1 shadow-2xl shadow-black/50 pointer-events-auto max-w-full overflow-x-auto no-scrollbar snap-x">
+          <a href="#photos" className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300 whitespace-nowrap snap-center">
+            <ImageIcon className="w-4 h-4 text-poster-accent shrink-0" /> 
+            <span className="hidden sm:inline tracking-wide uppercase">Gallery</span>
+            <span className="sm:hidden tracking-wide uppercase">Gallery</span>
           </a>
-          <a href="#prayer" className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
-            <Heart className="w-4 h-4 text-poster-accent" /> 
+          <a href="#prayer" className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300 whitespace-nowrap snap-center">
+            <Heart className="w-4 h-4 text-poster-accent shrink-0" /> 
             <span className="hidden sm:inline tracking-wide uppercase">Prayer Wall</span>
             <span className="sm:hidden tracking-wide uppercase">Prayers</span>
           </a>
-          <a href="#testimony" className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
-            <MessageSquare className="w-4 h-4 text-poster-accent" /> 
+          <a href="#testimony" className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300 whitespace-nowrap snap-center">
+            <MessageSquare className="w-4 h-4 text-poster-accent shrink-0" /> 
             <span className="hidden sm:inline tracking-wide uppercase">Testimonies</span>
             <span className="sm:hidden tracking-wide uppercase">Testimonies</span>
           </a>
-          <a href="#sow" className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300">
-            <Heart className="w-4 h-4 text-poster-accent" /> 
+          <a href="#sow" className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-300 whitespace-nowrap snap-center">
+            <Heart className="w-4 h-4 text-poster-accent shrink-0" /> 
             <span className="hidden sm:inline tracking-wide uppercase">Sow</span>
             <span className="sm:hidden tracking-wide uppercase">Sow</span>
           </a>
