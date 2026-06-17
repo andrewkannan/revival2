@@ -1021,3 +1021,123 @@ export async function getRegistrationByTicketId(ticketId: string) {
     return { success: false, message: error.message };
   }
 }
+
+export async function sendTestAnticipationEmail(testEmail: string) {
+  try {
+    const html = `
+      <div style="font-family: sans-serif; max-w: 600px; margin: 0 auto; text-align: center; background-color: #0f171a; color: #ffffff; padding: 40px; border-radius: 20px;">
+        <h2 style="color: #cdff64; margin-bottom: 20px;">⏳ The countdown begins!</h2>
+        <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">Hi Admin,</p>
+        <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">We are exactly 7 days away from REVIVAL! We can't wait to see what God is going to do in our midst next week.</p>
+        
+        <div style="margin: 40px 0;">
+          <a href="https://revival.thisiscccbilingual.com/itinerary">
+            <!-- Free Sendric timer configured for 26th June 2026 19:00 (GMT+8) -->
+            <img src="https://gen.sendric.com/image/s/countdown" alt="Countdown to REVIVAL" style="display: block; margin: 0 auto; max-width: 100%; border-radius: 10px;" />
+          </a>
+        </div>
+
+        <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">We want to give you early access to the official <strong>REVIVAL Itinerary & Experience Hub</strong>. Here, you can check out the full schedule, listen to our worship playlist to prepare your heart, and even share a testimony or drop a prayer request ahead of time!</p>
+        
+        <a href="https://revival.thisiscccbilingual.com/itinerary" style="display: inline-block; background-color: #cdff64; color: #0f171a; font-weight: bold; padding: 16px 32px; border-radius: 12px; text-decoration: none; margin: 30px 0;">Access the Itinerary Hub</a>
+        
+        <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">Start preparing your hearts, and we will see you very soon!</p>
+        <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">The REVIVAL Team</p>
+      </div>
+    `;
+
+    const { sendEmail } = await import('@/lib/email');
+
+    const success = await sendEmail(
+      testEmail,
+      "⏳ The countdown begins! REVIVAL is almost here.",
+      html
+    );
+
+    if (success) {
+      return { success: true };
+    } else {
+      return { success: false, message: "Failed to send email. Check logs." };
+    }
+  } catch (error: any) {
+    console.error("Test email error:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+export async function sendMassAnticipationEmail() {
+  try {
+    const registrations = await prisma.registration.findMany({
+      where: {
+        OR: [
+          { status: 'APPROVED' },
+          { status: 'COMPLETED' }
+        ]
+      },
+      include: {
+        attendee: true
+      }
+    });
+
+    if (registrations.length === 0) {
+      return { success: false, message: "No secured registrations found." };
+    }
+
+    let successCount = 0;
+    let failCount = 0;
+
+    const { sendEmail } = await import('@/lib/email');
+
+    for (const reg of registrations) {
+      const email = reg.attendee.email;
+      const name = reg.attendee.firstName;
+
+      if (!email) continue;
+
+      const html = `
+        <div style="font-family: sans-serif; max-w: 600px; margin: 0 auto; text-align: center; background-color: #0f171a; color: #ffffff; padding: 40px; border-radius: 20px;">
+          <h2 style="color: #cdff64; margin-bottom: 20px;">⏳ The countdown begins!</h2>
+          <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">Hi ${name},</p>
+          <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">We are exactly 7 days away from REVIVAL! We can't wait to see what God is going to do in our midst next week.</p>
+          
+          <div style="margin: 40px 0;">
+            <a href="https://revival.thisiscccbilingual.com/itinerary">
+              <!-- Free Sendric timer configured for 26th June 2026 19:00 (GMT+8) -->
+              <img src="https://gen.sendric.com/image/s/countdown" alt="Countdown to REVIVAL" style="display: block; margin: 0 auto; max-width: 100%; border-radius: 10px;" />
+            </a>
+          </div>
+
+          <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">We want to give you early access to the official <strong>REVIVAL Itinerary & Experience Hub</strong>. Here, you can check out the full schedule, listen to our worship playlist to prepare your heart, and even share a testimony or drop a prayer request ahead of time!</p>
+          
+          <a href="https://revival.thisiscccbilingual.com/itinerary" style="display: inline-block; background-color: #cdff64; color: #0f171a; font-weight: bold; padding: 16px 32px; border-radius: 12px; text-decoration: none; margin: 30px 0;">Access the Itinerary Hub</a>
+          
+          <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">Start preparing your hearts, and we will see you very soon!</p>
+          <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">The REVIVAL Team</p>
+        </div>
+      `;
+
+      const success = await sendEmail(
+        email,
+        "⏳ The countdown begins! REVIVAL is almost here.",
+        html
+      );
+
+      if (success) {
+        successCount++;
+      } else {
+        failCount++;
+      }
+
+      // Small delay to prevent rate limits
+      await new Promise(r => setTimeout(r, 200));
+    }
+
+    return { 
+      success: true, 
+      message: \`Successfully sent \${successCount} emails. Failed: \${failCount}\` 
+    };
+  } catch (error: any) {
+    console.error("Mass email error:", error);
+    return { success: false, message: error.message };
+  }
+}

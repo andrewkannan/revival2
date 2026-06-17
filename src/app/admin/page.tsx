@@ -1,6 +1,7 @@
 import { getDashboardStats } from '@/actions/admin';
 import { getActiveLocksCount } from '@/lib/ticket-lock';
 import ReminderButton from '@/components/ReminderButton';
+import AnticipationEmailButton from '@/components/AnticipationEmailButton';
 
 export const dynamic = 'force-dynamic';
 import { Users, Ticket, Clock, CheckCircle2, AlertCircle, Banknote, MapPin } from 'lucide-react';
@@ -22,6 +23,8 @@ export default async function AdminDashboard() {
         </div>
         <ReminderButton />
       </div>
+
+      <AnticipationEmailButton />
 
       <div className="grid grid-cols-1 gap-4">
         {/* Adult Capacity Card */}
