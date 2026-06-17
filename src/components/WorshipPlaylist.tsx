@@ -67,7 +67,7 @@ export default function WorshipPlaylist({ playlistUrl }: { playlistUrl: string }
                     Listen on YouTube
                   </h3>
                   <p className="text-sm font-medium text-white/50 group-hover:text-white/70 transition-colors duration-300 flex items-center justify-center gap-1.5">
-                    Opens playlist in new tab <PlayCircle className="w-3 h-3" />
+                    Click to open playlist now <PlayCircle className="w-3 h-3" />
                   </p>
                 </div>
               </div>
