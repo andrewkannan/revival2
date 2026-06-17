@@ -167,7 +167,7 @@ export default function SowPanel() {
                   onChange={(e) => setName(e.target.value)}
                   type="text" 
                   className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-poster-accent/50 focus:ring-1 focus:ring-poster-accent/50 transition-all" 
-                  placeholder="e.g. John Doe" 
+                  placeholder="e.g. Daniel" 
                 />
               </div>
 
