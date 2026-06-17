@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { uploadPhoto, getPhotos, deletePhoto } from '@/actions/photos';
+import { uploadPhoto, getPhotos, deletePhoto, deleteAllPhotos } from '@/actions/photos';
 import { Upload, Image as ImageIcon, Trash2, Loader2, AlertCircle } from 'lucide-react';
 
 export default function AdminPhotosPage() {
@@ -26,25 +26,35 @@ export default function AdminPhotosPage() {
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     setIsUploading(true);
     setError(null);
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
+      const uploadPromises = Array.from(files).map(async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        return uploadPhoto(formData);
+      });
       
-      const res = await uploadPhoto(formData);
-      if (res.success) {
-        setPhotos([res.photo, ...photos]);
-      } else {
-        setError(res.message || "Failed to upload photo");
+      const results = await Promise.all(uploadPromises);
+      
+      const successfulUploads = results.filter(r => r.success).map(r => r.photo);
+      const failedCount = results.filter(r => !r.success).length;
+
+      if (successfulUploads.length > 0) {
+        setPhotos(prev => [...successfulUploads, ...prev]);
       }
+      
+      if (failedCount > 0) {
+        setError(`Failed to upload ${failedCount} photo(s).`);
+      }
+
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "An error occurred");
+      setError(err.message || "An error occurred during upload.");
     } finally {
       setIsUploading(false);
       // reset file input
@@ -63,6 +73,19 @@ export default function AdminPhotosPage() {
     }
   };
 
+  const handleDeleteAll = async () => {
+    const pwd = prompt("Enter password to delete ALL photos:");
+    if (!pwd) return;
+
+    const res = await deleteAllPhotos(pwd);
+    if (res.success) {
+      setPhotos([]);
+      alert("All photos deleted successfully.");
+    } else {
+      setError(res.message || "Failed to delete photos. Invalid password?");
+    }
+  };
+
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -70,6 +93,14 @@ export default function AdminPhotosPage() {
           <h1 className="text-3xl font-bold tracking-tight">Photo Gallery</h1>
           <p className="text-slate-400 mt-2">Manage photos displayed on the itinerary page.</p>
         </div>
+        {photos.length > 0 && (
+          <button 
+            onClick={handleDeleteAll}
+            className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+          >
+            <Trash2 className="w-4 h-4" /> Delete All
+          </button>
+        )}
       </div>
 
       {error && (
@@ -81,21 +112,22 @@ export default function AdminPhotosPage() {
 
       <div className="bg-[#1c272a]/50 border border-white/10 rounded-2xl p-8 text-center border-dashed relative">
         <Upload className="w-10 h-10 text-slate-400 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-white mb-2">Upload a New Photo</h3>
+        <h3 className="text-lg font-medium text-white mb-2">Upload Photos</h3>
         <p className="text-sm text-slate-400 mb-6 max-w-md mx-auto">
-          Upload high-quality JPG or PNG images. They will be uploaded directly to AWS S3.
+          Upload multiple high-quality JPG or PNG images at once. They will be uploaded directly to AWS S3.
         </p>
         
         <label className={`inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-colors cursor-pointer ${isUploading ? 'bg-poster-accent/50 cursor-not-allowed text-white' : 'bg-poster-accent hover:bg-poster-accent-bright text-poster-bg'}`}>
           {isUploading ? (
             <><Loader2 className="w-5 h-5 animate-spin mr-2" /> Uploading...</>
           ) : (
-            'Select Image'
+            'Select Images'
           )}
           <input 
             type="file" 
             className="hidden" 
             accept="image/*"
+            multiple
             onChange={handleFileChange}
             disabled={isUploading}
           />

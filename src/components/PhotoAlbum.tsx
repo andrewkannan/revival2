@@ -63,7 +63,7 @@ export default function PhotoAlbum({ photos }: { photos: Photo[] }) {
           className="w-full pt-12 pb-16 px-4"
         >
           {photos.map((photo) => (
-            <SwiperSlide key={photo.id} className="w-[280px] sm:w-[350px] md:w-[450px] lg:w-[600px]">
+            <SwiperSlide key={photo.id} className="w-[75vw] sm:w-[350px] md:w-[450px] lg:w-[600px]">
               <div className="group relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10 bg-black/50 aspect-[4/3] sm:aspect-video transform transition-all duration-500">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img 

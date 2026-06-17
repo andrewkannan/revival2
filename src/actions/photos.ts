@@ -83,3 +83,20 @@ export async function deletePhoto(id: string) {
     return { success: false, message: error.message };
   }
 }
+
+export async function deleteAllPhotos(password: string) {
+  try {
+    if (password !== 'godisgoodallthetime') {
+      return { success: false, message: 'Invalid password' };
+    }
+    
+    await prisma.photo.deleteMany({});
+    
+    revalidatePath('/itinerary');
+    revalidatePath('/admin/photos');
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to delete all photos:", error);
+    return { success: false, message: error.message };
+  }
+}
