@@ -127,6 +127,11 @@ export default async function ItineraryPage() {
         <section id="sow" className="scroll-mt-24">
           <SowPanel />
         </section>
+
+        {/* Footer */}
+        <footer className="text-center pt-12 pb-8">
+          <p className="text-slate-500 text-sm tracking-widest uppercase">Presented by CCC Bilingual</p>
+        </footer>
       </div>
     </main>
   );
