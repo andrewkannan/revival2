@@ -3,30 +3,16 @@
 import { Music, PlayCircle, Disc } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import ReactPlayer from 'react-player';
 
 export default function WorshipPlaylist({ playlistUrl }: { playlistUrl: string }) {
-  const [embedUrl, setEmbedUrl] = useState('');
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!playlistUrl) return;
+    setMounted(true);
+  }, []);
 
-    // Parse the YouTube playlist URL to get the 'list' query parameter
-    try {
-      const url = new URL(playlistUrl);
-      const listId = url.searchParams.get('list');
-      
-      if (listId) {
-        // Use the official recommended format for embedding playlists
-        setEmbedUrl(`https://www.youtube.com/embed?listType=playlist&list=${listId}`);
-      } else if (playlistUrl.includes('youtube.com/embed')) {
-        setEmbedUrl(playlistUrl);
-      }
-    } catch (e) {
-      console.error("Invalid playlist URL", e);
-    }
-  }, [playlistUrl]);
-
-  if (!embedUrl) return null;
+  if (!playlistUrl || !mounted) return null;
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4">
@@ -58,16 +44,20 @@ export default function WorshipPlaylist({ playlistUrl }: { playlistUrl: string }
           </div>
 
           {/* YouTube iframe container */}
-          <div className="w-full md:w-1/2 shrink-0 relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white/5 aspect-video bg-black">
-            <iframe 
-              className="absolute inset-0 w-full h-full"
-              src={embedUrl}
-              title="YouTube video player" 
-              frameBorder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-              referrerPolicy="strict-origin-when-cross-origin" 
-              allowFullScreen
-            ></iframe>
+          <div className="w-full md:w-1/2 shrink-0 relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white/5 aspect-video bg-black flex items-center justify-center">
+            <ReactPlayer 
+              url={playlistUrl}
+              width="100%"
+              height="100%"
+              controls={true}
+              config={{
+                youtube: {
+                  playerVars: { 
+                    origin: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'
+                  }
+                }
+              }}
+            />
           </div>
 
         </div>
