@@ -16,7 +16,8 @@ export default function WorshipPlaylist({ playlistUrl }: { playlistUrl: string }
       const listId = url.searchParams.get('list');
       
       if (listId) {
-        setEmbedUrl(`https://www.youtube.com/embed/videoseries?list=${listId}`);
+        // Use the official recommended format for embedding playlists
+        setEmbedUrl(`https://www.youtube.com/embed?listType=playlist&list=${listId}`);
       } else if (playlistUrl.includes('youtube.com/embed')) {
         setEmbedUrl(playlistUrl);
       }
