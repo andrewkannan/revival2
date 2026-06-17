@@ -30,67 +30,74 @@ export default function PhotoAlbum({ photos }: { photos: Photo[] }) {
   }
 
   return (
-    <div className="w-full relative py-8 overflow-hidden">
-      <div className="text-center mb-12 relative z-10 px-4">
-        <h2 className="text-3xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent mb-4">
-          Gallery
-        </h2>
-        <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">Swipe to relive the moments of Revival 2026</p>
-      </div>
-
-      <div className="w-full relative max-w-[1400px] mx-auto px-4 pb-12">
-        {/* Glow behind slider */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-64 bg-poster-accent/20 rounded-full blur-[100px] pointer-events-none"></div>
+    <div className="w-full relative py-8 overflow-hidden max-w-[1400px] mx-auto px-4">
+      <div className="bg-[#1c272a]/90 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-12 shadow-2xl relative overflow-hidden">
         
-        <Swiper
-          effect={'coverflow'}
-          grabCursor={true}
-          centeredSlides={true}
-          slidesPerView={'auto'}
-          initialSlide={Math.floor(photos.length / 2)}
-          coverflowEffect={{
-            rotate: 20, // Reduced rotation for a sleeker curve
-            stretch: 0,
-            depth: 250, // More depth
-            modifier: 1.5,
-            slideShadows: true,
-          }}
-          pagination={{ clickable: true, dynamicBullets: true }}
-          navigation={true}
-          autoplay={{
-            delay: 3500,
-            disableOnInteraction: false,
-          }}
-          modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
-          className="w-full pt-12 pb-16 px-4"
-        >
-          {photos.map((photo) => (
-            <SwiperSlide key={photo.id} className="w-[75vw] sm:w-[350px] md:w-[450px] lg:w-[600px]">
-              <div className="group relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10 bg-black/50 aspect-[8.5/11] transform transition-all duration-500">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img 
-                  src={photo.imageUrl} 
-                  alt="Conference Photo" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  loading="lazy"
-                />
-                
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
-                
-                {/* Hover actions */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
-                  <button 
-                    onClick={() => setSelectedPhoto(photo.imageUrl)}
-                    className="p-4 bg-white/10 hover:bg-white/20 text-white rounded-full font-medium transition-all duration-300 border border-white/20 hover:scale-110 shadow-xl"
-                  >
-                    <Maximize2 className="w-6 h-6" />
-                  </button>
+        {/* Glow effects */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-poster-accent/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-poster-accent/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div className="text-center mb-12 relative z-10 px-4">
+          <div className="w-16 h-16 bg-gradient-to-br from-poster-accent/20 to-poster-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-poster-accent/30 shadow-[0_0_30px_rgba(205,255,100,0.2)]">
+            <ImageIcon className="w-8 h-8 text-poster-accent animate-pulse" />
+          </div>
+          <h2 className="text-4xl md:text-6xl font-black uppercase tracking-[0.1em] md:tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-white via-poster-accent to-white drop-shadow-[0_0_25px_rgba(205,255,100,0.4)] mb-4">
+            Revival Gallery
+          </h2>
+          <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto uppercase tracking-widest font-medium">Swipe to relive the moments of Revival 2026</p>
+        </div>
+
+        <div className="w-full relative mx-auto pb-4">
+          <Swiper
+            effect={'coverflow'}
+            grabCursor={true}
+            centeredSlides={true}
+            slidesPerView={'auto'}
+            initialSlide={Math.floor(photos.length / 2)}
+            coverflowEffect={{
+              rotate: 20, // Reduced rotation for a sleeker curve
+              stretch: 0,
+              depth: 250, // More depth
+              modifier: 1.5,
+              slideShadows: true,
+            }}
+            pagination={{ clickable: true, dynamicBullets: true }}
+            navigation={true}
+            autoplay={{
+              delay: 3500,
+              disableOnInteraction: false,
+            }}
+            modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
+            className="w-full pt-4 pb-16 px-4"
+          >
+            {photos.map((photo) => (
+              <SwiperSlide key={photo.id} className="w-[75vw] sm:w-[350px] md:w-[450px] lg:w-[500px]">
+                <div className="group relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10 bg-black/50 aspect-[8.5/11] transform transition-all duration-500">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img 
+                    src={photo.imageUrl} 
+                    alt="Conference Photo" 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  
+                  {/* Overlay gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
+                  
+                  {/* Hover actions */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
+                    <button 
+                      onClick={() => setSelectedPhoto(photo.imageUrl)}
+                      className="p-4 bg-white/10 hover:bg-white/20 text-white rounded-full font-medium transition-all duration-300 border border-white/20 hover:scale-110 shadow-xl"
+                    >
+                      <Maximize2 className="w-6 h-6" />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </div>
 
       {/* Lightbox Modal */}
