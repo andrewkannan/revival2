@@ -1004,6 +1004,44 @@ export async function toggleRegistrationCheckin(
   }
 }
 
+export async function searchRegistrationManual(query: string) {
+  try {
+    if (!query || query.trim() === '') {
+      return { success: false, message: "Query is empty" };
+    }
+
+    const cleanQuery = query.trim();
+    
+    // Check if query looks like an order number (e.g. R00015 or 15)
+    let orderNumber: number | undefined;
+    const orderMatch = cleanQuery.match(/^(?:R|r)?0*(\d+)$/);
+    if (orderMatch) {
+      orderNumber = parseInt(orderMatch[1], 10);
+    }
+
+    const regs = await prisma.registration.findMany({
+      where: {
+        OR: [
+          ...(orderNumber ? [{ orderNumber }] : []),
+          { attendee: { name: { contains: cleanQuery, mode: 'insensitive' } } },
+          { attendee: { email: { contains: cleanQuery, mode: 'insensitive' } } },
+          { attendee: { phone: { contains: cleanQuery, mode: 'insensitive' } } }
+        ]
+      },
+      include: {
+        attendee: true,
+        tickets: true
+      },
+      take: 10 // Limit results to prevent massive payloads
+    });
+
+    return { success: true, registrations: regs };
+  } catch (error: any) {
+    console.error("Search error:", error);
+    return { success: false, message: error.message };
+  }
+}
+
 export async function getRegistrationByTicketId(ticketId: string) {
   try {
     const ticket = await prisma.ticket.findUnique({

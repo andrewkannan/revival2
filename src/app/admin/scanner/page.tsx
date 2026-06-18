@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
-import { getRegistrationByTicketId, toggleRegistrationCheckin } from '@/actions/admin';
+import { getRegistrationByTicketId, toggleRegistrationCheckin, searchRegistrationManual } from '@/actions/admin';
 import { Registration, Attendee, Ticket } from '@prisma/client';
-import { BadgeCheck, Clock, CheckCircle2, User, Loader2, XCircle, ArrowLeft } from 'lucide-react';
+import { BadgeCheck, Clock, CheckCircle2, User, Loader2, XCircle, ArrowLeft, Search } from 'lucide-react';
 import Link from 'next/link';
 
 const formatQueue = (num: number) => 'R' + String(num).padStart(5, '0');
@@ -19,6 +19,10 @@ export default function ScannerPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [reg, setReg] = useState<RegData | null>(null);
+  
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<RegData[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     const html5QrCode = new Html5Qrcode("reader");
@@ -70,6 +74,41 @@ export default function ScannerPage() {
     setLoading(false);
   };
 
+  const handleManualSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    
+    setIsSearching(true);
+    setError('');
+    setReg(null);
+    
+    const res = await searchRegistrationManual(searchQuery);
+    if (res.success && res.registrations && res.registrations.length > 0) {
+      if (res.registrations.length === 1) {
+        setReg(res.registrations[0] as RegData);
+        setSearchResults([]);
+        setTimeout(() => {
+          resultPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      } else {
+        setSearchResults(res.registrations as RegData[]);
+      }
+    } else {
+      setSearchResults([]);
+      setError('No attendees found matching that search.');
+    }
+    
+    setIsSearching(false);
+  };
+
+  const selectSearchResult = (selectedReg: RegData) => {
+    setReg(selectedReg);
+    setSearchResults([]);
+    setTimeout(() => {
+      resultPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
+
   const handleToggle = async (field: 'wristbandCollected' | 'starterPackCollected', val: boolean) => {
     if (!reg) return;
     
@@ -88,6 +127,8 @@ export default function ScannerPage() {
     lastScanned.current = null;
     setReg(null);
     setError('');
+    setSearchQuery('');
+    setSearchResults([]);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -104,8 +145,57 @@ export default function ScannerPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
         {/* Scanner Panel */}
-        <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-xl p-4">
-          <div id="reader" className="w-full bg-black rounded-xl overflow-hidden [&_video]:w-full [&_video]:rounded-xl [&_#reader__dashboard_section_csr]:hidden [&_button]:bg-white [&_button]:text-black [&_button]:px-4 [&_button]:py-2 [&_button]:rounded-md [&_button]:font-medium [&_button]:mt-4 [&_select]:bg-black [&_select]:text-white [&_select]:border [&_select]:border-white/20 [&_select]:rounded-md [&_select]:px-3 [&_select]:py-2"></div>
+        <div className="flex flex-col gap-6">
+          <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-xl p-4">
+            <div id="reader" className="w-full bg-black rounded-xl overflow-hidden [&_video]:w-full [&_video]:rounded-xl [&_#reader__dashboard_section_csr]:hidden [&_button]:bg-white [&_button]:text-black [&_button]:px-4 [&_button]:py-2 [&_button]:rounded-md [&_button]:font-medium [&_button]:mt-4 [&_select]:bg-black [&_select]:text-white [&_select]:border [&_select]:border-white/20 [&_select]:rounded-md [&_select]:px-3 [&_select]:py-2"></div>
+          </div>
+          
+          {/* Manual Search */}
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 shadow-xl">
+            <h2 className="text-lg font-semibold mb-4">Manual Search</h2>
+            <form onSubmit={handleManualSearch} className="flex gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Name, Email, or Reg No (e.g. R00015)"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-black/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-white/30"
+                />
+              </div>
+              <button 
+                type="submit" 
+                disabled={isSearching || !searchQuery.trim()}
+                className="bg-white text-black px-6 py-3 rounded-xl font-bold hover:bg-slate-200 transition-colors disabled:opacity-50"
+              >
+                {isSearching ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Find'}
+              </button>
+            </form>
+            
+            {/* Search Results List */}
+            {searchResults.length > 0 && (
+              <div className="mt-6 space-y-3">
+                <h3 className="text-sm uppercase tracking-wider text-slate-400 font-semibold mb-2">Select Attendee</h3>
+                {searchResults.map((result) => (
+                  <button
+                    key={result.id}
+                    onClick={() => selectSearchResult(result)}
+                    className="w-full text-left bg-black/40 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-colors flex items-center justify-between"
+                  >
+                    <div>
+                      <div className="font-bold text-white text-lg">{result.attendee.name}</div>
+                      <div className="text-sm text-slate-400">{result.attendee.email}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-mono text-poster-accent font-bold">{formatQueue(result.orderNumber)}</div>
+                      <div className="text-xs text-slate-500">{result.tickets.length} Tickets</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Result Panel */}
