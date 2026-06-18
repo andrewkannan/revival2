@@ -135,13 +135,7 @@ export default function ScannerPage() {
   return (
     <div className="min-h-screen bg-black text-white p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold tracking-tight">QR Code Check-In</h1>
-          <Link href="/admin/registrations" className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors font-medium whitespace-nowrap">
-            <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Back to Dashboard</span>
-          </Link>
-        </div>
+        {/* Header removed to save space */}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
         {/* Scanner Panel */}
@@ -152,7 +146,6 @@ export default function ScannerPage() {
           
           {/* Manual Search */}
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6 shadow-xl">
-            <h2 className="text-lg font-semibold mb-4">Manual Search</h2>
             <form onSubmit={handleManualSearch} className="flex gap-3">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
