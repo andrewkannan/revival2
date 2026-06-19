@@ -116,8 +116,8 @@ export default async function ItineraryPage() {
         <section id="prayers" className="scroll-mt-24">
           <CountdownLock 
             title="Prayer Wall Unlocks in" 
-            isLocked={adminConfig?.isHubLocked} 
-            unlockTime={adminConfig?.hubUnlockTime ? new Date(adminConfig.hubUnlockTime).toISOString() : undefined}
+            isLocked={adminConfig?.isPrayerLocked} 
+            unlockTime={adminConfig?.prayerUnlockTime ? new Date(adminConfig.prayerUnlockTime).toISOString() : undefined}
           >
             <PrayerWall />
           </CountdownLock>
@@ -126,8 +126,8 @@ export default async function ItineraryPage() {
         <section id="photos" className="scroll-mt-24">
           <CountdownLock 
             title="Gallery Unlocks in"
-            isLocked={adminConfig?.isHubLocked} 
-            unlockTime={adminConfig?.hubUnlockTime ? new Date(adminConfig.hubUnlockTime).toISOString() : undefined}
+            isLocked={adminConfig?.isGalleryLocked} 
+            unlockTime={adminConfig?.galleryUnlockTime ? new Date(adminConfig.galleryUnlockTime).toISOString() : undefined}
           >
             <PhotoAlbum photos={photosRes.success ? photosRes.data! : []} />
           </CountdownLock>
@@ -136,8 +136,8 @@ export default async function ItineraryPage() {
         <section id="testimonies" className="scroll-mt-24">
           <CountdownLock 
             title="Testimonies Unlock in"
-            isLocked={adminConfig?.isHubLocked} 
-            unlockTime={adminConfig?.hubUnlockTime ? new Date(adminConfig.hubUnlockTime).toISOString() : undefined}
+            isLocked={adminConfig?.isTestimonyLocked} 
+            unlockTime={adminConfig?.testimonyUnlockTime ? new Date(adminConfig.testimonyUnlockTime).toISOString() : undefined}
           >
             <TestimonyBox />
           </CountdownLock>

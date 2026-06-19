@@ -122,8 +122,12 @@ model AdminConfig {
   tiktokUrl            String?
   youtubeUrl           String?
   playlistUrl          String?
-  isHubLocked          Boolean  @default(true)
-  hubUnlockTime        DateTime?
+  isPrayerLocked       Boolean  @default(true)
+  prayerUnlockTime     DateTime?
+  isTestimonyLocked    Boolean  @default(true)
+  testimonyUnlockTime  DateTime?
+  isGalleryLocked      Boolean  @default(true)
+  galleryUnlockTime    DateTime?
   isEmailQueuePaused   Boolean  @default(false)
   updatedAt            DateTime @updatedAt
 }

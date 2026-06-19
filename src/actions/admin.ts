@@ -61,8 +61,12 @@ export async function getAdminConfig() {
         kidsPriceEarlyBird: 30,
         adultPriceRegular: 80,
         kidsPriceRegular: 50,
-        isHubLocked: true,
-        hubUnlockTime: new Date('2026-06-26T12:00:00+08:00')
+        isPrayerLocked: true,
+        prayerUnlockTime: new Date('2026-06-26T12:00:00+08:00'),
+        isTestimonyLocked: true,
+        testimonyUnlockTime: new Date('2026-06-26T12:00:00+08:00'),
+        isGalleryLocked: true,
+        galleryUnlockTime: new Date('2026-06-26T12:00:00+08:00')
       }
     });
   }
@@ -82,8 +86,12 @@ export async function getAdminConfig() {
     tiktokUrl: config.tiktokUrl || '',
     youtubeUrl: config.youtubeUrl || '',
     playlistUrl: config.playlistUrl || '',
-    isHubLocked: config.isHubLocked,
-    hubUnlockTime: config.hubUnlockTime ? config.hubUnlockTime.toISOString() : null,
+    isPrayerLocked: config.isPrayerLocked,
+    prayerUnlockTime: config.prayerUnlockTime ? config.prayerUnlockTime.toISOString() : null,
+    isTestimonyLocked: config.isTestimonyLocked,
+    testimonyUnlockTime: config.testimonyUnlockTime ? config.testimonyUnlockTime.toISOString() : null,
+    isGalleryLocked: config.isGalleryLocked,
+    galleryUnlockTime: config.galleryUnlockTime ? config.galleryUnlockTime.toISOString() : null,
     isEmailQueuePaused: config.isEmailQueuePaused,
   };
 }
@@ -118,8 +126,12 @@ export async function updateAdminConfig(data: {
   tiktokUrl?: string | null;
   youtubeUrl?: string | null;
   playlistUrl?: string | null;
-  isHubLocked?: boolean;
-  hubUnlockTime?: Date | null;
+  isPrayerLocked?: boolean;
+  prayerUnlockTime?: Date | null;
+  isTestimonyLocked?: boolean;
+  testimonyUnlockTime?: Date | null;
+  isGalleryLocked?: boolean;
+  galleryUnlockTime?: Date | null;
 }) {
   try {
     await prisma.adminConfig.upsert({
