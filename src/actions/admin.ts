@@ -1084,7 +1084,7 @@ export async function sendTestAnticipationEmail(testEmail: string) {
   try {
     const reg = await prisma.registration.findFirst({
       where: { attendee: { email: testEmail } },
-      include: { attendee: true }
+      include: { attendee: true, tickets: true }
     });
 
     if (!reg) {
@@ -1110,6 +1110,9 @@ export async function sendTestAnticipationEmail(testEmail: string) {
 
     const name = reg.attendee.name.split(' ')[0] || 'Friend';
 
+    const ticketCount = reg.tickets ? reg.tickets.length : 1;
+    const ticketText = ticketCount === 1 ? '1 Ticket' : `${ticketCount} Tickets`;
+
     const html = `
       <div style="font-family: sans-serif; max-w: 600px; margin: 0 auto; text-align: center; background-color: #0f171a; color: #ffffff; padding: 40px; border-radius: 20px;">
         <h2 style="color: #cdff64; margin-bottom: 20px;">⏳ The countdown begins!</h2>
@@ -1129,13 +1132,31 @@ export async function sendTestAnticipationEmail(testEmail: string) {
         
         <hr style="border: none; border-top: 1px solid #334155; margin: 40px 0;" />
         
-        <h3 style="color: #ffffff; margin-bottom: 15px;">Your Master Registration Ticket</h3>
         <p style="font-size: 14px; color: #94a3b8; line-height: 1.5; margin-bottom: 20px;">Use this QR code for fast group check-in and collection of wristbands and starter packs.</p>
         
-        <div style="background-color: #ffffff; padding: 20px; border-radius: 15px; display: inline-block; margin-bottom: 20px;">
-          <img src="cid:qrcode" alt="Master Ticket QR Code" style="width: 200px; height: 200px; display: block;" />
+        <!-- Ticket Design -->
+        <div style="max-width: 320px; margin: 0 auto 30px auto; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; background-color: #ffffff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+          <!-- Top Header -->
+          <div style="background-color: #0f172a; padding: 24px 20px; text-align: center;">
+            <h3 style="margin: 0 0 8px 0; color: #ffffff; font-size: 22px; font-weight: bold; letter-spacing: 1px;">REVIVAL 2026</h3>
+            <p style="margin: 0; color: #94a3b8; font-size: 14px;">Official Conference Pass</p>
+          </div>
+          
+          <!-- QR Code Section -->
+          <div style="padding: 30px 20px; background-color: #ffffff; text-align: center;">
+            <img src="cid:qrcode" alt="Master Ticket QR Code" style="width: 200px; height: 200px; display: inline-block; margin: 0 auto;" />
+          </div>
+          
+          <!-- Divider -->
+          <div style="border-top: 2px dashed #cbd5e1; margin: 0;"></div>
+          
+          <!-- Details Section -->
+          <div style="background-color: #f8fafc; padding: 24px 20px; text-align: center;">
+            <h4 style="margin: 0 0 8px 0; color: #0f172a; font-size: 20px; font-weight: bold;">${reg.attendee.name}</h4>
+            <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px; font-family: monospace; letter-spacing: 2px;">${formattedOrderNumber}</p>
+            <p style="margin: 0; color: #64748b; font-size: 14px; font-weight: 500;">${ticketText}</p>
+          </div>
         </div>
-        <p style="font-size: 18px; font-weight: bold; font-family: monospace; letter-spacing: 2px; color: #cdff64; margin-top: 0;">${formattedOrderNumber}</p>
 
         <hr style="border: none; border-top: 1px solid #334155; margin: 40px 0;" />
 
@@ -1171,7 +1192,8 @@ export async function sendMassAnticipationEmail() {
         status: 'SEAT_SECURED'
       },
       include: {
-        attendee: true
+        attendee: true,
+        tickets: true
       }
     });
 
@@ -1209,6 +1231,9 @@ export async function sendMassAnticipationEmail() {
 
       const attachmentsHtml = `<script type="application/json" id="attachments">${JSON.stringify(attachments)}</script>`;
 
+      const ticketCount = reg.tickets ? reg.tickets.length : 1;
+      const ticketText = ticketCount === 1 ? '1 Ticket' : `${ticketCount} Tickets`;
+
       const html = `
         <div style="font-family: sans-serif; max-w: 600px; margin: 0 auto; text-align: center; background-color: #0f171a; color: #ffffff; padding: 40px; border-radius: 20px;">
           <h2 style="color: #cdff64; margin-bottom: 20px;">⏳ The countdown begins!</h2>
@@ -1228,13 +1253,31 @@ export async function sendMassAnticipationEmail() {
           
           <hr style="border: none; border-top: 1px solid #334155; margin: 40px 0;" />
           
-          <h3 style="color: #ffffff; margin-bottom: 15px;">Your Master Registration Ticket</h3>
           <p style="font-size: 14px; color: #94a3b8; line-height: 1.5; margin-bottom: 20px;">Use this QR code for fast group check-in and collection of wristbands and starter packs.</p>
           
-          <div style="background-color: #ffffff; padding: 20px; border-radius: 15px; display: inline-block; margin-bottom: 20px;">
-            <img src="cid:qrcode" alt="Master Ticket QR Code" style="width: 200px; height: 200px; display: block;" />
+          <!-- Ticket Design -->
+          <div style="max-width: 320px; margin: 0 auto 30px auto; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; background-color: #ffffff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <!-- Top Header -->
+            <div style="background-color: #0f172a; padding: 24px 20px; text-align: center;">
+              <h3 style="margin: 0 0 8px 0; color: #ffffff; font-size: 22px; font-weight: bold; letter-spacing: 1px;">REVIVAL 2026</h3>
+              <p style="margin: 0; color: #94a3b8; font-size: 14px;">Official Conference Pass</p>
+            </div>
+            
+            <!-- QR Code Section -->
+            <div style="padding: 30px 20px; background-color: #ffffff; text-align: center;">
+              <img src="cid:qrcode" alt="Master Ticket QR Code" style="width: 200px; height: 200px; display: inline-block; margin: 0 auto;" />
+            </div>
+            
+            <!-- Divider -->
+            <div style="border-top: 2px dashed #cbd5e1; margin: 0;"></div>
+            
+            <!-- Details Section -->
+            <div style="background-color: #f8fafc; padding: 24px 20px; text-align: center;">
+              <h4 style="margin: 0 0 8px 0; color: #0f172a; font-size: 20px; font-weight: bold;">${reg.attendee.name}</h4>
+              <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px; font-family: monospace; letter-spacing: 2px;">${formattedOrderNumber}</p>
+              <p style="margin: 0; color: #64748b; font-size: 14px; font-weight: 500;">${ticketText}</p>
+            </div>
           </div>
-          <p style="font-size: 18px; font-weight: bold; font-family: monospace; letter-spacing: 2px; color: #cdff64; margin-top: 0;">${formattedOrderNumber}</p>
 
           <hr style="border: none; border-top: 1px solid #334155; margin: 40px 0;" />
 
