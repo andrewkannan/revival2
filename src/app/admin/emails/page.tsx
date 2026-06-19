@@ -1,6 +1,7 @@
 import { getEmailLogs } from '@/actions/admin';
 import { Mail, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
 import RetryEmailButton from '@/components/admin/RetryEmailButton';
+import ExportCsvButton from '@/components/admin/ExportCsvButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,9 +10,12 @@ export default async function EmailLogsPage() {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Email Logs</h1>
-        <p className="text-slate-400 mt-2">Track the delivery status of all automated emails sent by the system.</p>
+      <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Email Logs</h1>
+          <p className="text-slate-400 mt-2">Track the delivery status of all automated emails sent by the system.</p>
+        </div>
+        <ExportCsvButton data={logs || []} filename="email-logs-export" />
       </div>
 
       <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-xl">

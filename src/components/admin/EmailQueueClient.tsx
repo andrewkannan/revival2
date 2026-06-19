@@ -4,6 +4,7 @@ import React, { useState, useTransition } from 'react';
 import { Mail, Clock, CheckCircle2, XCircle, AlertCircle, Search, Pause, Play, Loader2 } from 'lucide-react';
 import { toggleEmailQueue } from '@/actions/admin';
 import { useRouter } from 'next/navigation';
+import ExportCsvButton from './ExportCsvButton';
 
 export default function EmailQueueClient({ 
   initialQueue, 
@@ -46,24 +47,27 @@ export default function EmailQueueClient({
           />
         </div>
 
-        <button
-          onClick={handleTogglePause}
-          disabled={isPending}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-colors border ${
-            initialPaused 
-              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20' 
-              : 'bg-amber-500/10 text-amber-400 border-amber-500/20 hover:bg-amber-500/20'
-          }`}
-        >
-          {isPending ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : initialPaused ? (
-            <Play className="w-4 h-4 fill-current" />
-          ) : (
-            <Pause className="w-4 h-4 fill-current" />
-          )}
-          {initialPaused ? 'Resume Sending' : 'Pause Queue'}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleTogglePause}
+            disabled={isPending}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-colors border ${
+              initialPaused 
+                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20' 
+                : 'bg-amber-500/10 text-amber-400 border-amber-500/20 hover:bg-amber-500/20'
+            }`}
+          >
+            {isPending ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : initialPaused ? (
+              <Play className="w-4 h-4 fill-current" />
+            ) : (
+              <Pause className="w-4 h-4 fill-current" />
+            )}
+            {initialPaused ? 'Resume Sending' : 'Pause Queue'}
+          </button>
+          <ExportCsvButton data={initialQueue} filename="email-queue-export" />
+        </div>
       </div>
 
       <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-xl">
