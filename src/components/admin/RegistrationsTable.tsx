@@ -244,6 +244,7 @@ export default function RegistrationsTable({ initialData }: Props) {
       case 'PENDING_FOR_REVIEW': return <AlertCircle className="w-4 h-4 text-blue-400" />;
       case 'PAYMENT_REJECTED': return <XCircle className="w-4 h-4 text-red-500" />;
       case 'CONTACT_ADMIN': return <XCircle className="w-4 h-4 text-red-400" />;
+      case 'TICKET_CANCELLED': return <XCircle className="w-4 h-4 text-red-600" />;
     }
   };
 
@@ -317,15 +318,16 @@ export default function RegistrationsTable({ initialData }: Props) {
         
         <select
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value as any)}
-          className="bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-white/30"
+          onChange={(e) => setStatusFilter(e.target.value as RegistrationStatus | 'ALL')}
+          className="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-poster-accent transition-colors appearance-none"
         >
-          <option value="ALL">All Statuses</option>
+          <option value="ALL">All Status</option>
           <option value="PENDING_FOR_PAYMENT">Pending Payment</option>
           <option value="PENDING_FOR_REVIEW">Pending Review</option>
           <option value="PAYMENT_REJECTED">Payment Rejected</option>
           <option value="SEAT_SECURED">Seat Secured</option>
           <option value="CONTACT_ADMIN">Contact Admin</option>
+          <option value="TICKET_CANCELLED">Ticket Cancelled</option>
         </select>
 
         <select
@@ -438,7 +440,7 @@ export default function RegistrationsTable({ initialData }: Props) {
                     className={`border-b border-white/5 transition-all duration-300 ${
                       reg.status === 'SEAT_SECURED' ? 'bg-black/80 opacity-50 grayscale hover:grayscale-0 hover:opacity-100' : 'hover:bg-white/[0.04]'
                     } ${reg.status === 'PENDING_FOR_REVIEW' ? 'bg-poster-accent/10 border-l-4 border-l-poster-accent' : 
-                        reg.status === 'PAYMENT_REJECTED' ? 'bg-red-500/10 border-l-4 border-l-red-500' : 'border-l-4 border-l-transparent'}`}
+                        (reg.status === 'PAYMENT_REJECTED' || reg.status === 'TICKET_CANCELLED') ? 'bg-red-500/10 border-l-4 border-l-red-500' : 'border-l-4 border-l-transparent'}`}
                   >
                     <td className="px-4 py-4 font-mono font-bold text-poster-accent whitespace-nowrap">
                       {formatQueue(reg.orderNumber)}
@@ -596,7 +598,7 @@ export default function RegistrationsTable({ initialData }: Props) {
                 className={`p-4 space-y-4 ${
                   reg.status === 'SEAT_SECURED' ? 'bg-black/40 grayscale opacity-75' : ''
                 } ${reg.status === 'PENDING_FOR_REVIEW' ? 'bg-poster-accent/5' : 
-                    reg.status === 'PAYMENT_REJECTED' ? 'bg-red-500/5' : ''}`}
+                    (reg.status === 'PAYMENT_REJECTED' || reg.status === 'TICKET_CANCELLED') ? 'bg-red-500/5' : ''}`}
               >
                 <div className="flex justify-between items-start">
                   <div>
