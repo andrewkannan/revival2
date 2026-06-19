@@ -89,7 +89,7 @@ export default function CountdownLock({
           
           <h3 className="text-2xl font-bold text-white mb-2 uppercase tracking-widest">{title}</h3>
           <p className="text-slate-400 mb-8 text-sm max-w-sm">
-            This section is currently locked. It will become available as we get closer to REVIVAL.
+            This section is currently locked. It will become available as we get closer to REVIVAL Conference 2026.
           </p>
           
           <div className="flex gap-4 md:gap-6 justify-center">
