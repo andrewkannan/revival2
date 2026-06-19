@@ -89,12 +89,28 @@ export async function register() {
                   where: { id: email.id },
                   data: { status: 'FAILED', attempts: { increment: 1 }, error: "sendEmail returned false" }
                 });
+                
+                // Auto-pause the queue
+                await prisma.adminConfig.update({ where: { id: 1 }, data: { isEmailQueuePaused: true } });
+                
+                // Send alert
+                const adminEmails = config?.notificationEmails || 'kannanandrew101@gmail.com';
+                const alertHtml = `<p>URGENT: Email queue has been automatically paused.</p><p>Reason: sendEmail returned false</p><p>Failed to send to: ${email.to}</p><p>Please check your Zoho Mail account and the Email Queue dashboard.</p>`;
+                await sendEmail(adminEmails, "🚨 URGENT: Email Queue Paused", alertHtml, []).catch(e => console.error("Could not send alert email:", e));
               }
             } catch (err: any) {
               await prisma.emailQueue.update({
                 where: { id: email.id },
                 data: { status: 'FAILED', attempts: { increment: 1 }, error: err.message }
               });
+              
+              // Auto-pause the queue
+              await prisma.adminConfig.update({ where: { id: 1 }, data: { isEmailQueuePaused: true } });
+              
+              // Send alert
+              const adminEmails = config?.notificationEmails || 'kannanandrew101@gmail.com';
+              const alertHtml = `<p>URGENT: Email queue has been automatically paused.</p><p>Reason: ${err.message}</p><p>Failed to send to: ${email.to}</p><p>Please check your Zoho Mail account and the Email Queue dashboard.</p>`;
+              await sendEmail(adminEmails, "🚨 URGENT: Email Queue Paused", alertHtml, []).catch(e => console.error("Could not send alert email:", e));
             }
           }
         }
