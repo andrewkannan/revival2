@@ -28,7 +28,7 @@ export default async function AdminReceiptsPage() {
         attendeeName: reg.attendee.name,
         attendeeEmail: reg.attendee.email,
         url: reg.receiptUrl,
-        uploadedAt: reg.receiptUploadedAt ? reg.receiptUploadedAt.toISOString() : null,
+        uploadedAt: reg.receiptUploadedAt ? reg.receiptUploadedAt.toISOString() : reg.updatedAt.toISOString(),
         type: 'Primary'
       });
     }
@@ -40,7 +40,7 @@ export default async function AdminReceiptsPage() {
         attendeeName: reg.attendee.name,
         attendeeEmail: reg.attendee.email,
         url: (reg as any).receiptUrl2,
-        uploadedAt: (reg as any).receipt2UploadedAt ? (reg as any).receipt2UploadedAt.toISOString() : null,
+        uploadedAt: (reg as any).receipt2UploadedAt ? (reg as any).receipt2UploadedAt.toISOString() : reg.updatedAt.toISOString(),
         type: 'Secondary'
       });
     }
