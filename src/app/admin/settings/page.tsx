@@ -109,7 +109,14 @@ export default function SettingsPage() {
     const { name, value, type, checked } = e.target;
     setGeneralData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : (type === 'date' || type === 'text') ? value : Number(value)
+      [name]: type === 'checkbox' ? checked : (type === 'datetime-local' || type === 'date' || type === 'text') ? value : Number(value)
+    }));
+  };
+
+  const handleQuickSet = (name: string, value: string) => {
+    setGeneralData(prev => ({
+      ...prev,
+      [name]: value
     }));
   };
 
@@ -315,7 +322,7 @@ export default function SettingsPage() {
                   </div>
                 </label>
                 {generalData.isPrayerLocked && (
-                  <div className="pl-2">
+                  <div className="pl-2 space-y-3">
                     <label className="block text-sm text-slate-300 mb-1">Prayer Wall Unlock Date & Time</label>
                     <input 
                       type="datetime-local" 
@@ -324,6 +331,11 @@ export default function SettingsPage() {
                       onChange={handleGeneralChange}
                       className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" 
                     />
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      <button type="button" onClick={() => handleQuickSet('prayerUnlockTime', '2026-06-26T12:00')} className="px-3 py-1.5 text-xs font-medium bg-poster-accent/10 text-poster-accent border border-poster-accent/20 rounded-lg hover:bg-poster-accent/20 transition-colors">Day 1 (26 Jun, 12PM)</button>
+                      <button type="button" onClick={() => handleQuickSet('prayerUnlockTime', '2026-06-27T12:00')} className="px-3 py-1.5 text-xs font-medium bg-poster-accent/10 text-poster-accent border border-poster-accent/20 rounded-lg hover:bg-poster-accent/20 transition-colors">Day 2 (27 Jun, 12PM)</button>
+                      <button type="button" onClick={() => handleQuickSet('prayerUnlockTime', '2026-06-28T12:00')} className="px-3 py-1.5 text-xs font-medium bg-poster-accent/10 text-poster-accent border border-poster-accent/20 rounded-lg hover:bg-poster-accent/20 transition-colors">Day 3 (28 Jun, 12PM)</button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -343,7 +355,7 @@ export default function SettingsPage() {
                   </div>
                 </label>
                 {generalData.isTestimonyLocked && (
-                  <div className="pl-2">
+                  <div className="pl-2 space-y-3">
                     <label className="block text-sm text-slate-300 mb-1">Testimonies Unlock Date & Time</label>
                     <input 
                       type="datetime-local" 
@@ -352,6 +364,11 @@ export default function SettingsPage() {
                       onChange={handleGeneralChange}
                       className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" 
                     />
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      <button type="button" onClick={() => handleQuickSet('testimonyUnlockTime', '2026-06-26T12:00')} className="px-3 py-1.5 text-xs font-medium bg-poster-accent/10 text-poster-accent border border-poster-accent/20 rounded-lg hover:bg-poster-accent/20 transition-colors">Day 1 (26 Jun, 12PM)</button>
+                      <button type="button" onClick={() => handleQuickSet('testimonyUnlockTime', '2026-06-27T12:00')} className="px-3 py-1.5 text-xs font-medium bg-poster-accent/10 text-poster-accent border border-poster-accent/20 rounded-lg hover:bg-poster-accent/20 transition-colors">Day 2 (27 Jun, 12PM)</button>
+                      <button type="button" onClick={() => handleQuickSet('testimonyUnlockTime', '2026-06-28T12:00')} className="px-3 py-1.5 text-xs font-medium bg-poster-accent/10 text-poster-accent border border-poster-accent/20 rounded-lg hover:bg-poster-accent/20 transition-colors">Day 3 (28 Jun, 12PM)</button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -371,7 +388,7 @@ export default function SettingsPage() {
                   </div>
                 </label>
                 {generalData.isGalleryLocked && (
-                  <div className="pl-2">
+                  <div className="pl-2 space-y-3">
                     <label className="block text-sm text-slate-300 mb-1">Gallery Unlock Date & Time</label>
                     <input 
                       type="datetime-local" 
@@ -380,6 +397,11 @@ export default function SettingsPage() {
                       onChange={handleGeneralChange}
                       className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30" 
                     />
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      <button type="button" onClick={() => handleQuickSet('galleryUnlockTime', '2026-06-26T12:00')} className="px-3 py-1.5 text-xs font-medium bg-poster-accent/10 text-poster-accent border border-poster-accent/20 rounded-lg hover:bg-poster-accent/20 transition-colors">Day 1 (26 Jun, 12PM)</button>
+                      <button type="button" onClick={() => handleQuickSet('galleryUnlockTime', '2026-06-27T12:00')} className="px-3 py-1.5 text-xs font-medium bg-poster-accent/10 text-poster-accent border border-poster-accent/20 rounded-lg hover:bg-poster-accent/20 transition-colors">Day 2 (27 Jun, 12PM)</button>
+                      <button type="button" onClick={() => handleQuickSet('galleryUnlockTime', '2026-06-28T12:00')} className="px-3 py-1.5 text-xs font-medium bg-poster-accent/10 text-poster-accent border border-poster-accent/20 rounded-lg hover:bg-poster-accent/20 transition-colors">Day 3 (28 Jun, 12PM)</button>
+                    </div>
                   </div>
                 )}
               </div>
