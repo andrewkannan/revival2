@@ -640,6 +640,19 @@ export async function getEmailLogs() {
   }
 }
 
+export async function retryAllFailedEmails() {
+  try {
+    const result = await prisma.emailQueue.updateMany({
+      where: { status: 'FAILED' },
+      data: { status: 'PENDING', attempts: 0, error: null }
+    });
+    return { success: true, count: result.count, message: `Retriggered ${result.count} failed emails.` };
+  } catch (e: any) {
+    console.error("Failed to retrigger emails:", e);
+    return { success: false, message: e.message };
+  }
+}
+
 export async function getEmailQueue() {
   try {
     const queue = await prisma.emailQueue.findMany({

@@ -40,9 +40,9 @@ export async function register() {
         console.error("[AutoReport] Error checking/sending report:", e);
       }
     });
-    // Process email queue every minute (rate limit: 2 per minute)
+    // Process email queue every 3 minutes (rate limit: 1 per 3 mins + jitter)
     const { sendEmail } = await import('./lib/email');
-    cron.schedule('* * * * *', async () => {
+    cron.schedule('*/3 * * * *', async () => {
       try {
         const config = await prisma.adminConfig.findFirst();
         if (config?.isEmailQueuePaused) {
@@ -53,11 +53,16 @@ export async function register() {
         const pendingEmails = await prisma.emailQueue.findMany({
           where: { status: 'PENDING' },
           orderBy: { createdAt: 'asc' },
-          take: 2
+          take: 1
         });
 
         if (pendingEmails.length > 0) {
           console.log(`[EmailQueue] Processing ${pendingEmails.length} emails...`);
+          
+          // Introduce a random delay up to 45 seconds (jitter) to prevent exact minute-mark sending
+          const jitterDelay = Math.floor(Math.random() * 45000);
+          console.log(`[EmailQueue] Waiting ${jitterDelay}ms before sending to prevent spam filters...`);
+          await new Promise(resolve => setTimeout(resolve, jitterDelay));
           
           for (const email of pendingEmails) {
             try {

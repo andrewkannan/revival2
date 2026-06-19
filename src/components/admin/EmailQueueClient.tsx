@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from 'react';
 import { Mail, Clock, CheckCircle2, XCircle, AlertCircle, Search, Pause, Play, Loader2 } from 'lucide-react';
-import { toggleEmailQueue } from '@/actions/admin';
+import { toggleEmailQueue, retryAllFailedEmails } from '@/actions/admin';
 import { useRouter } from 'next/navigation';
 import ExportCsvButton from './ExportCsvButton';
 
@@ -22,6 +22,20 @@ export default function EmailQueueClient({
       await toggleEmailQueue(!initialPaused);
       router.refresh();
     });
+  };
+
+  const handleRetryFailed = () => {
+    if (confirm("Are you sure you want to re-queue all failed emails?")) {
+      startTransition(async () => {
+        const res = await retryAllFailedEmails();
+        if (res.success) {
+          alert(`Successfully re-queued ${res.count} emails.`);
+          router.refresh();
+        } else {
+          alert(`Failed: ${res.message}`);
+        }
+      });
+    }
   };
 
   const filteredQueue = initialQueue.filter((item) => {
@@ -65,6 +79,14 @@ export default function EmailQueueClient({
               <Pause className="w-4 h-4 fill-current" />
             )}
             {initialPaused ? 'Resume Sending' : 'Pause Queue'}
+          </button>
+          <button
+            onClick={handleRetryFailed}
+            disabled={isPending || initialQueue.filter(q => q.status === 'FAILED').length === 0}
+            className="flex items-center gap-2 px-4 py-2.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-xl hover:bg-indigo-500/20 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4 fill-current" />}
+            Retry All Failed
           </button>
           <ExportCsvButton data={initialQueue} filename="email-queue-export" />
         </div>
