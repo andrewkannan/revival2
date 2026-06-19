@@ -258,9 +258,11 @@ export async function updateRegistrationDetails(
     };
     if (data.receiptBase64) {
       updateData.receiptUrl = data.receiptBase64;
+      updateData.receiptUploadedAt = new Date();
     }
     if (data.receiptBase64_2 !== undefined) {
       updateData.receiptUrl2 = data.receiptBase64_2;
+      if (data.receiptBase64_2) updateData.receipt2UploadedAt = new Date();
     }
     
     if (data.adultTickets !== undefined) {

@@ -66,6 +66,40 @@ export default async function DbUpdatePage({
       } catch (e) {
         result.push("playlistUrl already exists");
       }
+
+      // Add receipt uploaded timestamp columns
+      try {
+        await prisma.$executeRawUnsafe(`ALTER TABLE "Registration" ADD COLUMN "receiptUploadedAt" TIMESTAMP(3);`);
+        result.push("Added receiptUploadedAt to Registration");
+      } catch (e) {
+        result.push("receiptUploadedAt already exists");
+      }
+
+      try {
+        await prisma.$executeRawUnsafe(`ALTER TABLE "Registration" ADD COLUMN "receipt2UploadedAt" TIMESTAMP(3);`);
+        result.push("Added receipt2UploadedAt to Registration");
+      } catch (e) {
+        result.push("receipt2UploadedAt already exists");
+      }
+
+      // Backfill receiptUploadedAt
+      try {
+        const backfillResult1 = await prisma.$executeRawUnsafe(`
+          UPDATE "Registration"
+          SET "receiptUploadedAt" = "updatedAt"
+          WHERE "receiptUrl" IS NOT NULL AND "receiptUploadedAt" IS NULL;
+        `);
+        result.push(`Backfilled receiptUploadedAt for existing receipts`);
+        
+        const backfillResult2 = await prisma.$executeRawUnsafe(`
+          UPDATE "Registration"
+          SET "receipt2UploadedAt" = "updatedAt"
+          WHERE "receiptUrl2" IS NOT NULL AND "receipt2UploadedAt" IS NULL;
+        `);
+        result.push(`Backfilled receipt2UploadedAt for existing receipts`);
+      } catch (e: any) {
+        result.push(`Error backfilling receipts: ${e.message}`);
+      }
       
       revalidatePath('/admin/db-update');
     } catch (error: any) {

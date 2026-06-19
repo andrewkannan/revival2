@@ -11,6 +11,7 @@ import { twMerge } from 'tailwind-merge';
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Registrations', href: '/admin/registrations', icon: Users },
+  { name: 'Receipts', href: '/admin/receipts', icon: ImageIcon },
   { name: 'Email Logs', href: '/admin/emails', icon: Mail },
   { name: 'Email Queue', href: '/admin/emails/queue', icon: Mail },
   { name: 'Scanner', href: '/admin/scanner', icon: LayoutDashboard },

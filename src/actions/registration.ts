@@ -214,6 +214,7 @@ export async function uploadReceipt(registrationId: string, formData: FormData) 
       where: { id: registrationId },
       data: {
         receiptUrl: base64String,
+        receiptUploadedAt: new Date(),
         status: 'PENDING_FOR_REVIEW',
       },
       include: { attendee: true }
