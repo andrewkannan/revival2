@@ -44,6 +44,12 @@ export async function register() {
     const { sendEmail } = await import('./lib/email');
     cron.schedule('* * * * *', async () => {
       try {
+        const config = await prisma.adminConfig.findFirst();
+        if (config?.isEmailQueuePaused) {
+          // Skip processing if queue is paused
+          return;
+        }
+
         const pendingEmails = await prisma.emailQueue.findMany({
           where: { status: 'PENDING' },
           orderBy: { createdAt: 'asc' },

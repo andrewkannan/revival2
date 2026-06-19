@@ -84,7 +84,23 @@ export async function getAdminConfig() {
     playlistUrl: config.playlistUrl || '',
     isHubLocked: config.isHubLocked,
     hubUnlockTime: config.hubUnlockTime ? config.hubUnlockTime.toISOString() : null,
+    isEmailQueuePaused: config.isEmailQueuePaused,
   };
+}
+
+export async function toggleEmailQueue(paused: boolean) {
+  try {
+    await prisma.adminConfig.upsert({
+      where: { id: 1 },
+      update: { isEmailQueuePaused: paused },
+      create: { id: 1, isEmailQueuePaused: paused }
+    });
+    revalidatePath('/admin/emails/queue');
+    return { success: true };
+  } catch (e) {
+    console.error("Failed to toggle email queue", e);
+    return { success: false, message: "Failed to update queue status" };
+  }
 }
 
 export async function updateAdminConfig(data: {

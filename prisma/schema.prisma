@@ -124,6 +124,7 @@ model AdminConfig {
   playlistUrl          String?
   isHubLocked          Boolean  @default(true)
   hubUnlockTime        DateTime?
+  isEmailQueuePaused   Boolean  @default(false)
   updatedAt            DateTime @updatedAt
 }
 
