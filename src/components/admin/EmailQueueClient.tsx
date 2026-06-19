@@ -142,10 +142,10 @@ export default function EmailQueueClient({
                     <td className="px-4 py-4 font-medium text-white">{item.to}</td>
                     <td className="px-4 py-4 text-slate-300">{item.subject}</td>
                     <td className="px-4 py-4 whitespace-nowrap text-slate-400 text-xs">
-                      {new Date(item.createdAt).toLocaleString()}
+                      {new Date(item.createdAt).toLocaleString('en-US', { timeZone: 'Asia/Singapore', dateStyle: 'short', timeStyle: 'medium' })}
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap text-slate-400 text-xs">
-                      {item.sentAt ? new Date(item.sentAt).toLocaleString() : '-'}
+                      {item.sentAt ? new Date(item.sentAt).toLocaleString('en-US', { timeZone: 'Asia/Singapore', dateStyle: 'short', timeStyle: 'medium' }) : '-'}
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap text-slate-400 text-xs">
                       {item.attempts}

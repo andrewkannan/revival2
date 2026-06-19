@@ -237,7 +237,7 @@ export default function ReceiptsClient({ initialReceipts }: { initialReceipts: R
                     </span>
                   </td>
                   <td className="px-6 py-4 text-slate-300">
-                    {receipt.uploadedAt ? new Date(receipt.uploadedAt).toLocaleString() : 'N/A'}
+                    {receipt.uploadedAt ? new Date(receipt.uploadedAt).toLocaleString('en-US', { timeZone: 'Asia/Singapore', dateStyle: 'short', timeStyle: 'medium' }) : 'N/A'}
                   </td>
                   <td className="px-6 py-4 text-right">
                     <button

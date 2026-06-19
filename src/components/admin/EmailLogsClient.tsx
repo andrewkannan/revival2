@@ -80,7 +80,7 @@ export default function EmailLogsClient({ initialLogs }: { initialLogs: any[] })
                     <td className="px-4 py-4 font-medium text-white">{log.to}</td>
                     <td className="px-4 py-4 text-slate-300">{log.subject}</td>
                     <td className="px-4 py-4 whitespace-nowrap text-slate-400 text-xs">
-                      {new Date(log.createdAt).toLocaleString()}
+                      {new Date(log.createdAt).toLocaleString('en-US', { timeZone: 'Asia/Singapore', dateStyle: 'short', timeStyle: 'medium' })}
                     </td>
                     <td className="px-4 py-4 text-xs text-slate-400 break-words whitespace-pre-wrap">
                       {log.error ? (
