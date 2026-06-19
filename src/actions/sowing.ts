@@ -38,3 +38,34 @@ export async function getSowings() {
     return { success: false, message: error.message };
   }
 }
+
+export async function editSowing(id: string, data: { name: string; amount: number; receiptUrl?: string }) {
+  try {
+    await prisma.sowing.update({
+      where: { id },
+      data: {
+        name: data.name,
+        amount: data.amount,
+        ...(data.receiptUrl ? { receiptUrl: data.receiptUrl } : {})
+      }
+    });
+    revalidatePath('/admin/sowing');
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to edit sowing:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+export async function deleteSowing(id: string) {
+  try {
+    await prisma.sowing.delete({
+      where: { id }
+    });
+    revalidatePath('/admin/sowing');
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to delete sowing:", error);
+    return { success: false, message: error.message };
+  }
+}

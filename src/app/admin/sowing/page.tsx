@@ -1,6 +1,7 @@
 import { getSowings } from '@/actions/sowing';
 import { Heart, Search, Image as ImageIcon } from 'lucide-react';
 import Link from 'next/link';
+import SowingTable from '@/components/admin/SowingTable';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,70 +29,7 @@ export default async function AdminSowingPage() {
         </div>
       </div>
 
-      <div className="bg-[#1c272a]/50 border border-white/10 rounded-2xl overflow-hidden shadow-xl">
-        <div className="p-4 border-b border-white/10 flex items-center gap-4">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input 
-              type="text" 
-              placeholder="Search records (UI only)..." 
-              className="w-full bg-black/50 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-white/30"
-              disabled
-            />
-          </div>
-          <div className="text-sm font-medium text-slate-400">
-            {sowings.length} Record{sowings.length !== 1 ? 's' : ''}
-          </div>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-black/40 text-slate-400">
-              <tr>
-                <th className="px-6 py-4 font-semibold uppercase tracking-wider text-xs">Date</th>
-                <th className="px-6 py-4 font-semibold uppercase tracking-wider text-xs">Name</th>
-                <th className="px-6 py-4 font-semibold uppercase tracking-wider text-xs">Amount</th>
-                <th className="px-6 py-4 font-semibold uppercase tracking-wider text-xs">Receipt</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {sowings.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-slate-500">
-                    <Heart className="w-8 h-8 mx-auto mb-3 opacity-20" />
-                    <p>No sowing records found.</p>
-                  </td>
-                </tr>
-              ) : (
-                sowings.map((sowing) => (
-                  <tr key={sowing.id} className="hover:bg-white/5 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-slate-300">
-                      {new Date(sowing.createdAt).toLocaleDateString()}
-                      <div className="text-xs text-slate-500">{new Date(sowing.createdAt).toLocaleTimeString()}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap font-medium text-white">
-                      {sowing.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap font-mono font-bold text-poster-accent-bright text-base">
-                      RM {Number(sowing.amount).toFixed(2)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <a 
-                        href={sowing.receiptUrl} 
-                        target="_blank" 
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg hover:bg-white/10 transition-colors text-xs font-medium text-slate-300 hover:text-white"
-                      >
-                        <ImageIcon className="w-3.5 h-3.5" /> View Receipt
-                      </a>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <SowingTable initialSowings={sowings} />
     </div>
   );
 }
