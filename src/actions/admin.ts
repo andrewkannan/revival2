@@ -631,8 +631,7 @@ export async function sendConferenceReminders() {
 export async function getEmailLogs() {
   try {
     const logs = await prisma.emailLog.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: 100 // Limit to recent 100 for dashboard performance
+      orderBy: { createdAt: 'desc' }
     });
     return { success: true, logs };
   } catch (e) {
@@ -644,8 +643,7 @@ export async function getEmailLogs() {
 export async function getEmailQueue() {
   try {
     const queue = await prisma.emailQueue.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: 100
+      orderBy: { createdAt: 'desc' }
     });
     return { success: true, queue };
   } catch (error: any) {
