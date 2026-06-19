@@ -1082,10 +1082,38 @@ export async function getRegistrationByTicketId(ticketId: string) {
 
 export async function sendTestAnticipationEmail(testEmail: string) {
   try {
+    const reg = await prisma.registration.findFirst({
+      where: { attendee: { email: testEmail } },
+      include: { attendee: true }
+    });
+
+    if (!reg) {
+      return { success: false, message: "No registration found for this test email to generate the QR code." };
+    }
+
+    let qrCodeUrl = reg.qrCodeUrl;
+    if (!qrCodeUrl) {
+      qrCodeUrl = await QRCode.toDataURL(reg.id);
+      await prisma.registration.update({
+        where: { id: reg.id },
+        data: { qrCodeUrl }
+      });
+    }
+
+    const formattedOrderNumber = 'R' + String(reg.orderNumber).padStart(5, '0');
+    const attachments = [{
+      filename: `revival-ticket-${formattedOrderNumber}.png`,
+      content: qrCodeUrl.split("base64,")[1],
+      encoding: 'base64',
+      cid: 'qrcode'
+    }];
+
+    const name = reg.attendee.name.split(' ')[0] || 'Friend';
+
     const html = `
       <div style="font-family: sans-serif; max-w: 600px; margin: 0 auto; text-align: center; background-color: #0f171a; color: #ffffff; padding: 40px; border-radius: 20px;">
         <h2 style="color: #cdff64; margin-bottom: 20px;">⏳ The countdown begins!</h2>
-        <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">Hi Admin,</p>
+        <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">Hi ${name},</p>
         <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">We are exactly 7 days away from REVIVAL! We can't wait to see what God is going to do in our midst next week.</p>
         
         <div style="margin: 40px 0; padding: 20px; border: 2px solid #cdff64; border-radius: 15px; display: inline-block;">
@@ -1099,6 +1127,18 @@ export async function sendTestAnticipationEmail(testEmail: string) {
           <p style="font-size: 14px; color: #cbd5e1; margin-top: 10px;">Experience the preparation.</p>
         </div>
         
+        <hr style="border: none; border-top: 1px solid #334155; margin: 40px 0;" />
+        
+        <h3 style="color: #ffffff; margin-bottom: 15px;">Your Master Registration Ticket</h3>
+        <p style="font-size: 14px; color: #94a3b8; line-height: 1.5; margin-bottom: 20px;">Use this QR code for fast group check-in and collection of wristbands and starter packs.</p>
+        
+        <div style="background-color: #ffffff; padding: 20px; border-radius: 15px; display: inline-block; margin-bottom: 20px;">
+          <img src="cid:qrcode" alt="Master Ticket QR Code" style="width: 200px; height: 200px; display: block;" />
+        </div>
+        <p style="font-size: 18px; font-weight: bold; font-family: monospace; letter-spacing: 2px; color: #cdff64; margin-top: 0;">${formattedOrderNumber}</p>
+
+        <hr style="border: none; border-top: 1px solid #334155; margin: 40px 0;" />
+
         <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">Start preparing your hearts, and we will see you very soon!</p>
         <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">The REVIVAL Team</p>
       </div>
@@ -1109,7 +1149,8 @@ export async function sendTestAnticipationEmail(testEmail: string) {
     const success = await sendEmail(
       testEmail,
       "7 Days to REVIVAL 2026",
-      html
+      html,
+      attachments
     );
 
     if (success) {
@@ -1149,6 +1190,25 @@ export async function sendMassAnticipationEmail() {
 
       if (!email) continue;
 
+      let qrCodeUrl = reg.qrCodeUrl;
+      if (!qrCodeUrl) {
+        qrCodeUrl = await QRCode.toDataURL(reg.id);
+        await prisma.registration.update({
+          where: { id: reg.id },
+          data: { qrCodeUrl }
+        });
+      }
+
+      const formattedOrderNumber = 'R' + String(reg.orderNumber).padStart(5, '0');
+      const attachments = [{
+        filename: `revival-ticket-${formattedOrderNumber}.png`,
+        content: qrCodeUrl.split("base64,")[1],
+        encoding: 'base64',
+        cid: 'qrcode'
+      }];
+
+      const attachmentsHtml = `<script type="application/json" id="attachments">${JSON.stringify(attachments)}</script>`;
+
       const html = `
         <div style="font-family: sans-serif; max-w: 600px; margin: 0 auto; text-align: center; background-color: #0f171a; color: #ffffff; padding: 40px; border-radius: 20px;">
           <h2 style="color: #cdff64; margin-bottom: 20px;">⏳ The countdown begins!</h2>
@@ -1166,9 +1226,22 @@ export async function sendMassAnticipationEmail() {
             <p style="font-size: 14px; color: #cbd5e1; margin-top: 10px; font-weight: bold;">Click now!</p>
           </div>
           
+          <hr style="border: none; border-top: 1px solid #334155; margin: 40px 0;" />
+          
+          <h3 style="color: #ffffff; margin-bottom: 15px;">Your Master Registration Ticket</h3>
+          <p style="font-size: 14px; color: #94a3b8; line-height: 1.5; margin-bottom: 20px;">Use this QR code for fast group check-in and collection of wristbands and starter packs.</p>
+          
+          <div style="background-color: #ffffff; padding: 20px; border-radius: 15px; display: inline-block; margin-bottom: 20px;">
+            <img src="cid:qrcode" alt="Master Ticket QR Code" style="width: 200px; height: 200px; display: block;" />
+          </div>
+          <p style="font-size: 18px; font-weight: bold; font-family: monospace; letter-spacing: 2px; color: #cdff64; margin-top: 0;">${formattedOrderNumber}</p>
+
+          <hr style="border: none; border-top: 1px solid #334155; margin: 40px 0;" />
+
           <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">Start preparing your hearts, and we will see you very soon!</p>
           <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">The REVIVAL Team</p>
         </div>
+        ${attachmentsHtml}
       `;
 
       await prisma.emailQueue.create({
