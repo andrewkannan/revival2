@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { Sowing } from '@prisma/client';
-import { Heart, Image as ImageIcon, Search, Edit2, Trash2, Loader2, X, Upload } from 'lucide-react';
+import { Heart, Image as ImageIcon, Search, Edit2, Trash2, Loader2, X, Upload, Download } from 'lucide-react';
+import JSZip from 'jszip';
 import { editSowing, deleteSowing } from '@/actions/sowing';
 
 export default function SowingTable({ initialSowings }: { initialSowings: Sowing[] }) {
@@ -13,6 +14,7 @@ export default function SowingTable({ initialSowings }: { initialSowings: Sowing
   const [editData, setEditData] = useState<{ name: string; amount: number; receiptUrl: string }>({ name: '', amount: 0, receiptUrl: '' });
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [previewModal, setPreviewModal] = useState<{url: string, title: string} | null>(null);
 
   const filtered = sowings.filter(s => 
@@ -80,6 +82,45 @@ export default function SowingTable({ initialSowings }: { initialSowings: Sowing
     }
   };
 
+  const handleDownloadZip = async () => {
+    setIsDownloading(true);
+    try {
+      const zip = new JSZip();
+      const folder = zip.folder("sowing_receipts");
+      
+      if (!folder) throw new Error("Failed to create zip folder");
+
+      for (const sowing of filtered) {
+        if (!sowing.receiptUrl) continue;
+        let data = sowing.receiptUrl;
+        let extension = 'png';
+        if (data.includes('jpeg') || data.includes('jpg')) extension = 'jpg';
+        if (data.includes('pdf')) extension = 'pdf';
+
+        const base64Data = data.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, "");
+        const filename = `Sowing_${sowing.name.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date(sowing.createdAt).toISOString().split('T')[0]}.${extension}`;
+        
+        folder.file(filename, base64Data, { base64: true });
+      }
+
+      const content = await zip.generateAsync({ type: "blob" });
+      const url = window.URL.createObjectURL(content);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Sowing_Receipts.zip`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+    } catch (error) {
+      console.error("Failed to generate ZIP", error);
+      alert("Failed to generate ZIP file.");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   return (
     <div className="bg-[#1c272a]/50 border border-white/10 rounded-2xl overflow-hidden shadow-xl">
       <div className="p-4 border-b border-white/10 flex items-center gap-4">
@@ -93,8 +134,22 @@ export default function SowingTable({ initialSowings }: { initialSowings: Sowing
             className="w-full bg-black/50 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-white/30"
           />
         </div>
-        <div className="text-sm font-medium text-slate-400">
-          {filtered.length} Record{filtered.length !== 1 ? 's' : ''}
+        <div className="flex items-center gap-4">
+          <div className="text-sm font-medium text-slate-400 hidden sm:block">
+            {filtered.length} Record{filtered.length !== 1 ? 's' : ''}
+          </div>
+          <button
+            onClick={handleDownloadZip}
+            disabled={isDownloading || filtered.length === 0}
+            className="flex items-center gap-2 px-4 py-2 bg-poster-accent text-poster-bg rounded-lg font-bold hover:bg-poster-accent-bright transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+          >
+            {isDownloading ? (
+              <span className="animate-spin text-xl leading-none">⟳</span>
+            ) : (
+              <Download className="w-4 h-4" />
+            )}
+            <span className="hidden sm:inline">Download ZIP</span>
+          </button>
         </div>
       </div>
 
