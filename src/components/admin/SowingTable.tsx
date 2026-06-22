@@ -13,6 +13,7 @@ export default function SowingTable({ initialSowings }: { initialSowings: Sowing
   const [editData, setEditData] = useState<{ name: string; amount: number; receiptUrl: string }>({ name: '', amount: 0, receiptUrl: '' });
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [previewModal, setPreviewModal] = useState<{url: string, title: string} | null>(null);
 
   const filtered = sowings.filter(s => 
     s.name.toLowerCase().includes(search.toLowerCase())
@@ -158,14 +159,12 @@ export default function SowingTable({ initialSowings }: { initialSowings: Sowing
                         </label>
                       </div>
                     ) : (
-                      <a 
-                        href={sowing.receiptUrl} 
-                        target="_blank" 
-                        rel="noreferrer"
+                      <button 
+                        onClick={() => setPreviewModal({ url: sowing.receiptUrl, title: sowing.name })}
                         className="inline-flex items-center gap-2 px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg hover:bg-white/10 transition-colors text-xs font-medium text-slate-300 hover:text-white"
                       >
                         <ImageIcon className="w-3.5 h-3.5" /> View Receipt
-                      </a>
+                      </button>
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right space-x-2">
@@ -195,6 +194,26 @@ export default function SowingTable({ initialSowings }: { initialSowings: Sowing
           </tbody>
         </table>
       </div>
+
+      {previewModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-sm" onClick={() => setPreviewModal(null)}>
+          <div className="relative max-w-4xl w-full bg-[#111] border border-white/10 rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-full" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+              <h3 className="text-lg font-semibold text-white">Receipt Preview <span className="text-slate-400 text-sm font-normal ml-2">{previewModal.title}</span></h3>
+              <button onClick={() => setPreviewModal(null)} className="text-slate-400 hover:text-white transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-6 overflow-auto flex items-center justify-center bg-black/50 min-h-[300px]">
+              {previewModal.url.includes('pdf') ? (
+                <iframe src={previewModal.url} className="w-full h-[600px] rounded-lg" />
+              ) : (
+                <img src={previewModal.url} alt="Receipt" className="max-w-full max-h-[70vh] object-contain rounded-lg" />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
