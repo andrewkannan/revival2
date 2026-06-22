@@ -100,6 +100,20 @@ export default async function DbUpdatePage({
       } catch (e: any) {
         result.push(`Error backfilling receipts: ${e.message}`);
       }
+      // Add Sowing soft-delete columns
+      try {
+        await prisma.$executeRawUnsafe(`ALTER TABLE "Sowing" ADD COLUMN "deletedAt" TIMESTAMP(3);`);
+        result.push("Added deletedAt to Sowing");
+      } catch (e) {
+        result.push("deletedAt already exists on Sowing");
+      }
+
+      try {
+        await prisma.$executeRawUnsafe(`ALTER TABLE "Sowing" ADD COLUMN "deleteRemark" TEXT;`);
+        result.push("Added deleteRemark to Sowing");
+      } catch (e) {
+        result.push("deleteRemark already exists on Sowing");
+      }
       
       revalidatePath('/admin/db-update');
     } catch (error: any) {

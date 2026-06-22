@@ -57,10 +57,14 @@ export async function editSowing(id: string, data: { name: string; amount: numbe
   }
 }
 
-export async function deleteSowing(id: string) {
+export async function deleteSowing(id: string, remark?: string) {
   try {
-    await prisma.sowing.delete({
-      where: { id }
+    await prisma.sowing.update({
+      where: { id },
+      data: {
+        deletedAt: new Date(),
+        deleteRemark: remark || null,
+      }
     });
     revalidatePath('/admin/sowing');
     return { success: true };

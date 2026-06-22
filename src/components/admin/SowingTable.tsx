@@ -44,11 +44,13 @@ export default function SowingTable({ initialSowings }: { initialSowings: Sowing
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this record?")) return;
+    const remark = prompt("Please provide a reason for deleting this record:");
+    if (remark === null) return; // User cancelled
+    
     setLoading(true);
-    const res = await deleteSowing(id);
+    const res = await deleteSowing(id, remark);
     if (res.success) {
-      setSowings(prev => prev.filter(s => s.id !== id));
+      setSowings(prev => prev.map(s => s.id === id ? { ...s, deletedAt: new Date() as any, deleteRemark: remark as any } : s));
     } else {
       alert("Failed to delete sowing: " + res.message);
     }
@@ -91,6 +93,7 @@ export default function SowingTable({ initialSowings }: { initialSowings: Sowing
       if (!folder) throw new Error("Failed to create zip folder");
 
       for (const sowing of filtered) {
+        if ((sowing as any).deletedAt) continue; // Skip deleted records
         if (!sowing.receiptUrl) continue;
         let data = sowing.receiptUrl;
         let extension = 'png';
@@ -174,7 +177,7 @@ export default function SowingTable({ initialSowings }: { initialSowings: Sowing
               </tr>
             ) : (
               filtered.map((sowing) => (
-                <tr key={sowing.id} className="hover:bg-white/5 transition-colors">
+                <tr key={sowing.id} className={`hover:bg-white/5 transition-colors ${(sowing as any).deletedAt ? "opacity-50 grayscale" : ""}`}>
                   <td className="px-6 py-4 whitespace-nowrap text-slate-300">
                     {new Date(sowing.createdAt).toLocaleDateString()}
                     <div className="text-xs text-slate-500">{new Date(sowing.createdAt).toLocaleTimeString()}</div>
@@ -187,9 +190,18 @@ export default function SowingTable({ initialSowings }: { initialSowings: Sowing
                         onChange={e => setEditData({...editData, name: e.target.value})}
                         className="bg-black border border-white/20 rounded px-2 py-1 w-32"
                       />
-                    ) : sowing.name}
+                    ) : (
+                      <>
+                        {sowing.name}
+                        {(sowing as any).deletedAt && (
+                          <div className="text-xs text-red-400 mt-1 font-normal break-words whitespace-normal max-w-[200px]">
+                            Deleted: {(sowing as any).deleteRemark || 'No reason provided'}
+                          </div>
+                        )}
+                      </>
+                    )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap font-mono font-bold text-poster-accent-bright text-base">
+                  <td className={`px-6 py-4 whitespace-nowrap font-mono font-bold text-base ${(sowing as any).deletedAt ? 'text-slate-500 line-through' : 'text-poster-accent-bright'}`}>
                     {editingId === sowing.id ? (
                       <div className="flex items-center gap-1">
                         RM <input 
@@ -234,12 +246,16 @@ export default function SowingTable({ initialSowings }: { initialSowings: Sowing
                       </>
                     ) : (
                       <>
-                        <button onClick={() => handleEdit(sowing)} disabled={loading} className="p-1.5 text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-colors">
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                        <button onClick={() => handleDelete(sowing.id)} disabled={loading} className="p-1.5 text-red-400 hover:text-white hover:bg-red-500/20 bg-white/5 rounded-lg transition-colors">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        {!(sowing as any).deletedAt && (
+                          <>
+                            <button onClick={() => handleEdit(sowing)} disabled={loading} className="p-1.5 text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-colors">
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button onClick={() => handleDelete(sowing.id)} disabled={loading} className="p-1.5 text-red-400 hover:text-white hover:bg-red-500/20 bg-white/5 rounded-lg transition-colors">
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </>
+                        )}
                       </>
                     )}
                   </td>

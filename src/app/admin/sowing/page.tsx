@@ -9,7 +9,9 @@ export default async function AdminSowingPage() {
   const res = await getSowings();
   const sowings = res.success ? res.data! : [];
 
-  const totalAmount = sowings.reduce((sum, s) => sum + Number(s.amount), 0);
+  const totalAmount = sowings
+    .filter((s: any) => !s.deletedAt)
+    .reduce((sum, s) => sum + Number(s.amount), 0);
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">

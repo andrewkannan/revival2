@@ -211,11 +211,13 @@ model Testimony {
 }
 
 model Sowing {
-  id         String           @id @default(uuid())
-  name       String
-  amount     Decimal          @db.Decimal(10, 2)
-  receiptUrl String
-  createdAt  DateTime         @default(now())
+  id           String           @id @default(uuid())
+  name         String
+  amount       Decimal          @db.Decimal(10, 2)
+  receiptUrl   String
+  deletedAt    DateTime?
+  deleteRemark String?
+  createdAt    DateTime         @default(now())
 }
 
 model Photo {
