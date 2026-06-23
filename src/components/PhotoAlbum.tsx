@@ -4,6 +4,7 @@ import { Image as ImageIcon, Maximize2, X } from 'lucide-react';
 import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCoverflow, Pagination, Navigation, Autoplay } from 'swiper/modules';
+import { useTranslation } from '@/hooks/useTranslation';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -17,14 +18,15 @@ interface Photo {
 }
 
 export default function PhotoAlbum({ photos }: { photos: Photo[] }) {
+  const { t } = useTranslation();
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
   if (!photos || photos.length === 0) {
     return (
       <div className="max-w-6xl mx-auto px-4 text-center py-24">
         <ImageIcon className="w-16 h-16 text-slate-500 mx-auto mb-4 opacity-50" />
-        <h2 className="text-2xl font-bold text-white mb-2">Conference Gallery</h2>
-        <p className="text-slate-400">Photos will be uploaded during the event.</p>
+        <h2 className="text-2xl font-bold text-white mb-2">{t('photoAlbum.emptyTitle')}</h2>
+        <p className="text-slate-400">{t('photoAlbum.emptyDesc')}</p>
       </div>
     );
   }
@@ -39,9 +41,9 @@ export default function PhotoAlbum({ photos }: { photos: Photo[] }) {
 
         <div className="text-center mb-12 relative z-10 px-4">
           <h2 className="text-4xl md:text-6xl font-black uppercase tracking-[0.1em] md:tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-white via-poster-accent to-white drop-shadow-[0_0_25px_rgba(205,255,100,0.4)] mb-4">
-            Revival Gallery
+            {t('photoAlbum.title')}
           </h2>
-          <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto uppercase tracking-widest font-medium">Swipe to relive the moments of Revival 2026</p>
+          <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto uppercase tracking-widest font-medium">{t('photoAlbum.subtitle')}</p>
         </div>
 
         <div className="w-full relative mx-auto pb-4">

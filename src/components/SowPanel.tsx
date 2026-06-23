@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { submitSowing } from '@/actions/sowing';
 import { Upload, CheckCircle2, Sprout, Loader2, ArrowRight, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function SowPanel() {
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -117,9 +119,9 @@ export default function SowPanel() {
           <div className="w-16 h-16 bg-gradient-to-br from-poster-accent/20 to-poster-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-poster-accent/30 shadow-[0_0_30px_rgba(205,255,100,0.2)]">
             <Sprout className="w-8 h-8 text-poster-accent animate-pulse" />
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent mb-3">Sow into the Ministry</h2>
-          <p className="text-slate-400 mb-2">Partner with us in spreading the Gospel.</p>
-          <p className="text-xs text-poster-accent/80 italic tracking-wide max-w-sm mx-auto">"Honor the Lord with your wealth, with the firstfruits of all your crops." - Proverbs 3:9</p>
+          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent mb-3">{t('sowPanel.title')}</h2>
+          <p className="text-slate-400 mb-2">{t('sowPanel.subtitle')}</p>
+          <p className="text-xs text-poster-accent/80 italic tracking-wide max-w-sm mx-auto">{t('sowPanel.verse')}</p>
         </div>
 
         <AnimatePresence mode="wait">
@@ -134,14 +136,14 @@ export default function SowPanel() {
               <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(16,185,129,0.2)]">
                 <CheckCircle2 className="w-10 h-10 text-emerald-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Thank You for Your Generosity!</h3>
+              <h3 className="text-2xl font-bold text-white mb-4">{t('sowPanel.successTitle')}</h3>
               <p className="text-slate-300 mb-8 leading-relaxed">
-                May the Lord bless you abundantly for your faithful sowing. Your giving empowers us to reach more lives for Jesus. 
+                {t('sowPanel.successDesc')}
                 <br /><br />
-                <span className="italic text-poster-accent/80">"And God is able to bless you abundantly, so that in all things at all times, having all that you need, you will abound in every good work." - 2 Corinthians 9:8</span>
+                <span className="italic text-poster-accent/80">{t('sowPanel.successVerse')}</span>
               </p>
               <button onClick={resetForm} className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-xl transition-all hover:scale-105">
-                Sow Again
+                {t('sowPanel.sowAgain')}
               </button>
             </motion.div>
           ) : step === 1 ? (
@@ -160,19 +162,19 @@ export default function SowPanel() {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Name</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t('sowPanel.nameLabel')}</label>
                 <input 
                   required 
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   type="text" 
                   className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-poster-accent/50 focus:ring-1 focus:ring-poster-accent/50 transition-all" 
-                  placeholder="e.g. Daniel" 
+                  placeholder={t('sowPanel.namePlaceholder')} 
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-3">Amount (RM)</label>
+                <label className="block text-sm font-medium text-slate-300 mb-3">{t('sowPanel.amountLabel')}</label>
                 <div className="grid grid-cols-3 gap-3 mb-4">
                   {[20, 50, 100, 200, 500, 1000].map((preset) => (
                     <button
@@ -199,7 +201,7 @@ export default function SowPanel() {
                     step="0.01" 
                     min="1" 
                     className="w-full bg-black/50 border border-white/10 rounded-xl pl-12 pr-4 py-3.5 text-white focus:outline-none focus:border-poster-accent/50 focus:ring-1 focus:ring-poster-accent/50 transition-all font-mono text-lg" 
-                    placeholder="Other Amount" 
+                    placeholder={t('sowPanel.otherAmount')} 
                   />
                 </div>
               </div>
@@ -208,7 +210,7 @@ export default function SowPanel() {
                 type="submit" 
                 className="w-full bg-gradient-to-r from-poster-accent to-poster-accent-bright text-poster-bg font-bold py-4 rounded-xl hover:scale-[1.02] transition-all duration-300 flex items-center justify-center shadow-[0_0_20px_rgba(205,255,100,0.3)] mt-8"
               >
-                Continue to Payment
+                {t('sowPanel.continuePayment')}
               </button>
             </motion.form>
           ) : (
@@ -227,41 +229,41 @@ export default function SowPanel() {
               )}
 
               <div className="text-center space-y-2 mb-2">
-                <h3 className="text-xl font-bold text-white">Payment Instructions</h3>
-                <p className="text-sm text-slate-400">Please transfer your sowing amount to the account below, then upload the receipt to confirm.</p>
+                <h3 className="text-xl font-bold text-white">{t('sowPanel.paymentInstructions')}</h3>
+                <p className="text-sm text-slate-400">{t('sowPanel.paymentDesc')}</p>
               </div>
 
               <div className="bg-black/40 p-5 rounded-2xl border border-white/10 font-mono text-sm space-y-3 shadow-xl">
                 <div className="flex justify-between items-center pb-3 border-b border-white/5">
-                  <span className="text-slate-400">Total Amount</span>
+                  <span className="text-slate-400">{t('sowPanel.totalAmount')}</span>
                   <span className="font-bold text-emerald-400 text-lg">RM {parseFloat(amount).toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center pb-3 border-b border-white/5">
-                  <span className="text-slate-400">Bank</span>
+                  <span className="text-slate-400">{t('sowPanel.bank')}</span>
                   <span className="font-bold text-white text-base">Maybank</span>
                 </div>
                 <div className="flex justify-between items-center pb-3 border-b border-white/5">
-                  <span className="text-slate-400">Account Name</span>
+                  <span className="text-slate-400">{t('sowPanel.accountName')}</span>
                   <span className="font-bold text-white text-base text-right">CALVARY COMMUNITY TT</span>
                 </div>
                 <div className="flex justify-between items-center pb-3 border-b border-white/5">
-                  <span className="text-slate-400">Account No.</span>
+                  <span className="text-slate-400">{t('sowPanel.accountNo')}</span>
                   <span className="font-bold tracking-widest text-poster-accent-bright text-lg">551016737305</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-400">Reference</span>
+                  <span className="text-slate-400">{t('sowPanel.reference')}</span>
                   <span className="font-bold tracking-widest text-poster-accent-bright">BIL CONF</span>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Upload Bank Receipt</label>
+                <label className="block text-sm font-medium text-slate-400 mb-2">{t('sowPanel.uploadLabel')}</label>
                 <label className={`w-full flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-2xl cursor-pointer transition-colors ${file ? 'border-poster-accent bg-poster-accent/5' : 'border-white/20 hover:border-white/40 hover:bg-white/5'}`}>
                   <Upload className={`w-8 h-8 mb-3 ${file ? 'text-poster-accent' : 'text-slate-400'}`} />
                   <span className="text-sm font-medium text-white mb-1">
-                    {file ? file.name : 'Tap to upload receipt'}
+                    {file ? file.name : t('sowPanel.tapUpload')}
                   </span>
-                  <span className="text-xs text-slate-500">Image files only (JPG, PNG)</span>
+                  <span className="text-xs text-slate-500">{t('sowPanel.imageOnly')}</span>
                   <input 
                     type="file" 
                     className="hidden" 
@@ -289,7 +291,7 @@ export default function SowPanel() {
                 >
                   {isSubmitting ? (
                     <><Loader2 className="w-5 h-5 animate-spin mr-2" /> Submitting...</>
-                  ) : 'Confirm & Submit'}
+                  ) : t('sowPanel.confirmSubmit')}
                 </button>
               </div>
             </motion.form>

@@ -3,8 +3,10 @@
 import { Music, PlayCircle, Disc } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function WorshipPlaylist({ playlistUrl }: { playlistUrl: string }) {
+  const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -27,18 +29,18 @@ export default function WorshipPlaylist({ playlistUrl }: { playlistUrl: string }
           <div className="flex-1 text-center md:text-left space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-poster-accent text-xs font-medium tracking-wide uppercase mb-2">
               <Music className="w-3.5 h-3.5" />
-              Prepare Your Heart
+              {t('worshipPlaylist.tag')}
             </div>
             <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent tracking-tight">
-              Worship Playlist
+              {t('worshipPlaylist.title')}
             </h2>
             <p className="text-slate-400 text-sm md:text-base leading-relaxed max-w-md mx-auto md:mx-0">
-              Listen to the songs we will be singing at REVIVAL. Let these melodies minister to you and prepare your heart for an encounter with God.
+              {t('worshipPlaylist.subtitle')}
             </p>
             
             <div className="flex items-center gap-2 justify-center md:justify-start pt-4 text-xs font-medium text-slate-500">
               <Disc className="w-4 h-4 animate-spin-slow" />
-              <span>Now Playing from YouTube</span>
+              <span>{t('worshipPlaylist.nowPlaying')}</span>
             </div>
           </div>
 
@@ -64,10 +66,10 @@ export default function WorshipPlaylist({ playlistUrl }: { playlistUrl: string }
                 
                 <div className="text-center space-y-1">
                   <h3 className="text-xl md:text-2xl font-bold tracking-tight text-white group-hover:text-white transition-colors duration-300">
-                    Listen on YouTube
+                    {t('worshipPlaylist.listenOn')}
                   </h3>
                   <p className="text-sm font-medium text-white/50 group-hover:text-white/70 transition-colors duration-300 flex items-center justify-center gap-1.5">
-                    Click to open playlist now <PlayCircle className="w-3 h-3" />
+                    {t('worshipPlaylist.clickToOpen')} <PlayCircle className="w-3 h-3" />
                   </p>
                 </div>
               </div>

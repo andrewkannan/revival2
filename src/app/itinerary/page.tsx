@@ -8,7 +8,8 @@ import SowPanel from '@/components/SowPanel';
 import WorshipPlaylist from '@/components/WorshipPlaylist';
 import CountdownLock from '@/components/CountdownLock';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
-import { Image as ImageIcon, Heart, MessageSquare, Music, Sprout } from 'lucide-react';
+import ShortcutDock from '@/components/ShortcutDock';
+import TranslatedFooter from '@/components/TranslatedFooter';
 import Image from 'next/image';
 
 export const revalidate = 0; // Ensures fresh data for the live announcement and prayers
@@ -77,32 +78,7 @@ export default async function ItineraryPage() {
       </div>
 
       {/* Sleek Shortcut Navigation - Single View Dock */}
-      <div className="sticky top-4 sm:top-6 z-50 px-2 sm:px-4 flex justify-center pointer-events-none mt-4 sm:mt-6">
-        <div className="bg-[#1c272a]/85 backdrop-blur-2xl border border-white/10 p-1.5 rounded-2xl sm:rounded-full flex justify-between sm:justify-center items-center gap-0.5 sm:gap-2 shadow-[0_10px_40px_rgba(0,0,0,0.5)] pointer-events-auto w-full max-w-[400px] sm:max-w-max">
-          {adminConfig?.playlistUrl && (
-            <a href="#worship" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 flex-1 sm:flex-none sm:px-6 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-[9px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300">
-              <Music className="w-4 h-4 sm:w-4 sm:h-4 text-poster-accent" /> 
-              <span className="tracking-widest uppercase">Playlist</span>
-            </a>
-          )}
-          <a href="#prayers" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 flex-1 sm:flex-none sm:px-6 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-[9px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300">
-            <Heart className="w-4 h-4 sm:w-4 sm:h-4 text-poster-accent" /> 
-            <span className="tracking-widest uppercase">Prayers</span>
-          </a>
-          <a href="#photos" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 flex-1 sm:flex-none sm:px-6 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-[9px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300">
-            <ImageIcon className="w-4 h-4 sm:w-4 sm:h-4 text-poster-accent" /> 
-            <span className="tracking-widest uppercase">Gallery</span>
-          </a>
-          <a href="#testimonies" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 flex-1 sm:flex-none sm:px-6 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-[9px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300">
-            <MessageSquare className="w-4 h-4 sm:w-4 sm:h-4 text-poster-accent" /> 
-            <span className="tracking-widest uppercase">Testimony</span>
-          </a>
-          <a href="#sow" className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 flex-1 sm:flex-none sm:px-6 py-2 sm:py-2.5 rounded-xl sm:rounded-full text-[9px] sm:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-300">
-            <Sprout className="w-4 h-4 sm:w-4 sm:h-4 text-poster-accent" /> 
-            <span className="tracking-widest uppercase">Sow</span>
-          </a>
-        </div>
-      </div>
+      <ShortcutDock playlistUrl={adminConfig?.playlistUrl} />
 
       <div className="pb-24 flex flex-col gap-8 md:gap-16 relative z-10">
         <section>
@@ -117,7 +93,7 @@ export default async function ItineraryPage() {
 
         <section id="prayers" className="scroll-mt-24">
           <CountdownLock 
-            title="Prayer Wall Unlocks in" 
+            titleKey="itineraryPage.unlockPrayerWall"
             isLocked={adminConfig?.isPrayerLocked} 
             unlockTime={adminConfig?.prayerUnlockTime ? new Date(adminConfig.prayerUnlockTime).toISOString() : undefined}
           >
@@ -127,7 +103,7 @@ export default async function ItineraryPage() {
 
         <section id="photos" className="scroll-mt-24">
           <CountdownLock 
-            title="Gallery Unlocks in"
+            titleKey="itineraryPage.unlockGallery"
             isLocked={adminConfig?.isGalleryLocked} 
             unlockTime={adminConfig?.galleryUnlockTime ? new Date(adminConfig.galleryUnlockTime).toISOString() : undefined}
           >
@@ -137,7 +113,7 @@ export default async function ItineraryPage() {
 
         <section id="testimonies" className="scroll-mt-24">
           <CountdownLock 
-            title="Testimonies Unlock in"
+            titleKey="itineraryPage.unlockTestimonies"
             isLocked={adminConfig?.isTestimonyLocked} 
             unlockTime={adminConfig?.testimonyUnlockTime ? new Date(adminConfig.testimonyUnlockTime).toISOString() : undefined}
           >
@@ -150,9 +126,7 @@ export default async function ItineraryPage() {
         </section>
 
         {/* Footer */}
-        <footer className="text-center pt-12 pb-8">
-          <p className="text-slate-500 text-sm tracking-widest uppercase">Presented by CCC Bilingual</p>
-        </footer>
+        <TranslatedFooter />
       </div>
     </main>
   );

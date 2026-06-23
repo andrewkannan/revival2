@@ -66,5 +66,87 @@ export const en = {
     successMsg: 'Your registration and payment receipt have been submitted. Our team will review the transaction and send your ticket confirmation to your email shortly.',
     registerAnother: 'Register Another Person',
     others: 'Others'
+  },
+  itineraryPage: {
+    playlist: 'Playlist',
+    prayers: 'Prayers',
+    gallery: 'Gallery',
+    testimony: 'Testimony',
+    sow: 'Sow',
+    unlockPrayerWall: 'Prayer Wall Unlocks in',
+    unlockGallery: 'Gallery Unlocks in',
+    unlockTestimonies: 'Testimonies Unlock in',
+    footer: 'Presented by CCC Bilingual'
+  },
+  prayerWall: {
+    title: 'Send a Prayer',
+    subtitle: 'Post a prayer request and we will stand in faith with you.',
+    verse: '"For where two or three gather in my name, there am I with them." - Matthew 18:20',
+    nameLabel: 'Name (Optional)',
+    namePlaceholder: 'e.g. Sarah',
+    contentLabel: 'How can we pray for you?',
+    contentPlaceholder: 'Share your prayer request here...',
+    sendBtn: 'Send Prayer',
+    successTitle: 'Prayer Request Received',
+    successDesc: 'We are standing with you in prayer and believing for God\'s breakthrough in your life.',
+    sendAnother: 'Send Another'
+  },
+  testimonyBox: {
+    title: 'Share a Testimony',
+    subtitle: 'Share how God has moved in your life and encourage others.',
+    verse: '"They triumphed over him by the blood of the Lamb and by the word of their testimony." - Revelation 12:11',
+    nameLabel: 'Name (Optional)',
+    namePlaceholder: 'e.g. David',
+    contentLabel: 'Your Story',
+    contentPlaceholder: 'I experienced...',
+    sendBtn: 'Share Testimony',
+    successTitle: 'Testimony Received',
+    successDesc: 'Thank you for sharing! Your story is a powerful witness of God\'s goodness and will surely encourage others.',
+    shareAnother: 'Share Another'
+  },
+  sowPanel: {
+    title: 'Sow into the Ministry',
+    subtitle: 'Partner with us in spreading the Gospel.',
+    verse: '"Honor the Lord with your wealth, with the firstfruits of all your crops." - Proverbs 3:9',
+    nameLabel: 'Name',
+    namePlaceholder: 'e.g. Daniel',
+    amountLabel: 'Amount (RM)',
+    otherAmount: 'Other Amount',
+    continuePayment: 'Continue to Payment',
+    paymentInstructions: 'Payment Instructions',
+    paymentDesc: 'Please transfer your sowing amount to the account below, then upload the receipt to confirm.',
+    totalAmount: 'Total Amount',
+    bank: 'Bank',
+    accountName: 'Account Name',
+    accountNo: 'Account No.',
+    reference: 'Reference',
+    uploadLabel: 'Upload Bank Receipt',
+    tapUpload: 'Tap to upload receipt',
+    imageOnly: 'Image files only (JPG, PNG)',
+    confirmSubmit: 'Confirm & Submit',
+    successTitle: 'Thank You for Your Generosity!',
+    successDesc: 'May the Lord bless you abundantly for your faithful sowing. Your giving empowers us to reach more lives for Jesus.',
+    successVerse: '"And God is able to bless you abundantly, so that in all things at all times, having all that you need, you will abound in every good work." - 2 Corinthians 9:8',
+    sowAgain: 'Sow Again'
+  },
+  worshipPlaylist: {
+    tag: 'Prepare Your Heart',
+    title: 'Worship Playlist',
+    subtitle: 'Listen to the songs we will be singing at REVIVAL. Let these melodies minister to you and prepare your heart for an encounter with God.',
+    nowPlaying: 'Now Playing from YouTube',
+    listenOn: 'Listen on YouTube',
+    clickToOpen: 'Click to open playlist now'
+  },
+  countdownLock: {
+    lockedMsg: 'This section is currently locked. It will become available as we get closer to REVIVAL Conference 2026.',
+    days: 'Days',
+    hours: 'Hours',
+    mins: 'Mins'
+  },
+  photoAlbum: {
+    emptyTitle: 'Conference Gallery',
+    emptyDesc: 'Photos will be uploaded during the event.',
+    title: 'Revival Gallery',
+    subtitle: 'Swipe to relive the moments of Revival 2026'
   }
 };

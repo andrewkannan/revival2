@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { Lock } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface CountdownLockProps {
   children: React.ReactNode;
   unlockTime?: string;
+  titleKey?: string;
   title?: string;
   isLocked?: boolean;
 }
@@ -13,9 +15,11 @@ interface CountdownLockProps {
 export default function CountdownLock({ 
   children, 
   unlockTime = '2026-06-26T12:00:00+08:00',
+  titleKey,
   title = "Unlocks in",
   isLocked: externalIsLocked = true
 }: CountdownLockProps) {
+  const { t } = useTranslation();
   const [isLocked, setIsLocked] = useState(externalIsLocked);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -87,9 +91,9 @@ export default function CountdownLock({
             <Lock className="w-8 h-8 text-poster-accent" />
           </div>
           
-          <h3 className="text-2xl font-bold text-white mb-2 uppercase tracking-widest">{title}</h3>
+          <h3 className="text-2xl font-bold text-white mb-2 uppercase tracking-widest">{titleKey ? t(titleKey) : title}</h3>
           <p className="text-slate-400 mb-8 text-sm max-w-sm">
-            This section is currently locked. It will become available as we get closer to REVIVAL Conference 2026.
+            {t('countdownLock.lockedMsg')}
           </p>
           
           <div className="flex gap-4 md:gap-6 justify-center">
@@ -97,21 +101,21 @@ export default function CountdownLock({
               <div className="text-3xl md:text-5xl font-black text-poster-accent drop-shadow-[0_0_15px_rgba(205,255,100,0.5)] w-16 md:w-20">
                 {timeLeft.days.toString().padStart(2, '0')}
               </div>
-              <div className="text-xs text-slate-400 font-bold tracking-widest uppercase mt-2">Days</div>
+              <div className="text-xs text-slate-400 font-bold tracking-widest uppercase mt-2">{t('countdownLock.days')}</div>
             </div>
             <div className="text-3xl md:text-5xl font-black text-poster-accent/50 pb-2">:</div>
             <div className="flex flex-col items-center">
               <div className="text-3xl md:text-5xl font-black text-poster-accent drop-shadow-[0_0_15px_rgba(205,255,100,0.5)] w-16 md:w-20">
                 {timeLeft.hours.toString().padStart(2, '0')}
               </div>
-              <div className="text-xs text-slate-400 font-bold tracking-widest uppercase mt-2">Hours</div>
+              <div className="text-xs text-slate-400 font-bold tracking-widest uppercase mt-2">{t('countdownLock.hours')}</div>
             </div>
             <div className="text-3xl md:text-5xl font-black text-poster-accent/50 pb-2">:</div>
             <div className="flex flex-col items-center">
               <div className="text-3xl md:text-5xl font-black text-poster-accent drop-shadow-[0_0_15px_rgba(205,255,100,0.5)] w-16 md:w-20">
                 {timeLeft.minutes.toString().padStart(2, '0')}
               </div>
-              <div className="text-xs text-slate-400 font-bold tracking-widest uppercase mt-2">Mins</div>
+              <div className="text-xs text-slate-400 font-bold tracking-widest uppercase mt-2">{t('countdownLock.mins')}</div>
             </div>
           </div>
         </div>

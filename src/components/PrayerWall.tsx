@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { submitPrayerRequest } from '@/actions/spiritual';
 import { Heart, Loader2, CheckCircle2, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function PrayerWall() {
+  const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   
@@ -45,9 +47,9 @@ export default function PrayerWall() {
           <div className="w-16 h-16 bg-gradient-to-br from-poster-accent/20 to-poster-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-poster-accent/30 shadow-[0_0_30px_rgba(205,255,100,0.2)]">
             <Heart className="w-8 h-8 text-poster-accent animate-pulse" />
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent mb-3">Send a Prayer</h2>
-          <p className="text-slate-400 mb-2">Post a prayer request and we will stand in faith with you.</p>
-          <p className="text-xs text-poster-accent/80 italic tracking-wide max-w-sm mx-auto">"For where two or three gather in my name, there am I with them." - Matthew 18:20</p>
+          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent mb-3">{t('prayerWall.title')}</h2>
+          <p className="text-slate-400 mb-2">{t('prayerWall.subtitle')}</p>
+          <p className="text-xs text-poster-accent/80 italic tracking-wide max-w-sm mx-auto">{t('prayerWall.verse')}</p>
         </div>
 
         <AnimatePresence mode="wait">
@@ -62,12 +64,12 @@ export default function PrayerWall() {
               <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(16,185,129,0.2)]">
                 <CheckCircle2 className="w-10 h-10 text-emerald-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Prayer Request Received</h3>
+              <h3 className="text-2xl font-bold text-white mb-4">{t('prayerWall.successTitle')}</h3>
               <p className="text-slate-300 mb-8 leading-relaxed">
-                We are standing with you in prayer and believing for God's breakthrough in your life.
+                {t('prayerWall.successDesc')}
               </p>
               <button onClick={resetForm} className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-xl transition-all hover:scale-105">
-                Send Another
+                {t('prayerWall.sendAnother')}
               </button>
             </motion.div>
           ) : (
@@ -80,25 +82,25 @@ export default function PrayerWall() {
               className="space-y-6 relative z-10"
             >
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Name (Optional)</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t('prayerWall.nameLabel')}</label>
                 <input 
                   type="text" 
                   value={formData.authorName}
                   onChange={e => setFormData({ ...formData, authorName: e.target.value })}
                   className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-poster-accent/50 focus:ring-1 focus:ring-poster-accent/50 transition-all" 
-                  placeholder="e.g. Sarah" 
+                  placeholder={t('prayerWall.namePlaceholder')} 
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">How can we pray for you? <span className="text-red-400">*</span></label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t('prayerWall.contentLabel')} <span className="text-red-400">*</span></label>
                 <textarea 
                   required 
                   rows={4}
                   value={formData.content}
                   onChange={e => setFormData({ ...formData, content: e.target.value })}
                   className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-poster-accent/50 focus:ring-1 focus:ring-poster-accent/50 transition-all resize-none" 
-                  placeholder="Share your prayer request here..." 
+                  placeholder={t('prayerWall.contentPlaceholder')} 
                 />
               </div>
 
@@ -107,7 +109,7 @@ export default function PrayerWall() {
                 disabled={isSubmitting || !formData.content.trim()}
                 className="w-full bg-gradient-to-r from-poster-accent to-poster-accent-bright text-poster-bg font-bold py-4 rounded-xl hover:scale-[1.02] transition-all duration-300 flex items-center justify-center shadow-[0_0_20px_rgba(205,255,100,0.3)] disabled:opacity-50 disabled:hover:scale-100"
               >
-                {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Send Prayer'}
+                {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : t('prayerWall.sendBtn')}
               </button>
             </motion.form>
           )}
