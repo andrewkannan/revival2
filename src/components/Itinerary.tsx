@@ -135,9 +135,9 @@ export default function Itinerary() {
                   initial={{ scale: 0, opacity: 0 }}
                   whileInView={{ scale: 1, opacity: 1 }}
                   viewport={{ once: true, amount: 0.1 }}
-                  className={`absolute -left-[5px] top-2 w-3 h-3 rounded-full transition-colors duration-500 ${dayActive ? 'bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.8)]' : 'bg-poster-accent-bright shadow-[0_0_15px_rgba(140,174,176,0.8)]'}`}
+                  className={`absolute -left-[5px] top-2 w-3 h-3 rounded-full transition-colors duration-500 ${dayActive ? 'bg-white shadow-[0_0_15px_rgba(255,255,255,0.8)]' : 'bg-poster-accent-bright shadow-[0_0_15px_rgba(140,174,176,0.8)]'}`}
                 >
-                  <div className={`absolute inset-0 rounded-full animate-ping opacity-40 ${dayActive ? 'bg-amber-400' : 'bg-poster-accent-bright'}`} />
+                  <div className={`absolute inset-0 rounded-full animate-ping opacity-40 ${dayActive ? 'bg-white' : 'bg-poster-accent-bright'}`} />
                 </motion.div>
                 
                 <motion.div 
@@ -146,10 +146,10 @@ export default function Itinerary() {
                   viewport={{ once: true, amount: 0.1 }}
                   className="pl-10 md:pl-16 mb-10 flex flex-col md:flex-row md:items-end gap-2 md:gap-4"
                 >
-                  <h3 className={`text-3xl md:text-4xl font-extrabold tracking-widest uppercase transition-colors duration-500 ${dayActive ? 'text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-white' : 'text-transparent bg-clip-text bg-gradient-to-r from-poster-accent-bright to-white'}`}>
+                  <h3 className={`text-3xl md:text-4xl font-extrabold tracking-widest uppercase transition-colors duration-500 ${dayActive ? 'text-transparent bg-clip-text bg-gradient-to-r from-white to-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'text-transparent bg-clip-text bg-gradient-to-r from-poster-accent-bright to-white'}`}>
                     {dayPlan.day}
                   </h3>
-                  <span className={`text-sm md:text-base font-semibold tracking-widest uppercase md:pb-1 transition-colors duration-500 ${dayActive ? 'text-amber-200/70' : 'text-slate-400'}`}>
+                  <span className={`text-sm md:text-base font-semibold tracking-widest uppercase md:pb-1 transition-colors duration-500 ${dayActive ? 'text-white/80' : 'text-slate-400'}`}>
                     {dayPlan.date}
                   </span>
                 </motion.div>
@@ -167,23 +167,23 @@ export default function Itinerary() {
                         transition={{ delay: eventIndex * 0.1, duration: 0.5, ease: "easeOut" }}
                         className={`group relative border rounded-3xl p-6 md:p-8 backdrop-blur-md transition-all duration-500 overflow-hidden ${
                           isActive 
-                            ? 'bg-gradient-to-br from-amber-500/10 to-transparent border-amber-500/30 shadow-lg shadow-amber-500/10 scale-[1.02]' 
+                            ? 'bg-gradient-to-br from-white/10 to-transparent border-white/30 shadow-lg shadow-white/10 scale-[1.02]' 
                             : 'bg-gradient-to-br from-white/[0.03] to-transparent border-white/[0.05] hover:bg-white/[0.06] hover:border-white/10 hover:-translate-y-1 hover:shadow-2xl hover:shadow-poster-accent/5'
                         }`}
                       >
                         {/* Hover/Active glare effect */}
-                        <div className={`absolute inset-0 bg-gradient-to-tr from-transparent to-transparent pointer-events-none transition-opacity duration-700 ${isActive ? 'via-amber-500/5 opacity-100' : 'via-white/[0.05] opacity-0 group-hover:opacity-100'}`} />
+                        <div className={`absolute inset-0 bg-gradient-to-tr from-transparent to-transparent pointer-events-none transition-opacity duration-700 ${isActive ? 'via-white/10 opacity-100' : 'via-white/[0.05] opacity-0 group-hover:opacity-100'}`} />
 
                         <div className="flex flex-col md:flex-row md:items-center gap-4 relative z-10">
                           <div className={`inline-flex px-4 py-1.5 rounded-full border text-xs font-bold tracking-widest uppercase items-center gap-2 ${
                             isActive 
-                              ? 'bg-amber-500/20 border-amber-500/40 text-amber-300' 
+                              ? 'bg-white/20 border-white/40 text-white' 
                               : 'bg-poster-accent/10 border-poster-accent/20 text-poster-accent-bright'
                           }`}>
                             {isActive && (
                               <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
                               </span>
                             )}
                             {event.time}
@@ -193,14 +193,14 @@ export default function Itinerary() {
                           </h4>
                           
                           {isActive && (
-                            <div className="md:ml-auto inline-flex items-center text-amber-400 text-sm font-semibold tracking-wider uppercase border border-amber-500/30 px-3 py-1 rounded-full bg-amber-500/10">
+                            <div className="md:ml-auto inline-flex items-center text-white text-sm font-semibold tracking-wider uppercase border border-white/30 px-3 py-1 rounded-full bg-white/10">
                               Happening Now
                             </div>
                           )}
                         </div>
                         
                         {event.description && (
-                          <p className={`font-light leading-relaxed relative z-10 whitespace-pre-line mt-4 ${isActive ? 'text-amber-100/70' : 'text-slate-400'}`}>
+                          <p className={`font-light leading-relaxed relative z-10 whitespace-pre-line mt-4 ${isActive ? 'text-white/90' : 'text-slate-400'}`}>
                             {event.description}
                           </p>
                         )}
