@@ -7,7 +7,6 @@ import JSZip from 'jszip';
 import { deleteRegistration, sendBulkPaymentReminders, sendPaymentReminderTest, sendIndividualPaymentReminder, toggleRegistrationCheckin } from '@/actions/admin';
 import StatusSelect from '@/components/admin/StatusSelect';
 import EditRegistrationModal, { EditData } from '@/components/admin/EditRegistrationModal';
-import AllocateTicketsModal from '@/components/admin/AllocateTicketsModal';
 import { motion, AnimatePresence } from 'framer-motion';
 
 function CheckinControls({ 
@@ -106,7 +105,6 @@ export default function RegistrationsTable({ initialData }: Props) {
   };
 
   const [mailingId, setMailingId] = useState<string | null>(null);
-  const [allocateModal, setAllocateModal] = useState<RegistrationWithAttendee | null>(null);
 
   const handleIndividualEmail = async (id: string, name: string) => {
     if (window.confirm(`Send payment reminder to ${name}?`)) {
@@ -462,20 +460,7 @@ export default function RegistrationsTable({ initialData }: Props) {
                           </svg>
                         </a>
                       </div>
-                      {reg.status === 'SEAT_SECURED' && reg.tickets && reg.tickets.length > 1 && (
-                        <div className="mt-3 pt-3 border-t border-white/5 space-y-1">
-                          <div className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1">Allocated Tickets</div>
-                          {reg.tickets.map((t, i) => (
-                            <div key={t.id} className="text-xs text-slate-400 flex items-center gap-1.5">
-                              <span className="opacity-50">#{i+1}</span>
-                              <span className="text-slate-300 truncate max-w-[150px]" title={t.attendeeName || (i === 0 ? reg.attendee.name : 'Pending')}>
-                                {t.attendeeName || (i === 0 ? reg.attendee.name : 'Pending')}
-                              </span>
-                              {t.ticketType === 'KIDS' && <span className="text-[9px] px-1 bg-orange-500/20 text-orange-400 rounded">KIDS</span>}
-                            </div>
-                          ))}
-                        </div>
-                      )}
+
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap">
                       <div className="font-medium text-white mb-0.5">RM {reg.totalAmount}</div>
@@ -562,15 +547,7 @@ export default function RegistrationsTable({ initialData }: Props) {
                               <Mail className="w-3.5 h-3.5" /> {mailingId === reg.id ? '...' : 'Remind'}
                             </button>
                           )}
-                          {reg.status === 'SEAT_SECURED' && (reg.adultTickets + reg.kidsTickets > 1) && (
-                            <button
-                              onClick={() => setAllocateModal(reg)}
-                              className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-purple-400 hover:text-white bg-purple-500/10 hover:bg-purple-500/80 rounded transition-colors border border-purple-500/20"
-                              title="Allocate Tickets"
-                            >
-                              <Users className="w-3.5 h-3.5" /> Allocate
-                            </button>
-                          )}
+
                         </div>
                         {reg.status === 'SEAT_SECURED' && (
                           <CheckinControls reg={reg} onToggle={handleToggleCheckin} />
@@ -619,20 +596,7 @@ export default function RegistrationsTable({ initialData }: Props) {
                         </svg>
                       </a>
                     </div>
-                    {reg.status === 'SEAT_SECURED' && reg.tickets && reg.tickets.length > 1 && (
-                      <div className="mt-3 pt-3 border-t border-white/5 space-y-1">
-                        <div className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1">Allocated Tickets</div>
-                        {reg.tickets.map((t, i) => (
-                          <div key={t.id} className="text-xs text-slate-400 flex items-center gap-1.5">
-                            <span className="opacity-50">#{i+1}</span>
-                            <span className="text-slate-300 truncate max-w-[150px]" title={t.attendeeName || (i === 0 ? reg.attendee.name : 'Pending')}>
-                              {t.attendeeName || (i === 0 ? reg.attendee.name : 'Pending')}
-                            </span>
-                            {t.ticketType === 'KIDS' && <span className="text-[9px] px-1 bg-orange-500/20 text-orange-400 rounded">KIDS</span>}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+
                   </div>
                   <div className="flex flex-col items-end gap-2">
                     {reg.receiptUrl ? (
@@ -722,13 +686,7 @@ export default function RegistrationsTable({ initialData }: Props) {
                         Secured: {new Date((reg as any).seatSecuredAt).toLocaleDateString('en-GB')}
                       </div>
                     )}
-                    {reg.status === 'SEAT_SECURED' && (reg.adultTickets + reg.kidsTickets > 1) && (
-                      <button
-                        onClick={() => setAllocateModal(reg)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-purple-400 hover:text-white bg-purple-500/10 hover:bg-purple-500/80 rounded transition-colors border border-purple-500/20"
-                      >
-                      </button>
-                    )}
+
                   </div>
                 </div>
 
@@ -849,15 +807,7 @@ export default function RegistrationsTable({ initialData }: Props) {
           />
         )}
 
-        {allocateModal && (
-          <AllocateTicketsModal
-            registrationId={allocateModal.id}
-            orderNumber={allocateModal.orderNumber}
-            tickets={allocateModal.tickets}
-            attendee={allocateModal.attendee}
-            onClose={() => setAllocateModal(null)}
-          />
-        )}
+
       </AnimatePresence>
     </div>
   );
