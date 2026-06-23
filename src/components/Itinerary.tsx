@@ -1,36 +1,98 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
+// SGT timezone is +08:00
 const schedule = [
   {
     day: 'Day 1',
     date: 'Friday • 26 June 2026',
     events: [
-      { time: '6:00pm - 7:30pm', title: 'Early Check In', description: '' },
-      { time: '7:30pm - 10pm', title: 'Session 1 - Night Rally', description: '' }
+      { 
+        time: '6:00pm - 7:30pm', 
+        title: 'Registration & Check-In', 
+        description: '',
+        start: '2026-06-26T18:00:00+08:00',
+        end: '2026-06-26T19:30:00+08:00'
+      },
+      { 
+        time: '7:30pm - 10pm', 
+        title: 'Session 1 - Night Rally', 
+        description: '',
+        start: '2026-06-26T19:30:00+08:00',
+        end: '2026-06-26T22:00:00+08:00'
+      }
     ]
   },
   {
     day: 'Day 2',
     date: 'Saturday • 27 June 2026',
     events: [
-      { time: '9am - 12pm', title: 'Session 2', description: '' },
-      { time: '1:30pm - 3pm', title: 'Breakout Sessions', description: 'Auditorium 2: Revival in Marketplace\nAuditorium 3: Hosting the Glory' },
-      { time: '7:00pm - 10pm', title: 'Session 3 - Night Rally', description: '' }
+      { 
+        time: '9am - 12pm', 
+        title: 'Session 2', 
+        description: '',
+        start: '2026-06-27T09:00:00+08:00',
+        end: '2026-06-27T12:00:00+08:00'
+      },
+      { 
+        time: '1:30pm - 3pm', 
+        title: 'Breakout Sessions', 
+        description: 'Auditorium 2: Revival in Marketplace\nAuditorium 3: Hosting the Glory',
+        start: '2026-06-27T13:30:00+08:00',
+        end: '2026-06-27T15:00:00+08:00'
+      },
+      { 
+        time: '7:00pm - 10pm', 
+        title: 'Session 3 - Night Rally', 
+        description: '',
+        start: '2026-06-27T19:00:00+08:00',
+        end: '2026-06-27T22:00:00+08:00'
+      }
     ]
   },
   {
     day: 'Day 3',
     date: 'Sunday • 28 June 2026',
     events: [
-      { time: '8:30am - 12pm', title: 'Session 4', description: '' }
+      { 
+        time: '8:30am - 12pm', 
+        title: 'Session 4', 
+        description: '',
+        start: '2026-06-28T08:30:00+08:00',
+        end: '2026-06-28T12:00:00+08:00'
+      }
     ]
   }
 ];
 
 export default function Itinerary() {
+  const [currentTime, setCurrentTime] = useState<Date | null>(null);
+
+  useEffect(() => {
+    // Set initial time on client side to avoid hydration mismatches
+    setCurrentTime(new Date());
+    
+    // Update the time every minute to keep the highlighting accurate
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  const isEventActive = (startStr: string, endStr: string) => {
+    if (!currentTime) return false;
+    const start = new Date(startStr);
+    const end = new Date(endStr);
+    return currentTime >= start && currentTime < end;
+  };
+
+  const isDayActive = (events: typeof schedule[0]['events']) => {
+    return events.some(event => isEventActive(event.start, event.end));
+  };
+
   return (
     <section id="itinerary" className="pt-12 pb-24 px-6 md:px-12 max-w-4xl mx-auto text-white relative scroll-mt-20">
       {/* Background glow effect */}
@@ -63,64 +125,92 @@ export default function Itinerary() {
         <div className="absolute left-0 top-2 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-white/20 to-transparent" />
 
         <div className="space-y-20">
-          {schedule.map((dayPlan, dayIndex) => (
-            <div key={dayPlan.day} className="relative">
-              {/* Sleek animated glowing dot for the day */}
-              <motion.div 
-                initial={{ scale: 0, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                viewport={{ once: true, amount: 0.1 }}
-                className="absolute -left-[5px] top-2 w-3 h-3 rounded-full bg-poster-accent-bright shadow-[0_0_15px_rgba(140,174,176,0.8)]"
-              >
-                <div className="absolute inset-0 bg-poster-accent-bright rounded-full animate-ping opacity-40" />
-              </motion.div>
-              
-              <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.1 }}
-                className="pl-10 md:pl-16 mb-10 flex flex-col md:flex-row md:items-end gap-2 md:gap-4"
-              >
-                <h3 className="text-3xl md:text-4xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-poster-accent-bright to-white uppercase">
-                  {dayPlan.day}
-                </h3>
-                <span className="text-sm md:text-base font-semibold tracking-widest text-slate-400 uppercase md:pb-1">
-                  {dayPlan.date}
-                </span>
-              </motion.div>
+          {schedule.map((dayPlan, dayIndex) => {
+            const dayActive = isDayActive(dayPlan.events);
+            
+            return (
+              <div key={dayPlan.day} className="relative">
+                {/* Sleek animated glowing dot for the day */}
+                <motion.div 
+                  initial={{ scale: 0, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  className={`absolute -left-[5px] top-2 w-3 h-3 rounded-full transition-colors duration-500 ${dayActive ? 'bg-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.8)]' : 'bg-poster-accent-bright shadow-[0_0_15px_rgba(140,174,176,0.8)]'}`}
+                >
+                  <div className={`absolute inset-0 rounded-full animate-ping opacity-40 ${dayActive ? 'bg-amber-400' : 'bg-poster-accent-bright'}`} />
+                </motion.div>
+                
+                <motion.div 
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  className="pl-10 md:pl-16 mb-10 flex flex-col md:flex-row md:items-end gap-2 md:gap-4"
+                >
+                  <h3 className={`text-3xl md:text-4xl font-extrabold tracking-widest uppercase transition-colors duration-500 ${dayActive ? 'text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-white' : 'text-transparent bg-clip-text bg-gradient-to-r from-poster-accent-bright to-white'}`}>
+                    {dayPlan.day}
+                  </h3>
+                  <span className={`text-sm md:text-base font-semibold tracking-widest uppercase md:pb-1 transition-colors duration-500 ${dayActive ? 'text-amber-200/70' : 'text-slate-400'}`}>
+                    {dayPlan.date}
+                  </span>
+                </motion.div>
 
-              <div className="space-y-8 pl-10 md:pl-16">
-                {dayPlan.events.map((event, eventIndex) => (
-                  <motion.div 
-                    key={event.title + event.time}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.1 }}
-                    transition={{ delay: eventIndex * 0.1, duration: 0.5, ease: "easeOut" }}
-                    className="group relative bg-gradient-to-br from-white/[0.03] to-transparent border border-white/[0.05] rounded-3xl p-6 md:p-8 backdrop-blur-md hover:bg-white/[0.06] hover:border-white/10 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-poster-accent/5 overflow-hidden"
-                  >
-                    {/* Hover glare effect */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-
-                    <div className="flex flex-col md:flex-row md:items-center gap-4 relative z-10">
-                      <div className="inline-flex px-4 py-1.5 rounded-full bg-poster-accent/10 border border-poster-accent/20 text-poster-accent-bright text-xs font-bold tracking-widest uppercase">
-                        {event.time}
-                      </div>
-                      <h4 className="text-xl md:text-2xl font-semibold text-white/95 tracking-wide">
-                        {event.title}
-                      </h4>
-                    </div>
+                <div className="space-y-8 pl-10 md:pl-16">
+                  {dayPlan.events.map((event, eventIndex) => {
+                    const isActive = isEventActive(event.start, event.end);
                     
-                    {event.description && (
-                      <p className="text-slate-400 font-light leading-relaxed relative z-10 whitespace-pre-line mt-4">
-                        {event.description}
-                      </p>
-                    )}
-                  </motion.div>
-                ))}
+                    return (
+                      <motion.div 
+                        key={event.title + event.time}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.1 }}
+                        transition={{ delay: eventIndex * 0.1, duration: 0.5, ease: "easeOut" }}
+                        className={`group relative border rounded-3xl p-6 md:p-8 backdrop-blur-md transition-all duration-500 overflow-hidden ${
+                          isActive 
+                            ? 'bg-gradient-to-br from-amber-500/10 to-transparent border-amber-500/30 shadow-lg shadow-amber-500/10 scale-[1.02]' 
+                            : 'bg-gradient-to-br from-white/[0.03] to-transparent border-white/[0.05] hover:bg-white/[0.06] hover:border-white/10 hover:-translate-y-1 hover:shadow-2xl hover:shadow-poster-accent/5'
+                        }`}
+                      >
+                        {/* Hover/Active glare effect */}
+                        <div className={`absolute inset-0 bg-gradient-to-tr from-transparent to-transparent pointer-events-none transition-opacity duration-700 ${isActive ? 'via-amber-500/5 opacity-100' : 'via-white/[0.05] opacity-0 group-hover:opacity-100'}`} />
+
+                        <div className="flex flex-col md:flex-row md:items-center gap-4 relative z-10">
+                          <div className={`inline-flex px-4 py-1.5 rounded-full border text-xs font-bold tracking-widest uppercase items-center gap-2 ${
+                            isActive 
+                              ? 'bg-amber-500/20 border-amber-500/40 text-amber-300' 
+                              : 'bg-poster-accent/10 border-poster-accent/20 text-poster-accent-bright'
+                          }`}>
+                            {isActive && (
+                              <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                              </span>
+                            )}
+                            {event.time}
+                          </div>
+                          <h4 className={`text-xl md:text-2xl font-semibold tracking-wide ${isActive ? 'text-white' : 'text-white/95'}`}>
+                            {event.title}
+                          </h4>
+                          
+                          {isActive && (
+                            <div className="md:ml-auto inline-flex items-center text-amber-400 text-sm font-semibold tracking-wider uppercase border border-amber-500/30 px-3 py-1 rounded-full bg-amber-500/10">
+                              Happening Now
+                            </div>
+                          )}
+                        </div>
+                        
+                        {event.description && (
+                          <p className={`font-light leading-relaxed relative z-10 whitespace-pre-line mt-4 ${isActive ? 'text-amber-100/70' : 'text-slate-400'}`}>
+                            {event.description}
+                          </p>
+                        )}
+                      </motion.div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
