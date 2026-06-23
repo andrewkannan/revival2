@@ -229,8 +229,14 @@ export async function uploadReceipt(registrationId: string, formData: FormData) 
         orderNumber: formattedOrderNumber,
         totalAmount: registration.totalAmount.toString()
       });
-      
-      sendEmail(registration.attendee.email, template.subject, parsedHtml).catch(e => console.error("Async email error:", e));
+      await prisma.emailQueue.create({
+        data: {
+          to: registration.attendee.email,
+          subject: template.subject,
+          html: parsedHtml,
+          status: 'PENDING'
+        }
+      });
 
       // Notify admin
       const adminHtml = `
@@ -242,7 +248,14 @@ export async function uploadReceipt(registrationId: string, formData: FormData) 
           <p>Please log in to the admin dashboard to review and approve this payment.</p>
         </div>
       `;
-      sendEmail('kannanandrew101@gmail.com', `New Receipt Uploaded: ${formattedOrderNumber}`, adminHtml).catch(e => console.error("Admin notification error:", e));
+      await prisma.emailQueue.create({
+        data: {
+          to: 'kannanandrew101@gmail.com',
+          subject: `New Receipt Uploaded: ${formattedOrderNumber}`,
+          html: adminHtml,
+          status: 'PENDING'
+        }
+      });
     } catch (emailError) {
       console.error('Error with invoice email logic:', emailError);
     }

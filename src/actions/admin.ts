@@ -217,8 +217,18 @@ export async function updateRegistrationStatus(id: string, status: RegistrationS
         finalHtml += `<br/>${passHtml}`;
       }
 
-      // Fire and forget: send email asynchronously
-      sendEmail(registration.attendee.email, template.subject, finalHtml, attachments).catch(e => console.error("Async email error:", e));
+      let queuedHtml = finalHtml;
+      if (attachments && attachments.length > 0) {
+        queuedHtml += `<script type="application/json" id="attachments">${JSON.stringify(attachments)}</script>`;
+      }
+      await prisma.emailQueue.create({
+        data: {
+          to: registration.attendee.email,
+          subject: template.subject,
+          html: queuedHtml,
+          status: 'PENDING'
+        }
+      });
     }
     
     revalidatePath('/admin/registrations');
@@ -619,8 +629,15 @@ export async function sendConferenceReminders() {
         name: reg.attendee.name,
         orderNumber: reg.orderNumber.toString()
       });
-      const sent = await sendEmail(reg.attendee.email, template.subject, parsedHtml);
-      if (sent) sentCount++;
+      await prisma.emailQueue.create({
+        data: {
+          to: reg.attendee.email,
+          subject: template.subject,
+          html: parsedHtml,
+          status: 'PENDING'
+        }
+      });
+      sentCount++;
     }
 
     return { success: true, message: `Sent ${sentCount} reminders.` };
@@ -697,12 +714,17 @@ export async function retryEmail(logId: string) {
         orderNumber: formattedOrderNumber,
         totalAmount: registration.totalAmount.toString()
       });
-      const success = await sendEmail(log.to, template.subject, parsedHtml);
-      if (success) {
-        await prisma.emailLog.update({ where: { id: logId }, data: { status: 'SENT', error: null } });
-      }
+      await prisma.emailQueue.create({
+        data: {
+          to: log.to,
+          subject: template.subject,
+          html: parsedHtml,
+          status: 'PENDING'
+        }
+      });
+      await prisma.emailLog.update({ where: { id: logId }, data: { status: 'SENT', error: 'Queued instead' } });
       revalidatePath('/admin/emails');
-      return { success, message: success ? 'Retried successfully' : 'Retry failed again' };
+      return { success: true, message: 'Queued successfully' };
     } else if (log.subject.includes('E-Tickets')) {
       const template = await getEmailTemplate('E_TICKET');
       const formattedOrderNumber = 'R' + String(registration.orderNumber).padStart(5, '0');
@@ -740,12 +762,21 @@ export async function retryEmail(logId: string) {
         finalHtml += `<br/>${passHtml}`;
       }
 
-      const success = await sendEmail(log.to, template.subject, finalHtml, attachments);
-      if (success) {
-        await prisma.emailLog.update({ where: { id: logId }, data: { status: 'SENT', error: null } });
+      let queuedHtml = finalHtml;
+      if (attachments && attachments.length > 0) {
+        queuedHtml += `<script type="application/json" id="attachments">${JSON.stringify(attachments)}</script>`;
       }
+      await prisma.emailQueue.create({
+        data: {
+          to: log.to,
+          subject: template.subject,
+          html: queuedHtml,
+          status: 'PENDING'
+        }
+      });
+      await prisma.emailLog.update({ where: { id: logId }, data: { status: 'SENT', error: 'Queued instead' } });
       revalidatePath('/admin/emails');
-      return { success, message: success ? 'Retried successfully' : 'Retry failed again' };
+      return { success: true, message: 'Queued successfully' };
     } else if (log.subject.includes('Action Required')) {
       const success = await sendPaymentRejectedEmail(log.to, attendee.name);
       if (success) {
@@ -797,13 +828,16 @@ export async function sendPaymentReminderTest() {
       </div>
     `;
 
-    const success = await sendEmail(testEmail, "REVIVAL - Payment Reminder (TEST)", html);
+    await prisma.emailQueue.create({
+      data: {
+        to: testEmail,
+        subject: "REVIVAL - Payment Reminder (TEST)",
+        html: html,
+        status: 'PENDING'
+      }
+    });
     
-    if (success) {
-      return { success: true, message: `Test email sent to ${testEmail}` };
-    } else {
-      return { success: false, message: "Failed to send test email" };
-    }
+    return { success: true, message: `Test email queued to ${testEmail}` };
   } catch (error: any) {
     console.error("Test email error:", error);
     return { success: false, message: error.message };
@@ -912,13 +946,16 @@ export async function sendIndividualPaymentReminder(registrationId: string) {
       </div>
     `;
 
-    const success = await sendEmail(reg.attendee.email, `REVIVAL - Payment Reminder (Order #${orderNum})`, html);
+    await prisma.emailQueue.create({
+      data: {
+        to: reg.attendee.email,
+        subject: `REVIVAL - Payment Reminder (Order #${orderNum})`,
+        html: html,
+        status: 'PENDING'
+      }
+    });
     
-    if (success) {
-      return { success: true, message: `Reminder sent to ${reg.attendee.name}` };
-    } else {
-      return { success: false, message: "Failed to send email" };
-    }
+    return { success: true, message: `Reminder queued to ${reg.attendee.name}` };
   } catch (error: any) {
     console.error("Individual email error:", error);
     return { success: false, message: error.message };
@@ -1317,12 +1354,20 @@ export async function resendTicketEmail(registrationId: string) {
       finalHtml += `<br/>${passHtml}`;
     }
 
-    const success = await sendEmail(registration.attendee.email, template.subject, finalHtml, attachments);
-    if (success) {
-      return { success: true, message: `Ticket resent to ${registration.attendee.name}` };
-    } else {
-      return { success: false, message: "Failed to send email" };
+    let queuedHtml = finalHtml;
+    if (attachments && attachments.length > 0) {
+      queuedHtml += `<script type="application/json" id="attachments">${JSON.stringify(attachments)}</script>`;
     }
+    await prisma.emailQueue.create({
+      data: {
+        to: registration.attendee.email,
+        subject: template.subject,
+        html: queuedHtml,
+        status: 'PENDING'
+      }
+    });
+    
+    return { success: true, message: `Ticket queued to ${registration.attendee.name}` };
   } catch (error: any) {
     console.error("Resend ticket error:", error);
     return { success: false, message: error.message };

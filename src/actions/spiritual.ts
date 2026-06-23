@@ -48,7 +48,14 @@ export async function submitPrayerRequest(data: { content: string; authorName?: 
         `;
         
         for (const email of emails) {
-          await sendEmail(email, "New Prayer Request Pending Approval", html);
+          await prisma.emailQueue.create({
+            data: {
+              to: email,
+              subject: "New Prayer Request Pending Approval",
+              html: html,
+              status: 'PENDING'
+            }
+          });
         }
       }
     } catch (e) {
@@ -164,7 +171,14 @@ export async function submitTestimony(data: { content: string; authorName?: stri
         `;
         
         for (const email of emails) {
-          await sendEmail(email, "New Testimony Pending Approval", html);
+          await prisma.emailQueue.create({
+            data: {
+              to: email,
+              subject: "New Testimony Pending Approval",
+              html: html,
+              status: 'PENDING'
+            }
+          });
         }
       }
     } catch (e) {
