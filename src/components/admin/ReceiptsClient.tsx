@@ -113,10 +113,23 @@ export default function ReceiptsClient({ initialReceipts }: { initialReceipts: R
         if (data.includes('jpeg') || data.includes('jpg')) extension = 'jpg';
         if (data.includes('pdf')) extension = 'pdf';
 
-        const base64Data = data.includes(',') ? data.split(',')[1] : data;
+        let fileData;
+        let isBase64Opt = false;
         const filename = `Order_R${String(receipt.orderNumber).padStart(5, '0')}_${receipt.attendeeName.replace(/[^a-zA-Z0-9]/g, '_')}_${receipt.type}.${extension}`;
         
-        folder.file(filename, base64Data, { base64: true });
+        try {
+          if (data.startsWith('http://') || data.startsWith('https://')) {
+            const response = await fetch(data);
+            fileData = await response.blob();
+          } else {
+            const base64String = data.includes(',') ? data.split(',')[1] : data;
+            fileData = base64String.replace(/\s+/g, '');
+            isBase64Opt = true;
+          }
+          folder.file(filename, fileData, isBase64Opt ? { base64: true } : undefined);
+        } catch (e) {
+          console.error(`Failed to process ${filename}`, e);
+        }
       }
 
       const content = await zip.generateAsync({ type: "blob" });
