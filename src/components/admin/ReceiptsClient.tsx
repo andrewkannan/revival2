@@ -109,9 +109,17 @@ export default function ReceiptsClient({ initialReceipts }: { initialReceipts: R
 
       for (const receipt of filteredAndSortedReceipts) {
         let data = receipt.url;
-        let extension = 'png';
-        if (data.includes('jpeg') || data.includes('jpg')) extension = 'jpg';
-        if (data.includes('pdf')) extension = 'pdf';
+        let extension = 'jpg';
+        if (data.startsWith('data:')) {
+          const mimeType = data.split(';')[0].split(':')[1] || '';
+          if (mimeType.includes('png')) extension = 'png';
+          else if (mimeType.includes('pdf')) extension = 'pdf';
+          else if (mimeType.includes('jpeg') || mimeType.includes('jpg')) extension = 'jpg';
+        } else if (data.startsWith('http')) {
+           const lowerData = data.toLowerCase();
+           if (lowerData.includes('.pdf')) extension = 'pdf';
+           else if (lowerData.includes('.png')) extension = 'png';
+        }
 
         const filename = `Order_R${String(receipt.orderNumber).padStart(5, '0')}_${receipt.attendeeName.replace(/[^a-zA-Z0-9]/g, '_')}_${receipt.type}.${extension}`;
         

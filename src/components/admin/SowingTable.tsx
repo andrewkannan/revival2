@@ -96,9 +96,17 @@ export default function SowingTable({ initialSowings }: { initialSowings: Sowing
         if ((sowing as any).deletedAt) continue; // Skip deleted records
         if (!sowing.receiptUrl) continue;
         let data = sowing.receiptUrl;
-        let extension = 'png';
-        if (data.includes('jpeg') || data.includes('jpg')) extension = 'jpg';
-        if (data.includes('pdf')) extension = 'pdf';
+        let extension = 'jpg';
+        if (data.startsWith('data:')) {
+          const mimeType = data.split(';')[0].split(':')[1] || '';
+          if (mimeType.includes('png')) extension = 'png';
+          else if (mimeType.includes('pdf')) extension = 'pdf';
+          else if (mimeType.includes('jpeg') || mimeType.includes('jpg')) extension = 'jpg';
+        } else if (data.startsWith('http')) {
+           const lowerData = data.toLowerCase();
+           if (lowerData.includes('.pdf')) extension = 'pdf';
+           else if (lowerData.includes('.png')) extension = 'png';
+        }
 
         const filename = `Sowing_${sowing.name.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date(sowing.createdAt).toISOString().split('T')[0]}.${extension}`;
         
