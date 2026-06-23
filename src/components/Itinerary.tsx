@@ -175,7 +175,7 @@ export default function Itinerary() {
                         <div className={`absolute inset-0 bg-gradient-to-tr from-transparent to-transparent pointer-events-none transition-opacity duration-700 ${isActive ? 'via-white/10 opacity-100' : 'via-white/[0.05] opacity-0 group-hover:opacity-100'}`} />
 
                         <div className="flex flex-col md:flex-row md:items-center gap-4 relative z-10">
-                          <div className={`inline-flex px-4 py-1.5 rounded-full border text-xs font-bold tracking-widest uppercase items-center gap-2 ${
+                          <div className={`inline-flex w-fit px-4 py-1.5 rounded-full border text-xs font-bold tracking-widest uppercase items-center gap-2 ${
                             isActive 
                               ? 'bg-white/20 border-white/40 text-white' 
                               : 'bg-poster-accent/10 border-poster-accent/20 text-poster-accent-bright'
@@ -193,7 +193,7 @@ export default function Itinerary() {
                           </h4>
                           
                           {isActive && (
-                            <div className="md:ml-auto inline-flex items-center text-white text-sm font-semibold tracking-wider uppercase border border-white/30 px-3 py-1 rounded-full bg-white/10">
+                            <div className="md:ml-auto inline-flex w-fit items-center text-white text-sm font-semibold tracking-wider uppercase border border-white/30 px-3 py-1 rounded-full bg-white/10">
                               Happening Now
                             </div>
                           )}
