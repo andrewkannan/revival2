@@ -100,7 +100,7 @@ export default function SowingTable({ initialSowings }: { initialSowings: Sowing
         if (data.includes('jpeg') || data.includes('jpg')) extension = 'jpg';
         if (data.includes('pdf')) extension = 'pdf';
 
-        const base64Data = data.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, "");
+        const base64Data = data.includes(',') ? data.split(',')[1] : data;
         const filename = `Sowing_${sowing.name.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date(sowing.createdAt).toISOString().split('T')[0]}.${extension}`;
         
         folder.file(filename, base64Data, { base64: true });

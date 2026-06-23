@@ -113,7 +113,7 @@ export default function ReceiptsClient({ initialReceipts }: { initialReceipts: R
         if (data.includes('jpeg') || data.includes('jpg')) extension = 'jpg';
         if (data.includes('pdf')) extension = 'pdf';
 
-        const base64Data = data.replace(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/, "");
+        const base64Data = data.includes(',') ? data.split(',')[1] : data;
         const filename = `Order_R${String(receipt.orderNumber).padStart(5, '0')}_${receipt.attendeeName.replace(/[^a-zA-Z0-9]/g, '_')}_${receipt.type}.${extension}`;
         
         folder.file(filename, base64Data, { base64: true });
