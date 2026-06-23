@@ -13,8 +13,8 @@ const schedule = [
         time: '6:00pm - 7:30pm', 
         title: 'Registration', 
         description: '',
-        start: '2026-06-23T16:00:00+08:00', // Temporarily set to today to show example
-        end: '2026-06-23T18:00:00+08:00'   // Temporarily set to today to show example
+        start: '2026-06-26T18:00:00+08:00',
+        end: '2026-06-26T19:30:00+08:00'
       },
       { 
         time: '7:30pm - 10pm', 
