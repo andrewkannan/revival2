@@ -14,6 +14,7 @@ export default function EmailQueueClient({
   initialPaused: boolean;
 }) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [showSent, setShowSent] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -39,6 +40,7 @@ export default function EmailQueueClient({
   };
 
   const filteredQueue = initialQueue.filter((item) => {
+    if (!showSent && item.status === 'SENT') return false;
     if (!searchTerm) return true;
     const searchLower = searchTerm.toLowerCase();
     return (
@@ -59,6 +61,17 @@ export default function EmailQueueClient({
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-black/50 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-poster-accent transition-colors"
           />
+        </div>
+        
+        <div className="flex items-center gap-2 mr-auto sm:mr-0 text-sm text-slate-300">
+          <input 
+            type="checkbox" 
+            id="showSent" 
+            checked={showSent} 
+            onChange={(e) => setShowSent(e.target.checked)} 
+            className="rounded border-white/20 bg-white/5 text-poster-accent focus:ring-poster-accent"
+          />
+          <label htmlFor="showSent" className="cursor-pointer select-none">Show Sent</label>
         </div>
 
         <div className="flex gap-2">
