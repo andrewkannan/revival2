@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { RegistrationStatus, Registration, Attendee, OutreachLocation, Ticket } from '@prisma/client';
 import { BadgeCheck, Clock, XCircle, AlertCircle, Search, X, Edit2, Download, FileArchive, QrCode, Trash2, Mail, Users } from 'lucide-react';
 import JSZip from 'jszip';
-import { deleteRegistration, sendBulkPaymentReminders, sendPaymentReminderTest, sendIndividualPaymentReminder, toggleRegistrationCheckin } from '@/actions/admin';
+import { deleteRegistration, sendBulkPaymentReminders, sendPaymentReminderTest, sendIndividualPaymentReminder, toggleRegistrationCheckin, resendTicketEmail } from '@/actions/admin';
 import StatusSelect from '@/components/admin/StatusSelect';
 import EditRegistrationModal, { EditData } from '@/components/admin/EditRegistrationModal';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -112,6 +112,16 @@ export default function RegistrationsTable({ initialData }: Props) {
       const res = await sendIndividualPaymentReminder(id);
       alert(res.message);
       setMailingId(null);
+    }
+  };
+
+  const [resendId, setResendId] = useState<string | null>(null);
+  const handleResendTicket = async (id: string, name: string) => {
+    if (window.confirm(`Resend Master Ticket email to ${name}?`)) {
+      setResendId(id);
+      const res = await resendTicketEmail(id);
+      alert(res.message);
+      setResendId(null);
     }
   };
 
@@ -496,12 +506,22 @@ export default function RegistrationsTable({ initialData }: Props) {
                     <td className="px-4 py-4">
                       <div className="flex flex-col items-end gap-2">
                         {reg.status === 'SEAT_SECURED' && (
-                          <button
-                            onClick={() => setTicketsModal({ reg })}
-                            className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 rounded transition-colors border border-emerald-500/20 whitespace-nowrap mt-2 sm:mt-0"
-                          >
-                            <QrCode className="w-3.5 h-3.5" /> View Ticket
-                          </button>
+                          <div className="flex items-center gap-2 mt-2 sm:mt-0">
+                            <button
+                              onClick={() => setTicketsModal({ reg })}
+                              className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 rounded transition-colors border border-emerald-500/20 whitespace-nowrap"
+                            >
+                              <QrCode className="w-3.5 h-3.5" /> View Ticket
+                            </button>
+                            <button
+                              onClick={() => handleResendTicket(reg.id, reg.attendee.name)}
+                              disabled={resendId === reg.id}
+                              className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-400 hover:text-blue-300 bg-blue-500/10 hover:bg-blue-500/20 rounded transition-colors border border-blue-500/20 whitespace-nowrap disabled:opacity-50"
+                              title="Resend Ticket Email"
+                            >
+                              <Mail className="w-3.5 h-3.5" /> {resendId === reg.id ? '...' : 'Resend'}
+                            </button>
+                          </div>
                         )}
                         <StatusSelect registrationId={reg.id} currentStatus={reg.status} />
                         {reg.status === 'SEAT_SECURED' && (reg as any).seatSecuredAt && (
@@ -673,12 +693,22 @@ export default function RegistrationsTable({ initialData }: Props) {
                   </div>
                   <div className="flex flex-col items-end gap-2">
                     {reg.status === 'SEAT_SECURED' && (
-                      <button
-                        onClick={() => setTicketsModal({ reg })}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 rounded transition-colors border border-emerald-500/20"
-                      >
-                        <QrCode className="w-3.5 h-3.5" /> View Ticket
-                      </button>
+                      <div className="flex flex-col gap-2">
+                        <button
+                          onClick={() => setTicketsModal({ reg })}
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 rounded transition-colors border border-emerald-500/20"
+                        >
+                          <QrCode className="w-3.5 h-3.5" /> View Ticket
+                        </button>
+                        <button
+                          onClick={() => handleResendTicket(reg.id, reg.attendee.name)}
+                          disabled={resendId === reg.id}
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-400 hover:text-blue-300 bg-blue-500/10 hover:bg-blue-500/20 rounded transition-colors border border-blue-500/20 disabled:opacity-50"
+                          title="Resend Ticket Email"
+                        >
+                          <Mail className="w-3.5 h-3.5" /> {resendId === reg.id ? '...' : 'Resend Ticket'}
+                        </button>
+                      </div>
                     )}
                     <StatusSelect registrationId={reg.id} currentStatus={reg.status} />
                     {reg.status === 'SEAT_SECURED' && (reg as any).seatSecuredAt && (
