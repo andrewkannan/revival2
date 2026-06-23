@@ -7,6 +7,7 @@ import TestimonyBox from '@/components/TestimonyBox';
 import SowPanel from '@/components/SowPanel';
 import WorshipPlaylist from '@/components/WorshipPlaylist';
 import CountdownLock from '@/components/CountdownLock';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { Image as ImageIcon, Heart, MessageSquare, Music, Sprout } from 'lucide-react';
 import Image from 'next/image';
 
@@ -20,6 +21,7 @@ export default async function ItineraryPage() {
 
   return (
     <main className="min-h-screen bg-[#263336] overflow-x-hidden relative">
+      <LanguageSwitcher />
       {/* Live Calvary Background */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-black">
         <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#263336]/95 via-[#263336]/80 to-black/95"></div>
