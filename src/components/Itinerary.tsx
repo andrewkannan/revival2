@@ -8,6 +8,7 @@ const schedule = [
     day: 'Day 1',
     date: 'Friday • 26 June 2026',
     events: [
+      { time: '6:00pm - 7:30pm', title: 'Early Check In', description: '' },
       { time: '7:30pm - 10pm', title: 'Session 1 - Night Rally', description: '' }
     ]
   },
