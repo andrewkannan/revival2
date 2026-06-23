@@ -3,9 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState<3 | 4>(3);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -42,18 +44,18 @@ export default function Hero() {
         <div className="relative w-full max-w-[280px] md:max-w-[400px] aspect-[5/1] mb-6 md:mb-8">
           <Image src="/hero/revival-logo.png" alt="Revival Logo" fill className="object-contain drop-shadow-xl" priority />
         </div>
-        <h2 className="text-2xl md:text-4xl lg:text-5xl font-extrabold mb-4 md:mb-6 tracking-widest text-white uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] leading-tight">
-          "I Will Pour Out<br/>My Spirit"
+        <h2 className="text-2xl md:text-4xl lg:text-5xl font-extrabold mb-4 md:mb-6 tracking-widest text-white uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] leading-tight whitespace-pre-line">
+          {t('hero.title1')}<br/>{t('hero.title2')}
         </h2>
         
         <p className="text-lg md:text-xl font-light text-slate-200 italic mb-6 md:mb-8 drop-shadow-md tracking-wide">
-          An Outpouring. An Awakening. A Generation Arising.
+          {t('hero.subtitle')}
         </p>
         
         <div className="inline-flex items-center gap-4">
           <div className="h-[1px] w-8 md:w-12 bg-poster-accent-bright/40"></div>
           <p className="text-sm md:text-base font-bold tracking-[0.5em] text-poster-accent-bright uppercase drop-shadow-md">
-            Acts 2:17-18
+            {t('hero.verse')}
           </p>
           <div className="h-[1px] w-8 md:w-12 bg-poster-accent-bright/40"></div>
         </div>
@@ -113,13 +115,13 @@ export default function Hero() {
           onClick={() => document.getElementById('registration')?.scrollIntoView({ behavior: 'smooth' })}
           className="bg-poster-accent hover:bg-poster-accent-bright text-poster-bg px-8 py-3 md:px-12 md:py-5 rounded-md font-black uppercase tracking-[0.15em] md:tracking-[0.2em] text-sm md:text-base hover:-translate-y-1 transition-all duration-300 shadow-[0_0_30px_rgba(140,174,176,0.4)] hover:shadow-[0_0_40px_rgba(164,197,198,0.6)] whitespace-nowrap"
         >
-          Secure your place today
+          {t('hero.cta')}
         </button>
         <a 
           href="/itinerary"
           className="group flex items-center gap-2 text-poster-accent font-bold uppercase tracking-widest text-xs md:text-sm border border-poster-accent/30 px-6 py-2.5 rounded-full hover:bg-poster-accent/10 hover:border-poster-accent/60 transition-all duration-300"
         >
-          View Itinerary & Hub
+          {t('hero.itineraryBtn')}
           <span className="group-hover:translate-x-1 transition-transform">→</span>
         </a>
       </motion.div>
@@ -133,33 +135,33 @@ export default function Hero() {
         className="text-center z-20 max-w-2xl mx-auto mt-4 px-2"
       >
         <p className="text-lg md:text-2xl font-semibold mb-6 md:mb-8 text-white tracking-wide">
-          This conference is a space to:
+          {t('hero.spaceTo')}
         </p>
         
         <ul className="text-left space-y-4 text-base md:text-lg text-slate-300 mb-10 md:mb-12 max-w-md mx-auto">
           <li className="flex items-start gap-3">
-            <span className="text-poster-accent-bright mt-0.5">✦</span> Encounter the Holy Spirit deeply
+            <span className="text-poster-accent-bright mt-0.5">✦</span> {t('hero.point1')}
           </li>
           <li className="flex items-start gap-3">
-            <span className="text-poster-accent-bright mt-0.5">✦</span> Discover and stir up your calling
+            <span className="text-poster-accent-bright mt-0.5">✦</span> {t('hero.point2')}
           </li>
           <li className="flex items-start gap-3">
-            <span className="text-poster-accent-bright mt-0.5">✦</span> Be activated in your gifts and purpose
+            <span className="text-poster-accent-bright mt-0.5">✦</span> {t('hero.point3')}
           </li>
           <li className="flex items-start gap-3">
-            <span className="text-poster-accent-bright mt-0.5">✦</span> Receive fresh vision for this season
+            <span className="text-poster-accent-bright mt-0.5">✦</span> {t('hero.point4')}
           </li>
           <li className="flex items-start gap-3">
-            <span className="text-poster-accent-bright mt-0.5">✦</span> Build alongside a generation hungry for God
+            <span className="text-poster-accent-bright mt-0.5">✦</span> {t('hero.point5')}
           </li>
         </ul>
 
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
           <p className="text-base md:text-xl text-white font-medium italic mb-4">
-            "Come expecting not just information, but transformation."
+            {t('hero.quote')}
           </p>
           <p className="text-poster-accent-bright font-bold text-sm md:text-base uppercase tracking-[0.15em] leading-relaxed">
-            A generation marked by His presence will become a generation that carries His power.
+            {t('hero.subquote')}
           </p>
         </div>
       </motion.div>

@@ -2,64 +2,65 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from '@/hooks/useTranslation';
 
 // SGT timezone is +08:00
 const schedule = [
   {
-    day: 'Day 1',
-    date: 'Friday • 26 June 2026',
+    dayKey: 'itinerary.day1',
+    dateKey: 'itinerary.date1',
     events: [
       { 
         time: '6:00pm - 7:30pm', 
-        title: 'Registration', 
-        description: '',
+        titleKey: 'itinerary.registration', 
+        descriptionKey: null,
         start: '2026-06-26T18:00:00+08:00',
         end: '2026-06-26T19:30:00+08:00'
       },
       { 
         time: '7:30pm - 10pm', 
-        title: 'Session 1 - Night Rally', 
-        description: '',
+        titleKey: 'itinerary.session1', 
+        descriptionKey: null,
         start: '2026-06-26T19:30:00+08:00',
         end: '2026-06-26T22:00:00+08:00'
       }
     ]
   },
   {
-    day: 'Day 2',
-    date: 'Saturday • 27 June 2026',
+    dayKey: 'itinerary.day2',
+    dateKey: 'itinerary.date2',
     events: [
       { 
         time: '9am - 12pm', 
-        title: 'Session 2', 
-        description: '',
+        titleKey: 'itinerary.session2', 
+        descriptionKey: null,
         start: '2026-06-27T09:00:00+08:00',
         end: '2026-06-27T12:00:00+08:00'
       },
       { 
         time: '1:30pm - 3pm', 
-        title: 'Breakout Sessions', 
-        description: 'Auditorium 2: Revival in Marketplace\nAuditorium 3: Hosting the Glory',
+        titleKey: 'itinerary.breakout', 
+        descriptionKey: 'itinerary.breakoutDesc',
         start: '2026-06-27T13:30:00+08:00',
         end: '2026-06-27T15:00:00+08:00'
       },
       { 
         time: '7:00pm - 10pm', 
-        title: 'Session 3 - Night Rally', 
-        description: '',
+        titleKey: 'itinerary.session3', 
+        descriptionKey: null,
         start: '2026-06-27T19:00:00+08:00',
         end: '2026-06-27T22:00:00+08:00'
       }
     ]
   },
   {
-    day: 'Day 3',
-    date: 'Sunday • 28 June 2026',
+    dayKey: 'itinerary.day3',
+    dateKey: 'itinerary.date3',
     events: [
       { 
         time: '8:30am - 12pm', 
-        title: 'Session 4', 
-        description: '',
+        titleKey: 'itinerary.session4', 
+        descriptionKey: null,
         start: '2026-06-28T08:30:00+08:00',
         end: '2026-06-28T12:00:00+08:00'
       }
@@ -69,6 +70,7 @@ const schedule = [
 
 export default function Itinerary() {
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Set initial time on client side to avoid hydration mismatches
@@ -107,7 +109,7 @@ export default function Itinerary() {
           transition={{ delay: 0.1 }}
           className="text-3xl md:text-5xl font-extrabold mb-4 tracking-[0.15em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-white via-poster-accent-bright to-white"
         >
-          Itinerary
+          {t('itinerary.title')}
         </motion.h2>
         <motion.p 
           initial={{ opacity: 0, y: 20 }}
@@ -116,7 +118,7 @@ export default function Itinerary() {
           transition={{ delay: 0.1 }}
           className="text-slate-400 font-light text-lg tracking-wide max-w-xl mx-auto"
         >
-          Here's what we have in store for the REVIVAL conference.
+          {t('itinerary.subtitle')}
         </motion.p>
       </div>
 
@@ -129,7 +131,7 @@ export default function Itinerary() {
             const dayActive = isDayActive(dayPlan.events);
             
             return (
-              <div key={dayPlan.day} className="relative">
+              <div key={dayPlan.dayKey} className="relative">
                 {/* Sleek animated glowing dot for the day */}
                 <motion.div 
                   initial={{ scale: 0, opacity: 0 }}
@@ -147,10 +149,10 @@ export default function Itinerary() {
                   className="pl-10 md:pl-16 mb-10 flex flex-col md:flex-row md:items-end gap-2 md:gap-4"
                 >
                   <h3 className={`text-3xl md:text-4xl font-extrabold tracking-widest uppercase transition-colors duration-500 ${dayActive ? 'text-transparent bg-clip-text bg-gradient-to-r from-white to-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'text-transparent bg-clip-text bg-gradient-to-r from-poster-accent-bright to-white'}`}>
-                    {dayPlan.day}
+                    {t(dayPlan.dayKey)}
                   </h3>
                   <span className={`text-sm md:text-base font-semibold tracking-widest uppercase md:pb-1 transition-colors duration-500 ${dayActive ? 'text-white/80' : 'text-slate-400'}`}>
-                    {dayPlan.date}
+                    {t(dayPlan.dateKey)}
                   </span>
                 </motion.div>
 
@@ -160,7 +162,7 @@ export default function Itinerary() {
                     
                     return (
                       <motion.div 
-                        key={event.title + event.time}
+                        key={event.titleKey + event.time}
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, amount: 0.1 }}
@@ -174,7 +176,7 @@ export default function Itinerary() {
                         {/* Hover/Active glare effect */}
                         <div className={`absolute inset-0 bg-gradient-to-tr from-transparent to-transparent pointer-events-none transition-opacity duration-700 ${isActive ? 'via-white/10 opacity-100' : 'via-white/[0.05] opacity-0 group-hover:opacity-100'}`} />
 
-                        <div className="flex flex-col md:flex-row md:items-center gap-4 relative z-10">
+                        <div className="flex flex-col md:flex-row md:items-start md:items-center gap-4 relative z-10">
                           <div className={`inline-flex w-fit px-4 py-1.5 rounded-full border text-xs font-bold tracking-widest uppercase items-center gap-2 ${
                             isActive 
                               ? 'bg-white/20 border-white/40 text-white' 
@@ -189,19 +191,19 @@ export default function Itinerary() {
                             {event.time}
                           </div>
                           <h4 className={`text-xl md:text-2xl font-semibold tracking-wide ${isActive ? 'text-white' : 'text-white/95'}`}>
-                            {event.title}
+                            {t(event.titleKey)}
                           </h4>
                           
                           {isActive && (
                             <div className="md:ml-auto inline-flex w-fit items-center text-white text-sm font-semibold tracking-wider uppercase border border-white/30 px-3 py-1 rounded-full bg-white/10">
-                              Happening Now
+                              {t('itinerary.happeningNow')}
                             </div>
                           )}
                         </div>
                         
-                        {event.description && (
+                        {event.descriptionKey && (
                           <p className={`font-light leading-relaxed relative z-10 whitespace-pre-line mt-4 ${isActive ? 'text-white/90' : 'text-slate-400'}`}>
-                            {event.description}
+                            {t(event.descriptionKey)}
                           </p>
                         )}
                       </motion.div>

@@ -1,10 +1,12 @@
 import Hero from '@/components/Hero';
 import RegistrationWizard from '@/components/RegistrationWizard';
 import Itinerary from '@/components/Itinerary';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#263336] to-black">
+    <main className="min-h-screen bg-gradient-to-b from-[#263336] to-black relative">
+      <LanguageSwitcher />
       <Hero />
       
       <Itinerary />

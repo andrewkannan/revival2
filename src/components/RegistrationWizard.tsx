@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import { checkCapacity, lockTicketsAction, releaseLockAction, finalizeRegistration, getPricing, uploadReceipt } from '@/actions/registration';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const OutreachLocationEnum = z.enum([
   'JOHOR_BAHRU', 'ISKANDAR_PUTERI', 'TAMAN_DAYA', 
@@ -27,6 +28,7 @@ const step2Schema = z.object({
 type FormData = z.infer<typeof step1Schema> & z.infer<typeof step2Schema>;
 
 export default function RegistrationWizard() {
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [sessionId, setSessionId] = useState('');
   const [isLocking, setIsLocking] = useState(false);
@@ -213,28 +215,28 @@ export default function RegistrationWizard() {
             initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
             className="space-y-4"
           >
-            <h3 className="text-2xl font-semibold mb-6">Your Details</h3>
+            <h3 className="text-2xl font-semibold mb-6">{t('registration.detailsTitle')}</h3>
             
             <div>
-              <label className="block text-sm font-medium text-slate-400 mb-1">Full Name</label>
+              <label className="block text-sm font-medium text-slate-400 mb-1">{t('registration.fullName')}</label>
               <input {...register('name')} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white/30" placeholder="John Doe" />
               {errors.name && <span className="text-red-400 text-xs mt-1 block">{errors.name.message}</span>}
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-slate-400 mb-1">Email Address</label>
+              <label className="block text-sm font-medium text-slate-400 mb-1">{t('registration.email')}</label>
               <input type="email" {...register('email')} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white/30" placeholder="john@example.com" />
               {errors.email && <span className="text-red-400 text-xs mt-1 block">{errors.email.message}</span>}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-400 mb-1">Phone Number</label>
+              <label className="block text-sm font-medium text-slate-400 mb-1">{t('registration.phone')}</label>
               <input type="tel" {...register('phone')} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white/30" placeholder="+60 12-345 6789" />
               {errors.phone && <span className="text-red-400 text-xs mt-1 block">{errors.phone.message}</span>}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-400 mb-1">Outreach Location</label>
+              <label className="block text-sm font-medium text-slate-400 mb-1">{t('registration.outreach')}</label>
               <select {...register('outreach')} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white/30">
                 <option value="JOHOR_BAHRU">Johor Bahru</option>
                 <option value="ISKANDAR_PUTERI">Iskandar Puteri</option>
@@ -242,12 +244,12 @@ export default function RegistrationWizard() {
                 <option value="PELANGI_INDAH">Pelangi Indah</option>
                 <option value="MELAKA">Melaka</option>
                 <option value="SIMPANG_RENGGAM">Simpang Renggam</option>
-                <option value="OTHERS">Others</option>
+                <option value="OTHERS">{t('registration.others')}</option>
               </select>
             </div>
 
             <button type="button" onClick={nextStep} className="w-full bg-white text-black font-medium py-3 rounded-lg hover:bg-slate-200 transition-colors mt-6">
-              Continue to Tickets
+              {t('registration.continueTickets')}
             </button>
           </motion.div>
         )}
@@ -258,12 +260,12 @@ export default function RegistrationWizard() {
             initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-semibold mb-2">Select Tickets</h3>
-            {pricing.isEarlyBird && <p className="text-sm text-green-400 mb-6 font-medium">✨ Early Bird Pricing Active</p>}
+            <h3 className="text-2xl font-semibold mb-2">{t('registration.selectTickets')}</h3>
+            {pricing.isEarlyBird && <p className="text-sm text-green-400 mb-6 font-medium">{t('registration.earlyBird')}</p>}
 
             <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
               <div>
-                <h4 className="font-medium text-lg">Adult Ticket</h4>
+                <h4 className="font-medium text-lg">{t('registration.adultTicket')}</h4>
                 <div className="flex flex-col items-start gap-0.5 mt-1">
                   <p className={pricing.isEarlyBird ? "text-emerald-400 text-xl font-bold" : "text-slate-400 text-lg"}>
                     RM {pricing.adultPrice.toFixed(2)}
@@ -287,10 +289,10 @@ export default function RegistrationWizard() {
 
             <div className="flex space-x-3 mt-8">
               <button type="button" onClick={prevStep} className="px-6 py-3 rounded-lg border border-white/20 hover:bg-white/10 transition-colors">
-                Back
+                {t('registration.back')}
               </button>
               <button type="button" onClick={nextStep} disabled={isLocking} className="flex-1 bg-white text-black font-medium py-3 rounded-lg hover:bg-slate-200 transition-colors disabled:opacity-70 flex items-center justify-center">
-                {isLocking ? 'Securing Tickets...' : 'Review & Lock Seats'}
+                {isLocking ? t('registration.securing') : t('registration.reviewLock')}
               </button>
             </div>
           </motion.div>
@@ -304,10 +306,10 @@ export default function RegistrationWizard() {
           >
             <div className="flex items-center space-x-2 text-green-400 mb-6 bg-green-400/10 p-3 rounded-lg border border-green-400/20">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-              <span className="text-sm font-medium">Your seats are locked for 10 minutes.</span>
+              <span className="text-sm font-medium">{t('registration.lockedMsg')}</span>
             </div>
 
-            <h3 className="text-2xl font-semibold mb-2">Order Summary</h3>
+            <h3 className="text-2xl font-semibold mb-2">{t('registration.summary')}</h3>
             
             <div className="space-y-3 bg-black/30 p-5 rounded-xl border border-white/5">
               <div className="space-y-1">
@@ -317,23 +319,23 @@ export default function RegistrationWizard() {
               <hr className="border-white/10" />
               {formData.adultTickets > 0 && (
                 <div className="flex justify-between">
-                  <span>{formData.adultTickets}x Adult Ticket</span>
+                  <span>{formData.adultTickets}x {t('registration.adultTicket')}</span>
                   <span>RM {(formData.adultTickets * pricing.adultPrice).toFixed(2)}</span>
                 </div>
               )}
               <hr className="border-white/10" />
               <div className="flex justify-between font-bold text-xl pt-2">
-                <span>Total</span>
+                <span>{t('registration.total')}</span>
                 <span>RM {totalAmount.toFixed(2)}</span>
               </div>
             </div>
 
             <div className="flex space-x-3 mt-8">
               <button type="button" onClick={cancelLock} disabled={isSubmitting} className="px-6 py-3 rounded-lg border border-white/20 hover:bg-white/10 transition-colors">
-                Back
+                {t('registration.back')}
               </button>
               <button type="button" onClick={onSubmitFinal} disabled={isSubmitting} className="flex-1 bg-poster-accent text-poster-bg font-medium py-4 rounded-xl hover:bg-poster-accent-bright transition-colors disabled:opacity-70 shadow-[0_0_20px_rgba(140,174,176,0.2)]">
-                {isSubmitting ? 'Processing...' : 'Proceed to Payment'}
+                {isSubmitting ? t('registration.processing') : t('registration.proceedPayment')}
               </button>
             </div>
           </motion.div>
@@ -345,35 +347,35 @@ export default function RegistrationWizard() {
             initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-semibold mb-2">Payment Details</h3>
-            <p className="text-slate-300 text-sm mb-4">Please transfer the total amount of <strong className="text-white text-lg font-mono">RM {totalAmount.toFixed(2)}</strong> to the bank account below and upload your receipt.</p>
+            <h3 className="text-2xl font-semibold mb-2">{t('registration.paymentDetails')}</h3>
+            <p className="text-slate-300 text-sm mb-4">{t('registration.transferInstruction1')}<strong className="text-white text-lg font-mono">RM {totalAmount.toFixed(2)}</strong>{t('registration.transferInstruction2')}</p>
             
             <div className="bg-black/40 p-4 rounded-xl border border-white/10 mb-6 font-mono text-sm space-y-2">
               <div className="flex justify-between">
-                <span className="text-slate-400">Bank Name</span>
+                <span className="text-slate-400">{t('registration.bankName')}</span>
                 <span className="font-medium">Maybank</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Account Name</span>
+                <span className="text-slate-400">{t('registration.accountName')}</span>
                 <span className="font-medium">CALVARY COMMUNITY TT</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Account Number</span>
+                <span className="text-slate-400">{t('registration.accountNumber')}</span>
                 <span className="font-medium tracking-widest text-poster-accent-bright">551016737305</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Payment Reference</span>
+                <span className="text-slate-400">{t('registration.paymentRef')}</span>
                 <span className="font-medium tracking-widest text-poster-accent-bright">BIL CONF</span>
               </div>
             </div>
 
             <form onSubmit={onUploadReceipt} className="space-y-6">
               <div className="bg-poster-accent/10 border border-poster-accent/20 rounded-lg p-4 text-sm text-slate-300 text-center">
-                Provide a screenshot or PDF receipt showing amount, date, and reference for payment verification.
+                {t('registration.uploadInstruction')}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Upload Payment Receipt</label>
+                <label className="block text-sm font-medium text-slate-400 mb-2">{t('registration.uploadLabel')}</label>
                 <input 
                   type="file" 
                   name="receipt" 
@@ -384,7 +386,7 @@ export default function RegistrationWizard() {
               </div>
 
               <button type="submit" disabled={isSubmitting} className="w-full bg-poster-accent text-poster-bg font-medium py-4 rounded-xl hover:bg-poster-accent-bright transition-colors disabled:opacity-70 shadow-[0_0_20px_rgba(140,174,176,0.2)]">
-                {isSubmitting ? 'Uploading...' : 'Submit Proof'}
+                {isSubmitting ? t('registration.uploading') : t('registration.submitProof')}
               </button>
             </form>
           </motion.div>
@@ -399,12 +401,12 @@ export default function RegistrationWizard() {
             <div className="w-20 h-20 bg-poster-accent rounded-full mx-auto flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(140,174,176,0.4)]">
               <svg className="w-10 h-10 text-poster-bg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
             </div>
-            <h3 className="text-3xl font-bold mb-4">You're In!</h3>
+            <h3 className="text-3xl font-bold mb-4">{t('registration.successTitle')}</h3>
             <p className="text-slate-300 mb-8 max-w-sm mx-auto">
-              Your registration and payment receipt have been submitted. Our team will review the transaction and send your ticket confirmation to your email shortly.
+              {t('registration.successMsg')}
             </p>
             <button type="button" onClick={() => window.location.reload()} className="bg-white/10 border border-white/20 text-white px-6 py-3 rounded-lg hover:bg-white/20 transition-colors">
-              Register Another Person
+              {t('registration.registerAnother')}
             </button>
           </motion.div>
         )}
