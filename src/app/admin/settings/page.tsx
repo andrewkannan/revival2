@@ -37,6 +37,7 @@ export default function SettingsPage() {
     testimonyUnlockTime: '',
     isGalleryLocked: true,
     galleryUnlockTime: '',
+    isBreakoutQALocked: true,
   });
 
   const [smtpData, setSmtpData] = useState({
@@ -76,6 +77,7 @@ export default function SettingsPage() {
         testimonyUnlockTime: config.testimonyUnlockTime ? new Date(config.testimonyUnlockTime).toISOString().slice(0, 16) : '',
         isGalleryLocked: config.isGalleryLocked ?? true,
         galleryUnlockTime: config.galleryUnlockTime ? new Date(config.galleryUnlockTime).toISOString().slice(0, 16) : '',
+        isBreakoutQALocked: config.isBreakoutQALocked ?? true,
       });
 
       setSmtpData({
@@ -404,6 +406,22 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 )}
+              </div>
+
+              {/* Breakout Q&A Lock */}
+              <div className="space-y-4">
+                <label className="flex items-center gap-3 cursor-pointer p-4 bg-black/30 border border-white/10 rounded-xl hover:bg-white/5 transition-colors">
+                  <input 
+                    type="checkbox" 
+                    name="isBreakoutQALocked" 
+                    checked={generalData.isBreakoutQALocked} 
+                    onChange={handleGeneralChange}
+                    className="w-5 h-5 accent-poster-accent"
+                  />
+                  <div>
+                    <span className="font-medium block text-white">Lock Breakout Q&A</span>
+                  </div>
+                </label>
               </div>
             </div>
           </div>

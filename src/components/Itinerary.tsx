@@ -42,7 +42,8 @@ const schedule = [
         titleKey: 'itinerary.breakout', 
         descriptionKey: 'itinerary.breakoutDesc',
         start: '2026-06-27T13:30:00+08:00',
-        end: '2026-06-27T15:00:00+08:00'
+        end: '2026-06-27T15:00:00+08:00',
+        isBreakout: true
       },
       { 
         time: '7:00pm - 10pm', 
@@ -68,7 +69,7 @@ const schedule = [
   }
 ];
 
-export default function Itinerary() {
+export default function Itinerary({ isBreakoutQALocked = true }: { isBreakoutQALocked?: boolean }) {
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const { t } = useTranslation();
 
@@ -205,6 +206,23 @@ export default function Itinerary() {
                           <p className={`font-light leading-relaxed relative z-10 whitespace-pre-line mt-4 ${isActive ? 'text-white/90' : 'text-slate-400'}`}>
                             {t(event.descriptionKey)}
                           </p>
+                        )}
+                        
+                        {event.isBreakout && (!isBreakoutQALocked || isActive) && (
+                          <div className="mt-8 flex flex-col sm:flex-row gap-4 relative z-10">
+                            <a 
+                              href="/breakout-qa/1"
+                              className="flex-1 text-center py-3 px-4 rounded-xl font-bold tracking-wide uppercase text-sm border border-[#8caeb0] text-[#8caeb0] hover:bg-[#8caeb0] hover:text-[#0b1013] transition-all"
+                            >
+                              Enter Q&A: Auditorium 2
+                            </a>
+                            <a 
+                              href="/breakout-qa/2"
+                              className="flex-1 text-center py-3 px-4 rounded-xl font-bold tracking-wide uppercase text-sm border border-[#8caeb0] text-[#8caeb0] hover:bg-[#8caeb0] hover:text-[#0b1013] transition-all"
+                            >
+                              Enter Q&A: Auditorium 3
+                            </a>
+                          </div>
                         )}
                       </motion.div>
                     );

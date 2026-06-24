@@ -82,7 +82,7 @@ export default async function ItineraryPage() {
 
       <div className="pb-24 flex flex-col gap-8 md:gap-16 relative z-10">
         <section>
-          <Itinerary />
+          <Itinerary isBreakoutQALocked={adminConfig?.isBreakoutQALocked ?? true} />
         </section>
 
         {adminConfig?.playlistUrl && (

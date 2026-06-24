@@ -130,6 +130,7 @@ model AdminConfig {
   testimonyUnlockTime  DateTime?
   isGalleryLocked      Boolean  @default(true)
   galleryUnlockTime    DateTime?
+  isBreakoutQALocked   Boolean  @default(true)
   isEmailQueuePaused   Boolean  @default(false)
   updatedAt            DateTime @updatedAt
 }
@@ -225,4 +226,13 @@ model Photo {
   imageUrl  String   @db.Text
   sessionId Int      @default(1)
   createdAt DateTime @default(now())
+}
+
+model BreakoutQuestion {
+  id         String   @id @default(uuid())
+  sessionId  Int      // 1 for Auditorium 2, 2 for Auditorium 3
+  authorName String?
+  content    String
+  isDone     Boolean  @default(false)
+  createdAt  DateTime @default(now())
 }
