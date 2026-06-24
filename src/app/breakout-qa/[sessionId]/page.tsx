@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useParams } from 'next/navigation';
 import { submitBreakoutQuestion } from '@/actions/breakout';
 import { Send, Loader2, ArrowLeft, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 
-export default function BreakoutQASubmission({ params }: { params: { sessionId: string } }) {
-  const sessionId = parseInt(params.sessionId, 10);
+export default function BreakoutQASubmission() {
+  const params = useParams();
+  const sessionId = parseInt(params?.sessionId as string, 10);
   const [content, setContent] = useState('');
   const [authorName, setAuthorName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
