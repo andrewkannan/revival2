@@ -1377,6 +1377,13 @@ function generateConferenceEveHtml(name: string, formattedOrderNumber: string, t
         </div>
       </div>
 
+      <div style="margin: 30px 0;">
+        <a href="https://revival.thisiscccbilingual.com/itinerary" style="display: inline-block; background-color: #8caeb0; color: #0f171a; font-weight: bold; padding: 16px 32px; border-radius: 12px; text-decoration: none;">View the Full Itinerary</a>
+        <p style="font-size: 14px; color: #cbd5e1; margin-top: 10px; font-weight: bold;">Check out the schedule before you arrive!</p>
+      </div>
+
+      <hr style="border: none; border-top: 1px solid #334155; margin: 40px 0;" />
+
       <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">Start preparing your hearts, and we will see you tomorrow!</p>
       <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">The REVIVAL Team</p>
     </div>
