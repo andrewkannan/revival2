@@ -1338,8 +1338,13 @@ function generateConferenceEveHtml(name: string, formattedOrderNumber: string, t
       <div style="margin: 0 0 30px 0; padding: 20px; background-color: #1c272a; border: 2px solid #8caeb0; border-radius: 15px; display: block;">
         <h2 style="color: #8caeb0; font-size: 24px; margin: 0 0 10px 0;">Registration Info</h2>
         <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; margin: 0;">
-          Registration opens at <strong>6:00 PM - 7:30 PM</strong>.
+          Registration opens at:
         </p>
+        <div style="background-color: #0f171a; padding: 10px; border-radius: 8px; margin: 10px 0;">
+          <p style="font-size: 22px; color: #cdff64; font-weight: bold; margin: 0; letter-spacing: 1px;">
+            6:00 PM - 7:30 PM
+          </p>
+        </div>
         <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; margin: 10px 0 0 0;">
           Please arrive early to register and collect your starter pack!
         </p>
