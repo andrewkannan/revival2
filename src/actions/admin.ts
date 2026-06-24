@@ -1332,60 +1332,58 @@ export async function sendMassAnticipationEmail() {
 
 function generateConferenceEveHtml(name: string, formattedOrderNumber: string, ticketText: string, reg: any) {
   return `
-    <div style="font-family: sans-serif; max-w: 600px; margin: 0 auto; text-align: center; background-color: #0f171a; color: #ffffff; padding: 40px; border-radius: 20px;">
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0b1013; color: #ffffff; padding: 0; border-radius: 24px; overflow: hidden; border: 1px solid #1c272a;">
       
-      <!-- Registration Instructions Panel -->
-      <div style="margin: 0 0 30px 0; padding: 20px; background-color: #1c272a; border: 2px solid #8caeb0; border-radius: 15px; display: block;">
-        <h2 style="color: #8caeb0; font-size: 24px; margin: 0 0 10px 0;">Registration Info</h2>
-        <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; margin: 0;">
-          Registration opens at:
-        </p>
-        <div style="background-color: #0f171a; padding: 10px; border-radius: 8px; margin: 10px 0;">
-          <p style="font-size: 22px; color: #cdff64; font-weight: bold; margin: 0; letter-spacing: 1px;">
-            6:00 PM - 7:30 PM
-          </p>
-        </div>
-        <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; margin: 10px 0 0 0;">
-          Please arrive early to register and collect your starter pack!
-        </p>
+      <!-- Hero Header -->
+      <div style="background: linear-gradient(145deg, #11181a 0%, #172023 100%); padding: 50px 30px; text-align: center; border-bottom: 1px solid #233135;">
+        <h1 style="color: #ffffff; font-size: 34px; font-weight: 900; margin: 0; letter-spacing: 5px; text-transform: uppercase;">REVIVAL 2026</h1>
+        <p style="color: #8caeb0; font-size: 13px; font-weight: 700; letter-spacing: 3px; margin: 12px 0 0 0; text-transform: uppercase;">1 Day to Go</p>
       </div>
 
-      <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left; margin-bottom: 20px;">Hi ${name},</p>
-      <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">We are just ONE DAY away from REVIVAL! Below is your official ticket. Please have the QR code ready on your phone for fast group check-in.</p>
-      
-      <!-- Ticket Design -->
-      <div style="max-width: 320px; margin: 30px auto; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; background-color: #ffffff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-        <!-- Top Header -->
-        <div style="background-color: #0f172a; padding: 24px 20px; text-align: center;">
-          <h3 style="margin: 0 0 8px 0; color: #ffffff; font-size: 22px; font-weight: bold; letter-spacing: 1px;">REVIVAL 2026</h3>
-          <p style="margin: 0; color: #94a3b8; font-size: 14px;">Official Conference Pass</p>
+      <div style="padding: 40px 30px;">
+        <p style="font-size: 18px; color: #ffffff; line-height: 1.6; margin: 0 0 20px 0;">Hi ${name},</p>
+        <p style="font-size: 16px; color: #cbd5e1; line-height: 1.6; margin: 0 0 35px 0;">We are just <strong>ONE DAY</strong> away from REVIVAL! Below is your official ticket. Please have the QR code ready on your phone for fast group check-in.</p>
+        
+        <!-- Registration Instructions Panel -->
+        <div style="background-color: rgba(140, 174, 176, 0.08); border: 1px solid rgba(140, 174, 176, 0.2); border-radius: 16px; padding: 30px; text-align: center; margin-bottom: 45px;">
+          <h2 style="color: #8caeb0; font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin: 0 0 15px 0;">Important Info</h2>
+          <p style="font-size: 15px; color: #cbd5e1; margin: 0;">Registration & Check-in strictly opens at:</p>
+          <div style="background-color: #0b1013; padding: 15px 25px; border-radius: 12px; margin: 18px auto; display: inline-block; border: 1px solid rgba(205, 255, 100, 0.15); box-shadow: 0 4px 20px rgba(205, 255, 100, 0.05);">
+            <p style="font-size: 26px; color: #cdff64; font-weight: 800; margin: 0; letter-spacing: 1px;">6:00 PM - 7:30 PM</p>
+          </div>
+          <p style="font-size: 14px; color: #94a3b8; margin: 0; line-height: 1.5;">Please arrive early to collect your wristbands and starter packs!</p>
         </div>
         
-        <!-- QR Code Section -->
-        <div style="padding: 30px 20px; background-color: #ffffff; text-align: center;">
-          <img src="cid:qrcode" alt="Master Ticket QR Code" style="width: 200px; height: 200px; display: inline-block; margin: 0 auto;" />
+        <!-- Sleek Ticket Design -->
+        <div style="background-color: #ffffff; border-radius: 24px; padding: 8px; margin: 0 auto 45px auto; max-width: 320px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+          <div style="border: 2px dashed #e2e8f0; border-radius: 18px; overflow: hidden;">
+            <div style="background-color: #f8fafc; padding: 20px; text-align: center; border-bottom: 2px dashed #e2e8f0;">
+              <p style="margin: 0; color: #64748b; font-size: 12px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;">Admit &bull; ${ticketText}</p>
+            </div>
+            
+            <div style="padding: 35px; text-align: center; background-color: #ffffff;">
+              <img src="cid:qrcode" alt="Master Ticket QR Code" style="width: 200px; height: 200px; display: block; margin: 0 auto;" />
+            </div>
+            
+            <div style="background-color: #f8fafc; padding: 20px; text-align: center; border-top: 2px dashed #e2e8f0;">
+              <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 20px; font-weight: 800;">${reg.attendee.name}</h4>
+              <p style="margin: 0; color: #64748b; font-size: 14px; font-family: 'Courier New', Courier, monospace; letter-spacing: 3px; font-weight: 700;">${formattedOrderNumber}</p>
+            </div>
+          </div>
         </div>
-        
-        <!-- Divider -->
-        <div style="border-top: 2px dashed #cbd5e1; margin: 0;"></div>
-        
-        <!-- Details Section -->
-        <div style="background-color: #f8fafc; padding: 24px 20px; text-align: center;">
-          <h4 style="margin: 0 0 8px 0; color: #0f172a; font-size: 20px; font-weight: bold;">${reg.attendee.name}</h4>
-          <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px; font-family: monospace; letter-spacing: 2px;">${formattedOrderNumber}</p>
-          <p style="margin: 0; color: #64748b; font-size: 14px; font-weight: 500;">${ticketText}</p>
+
+        <!-- Call to Action -->
+        <div style="text-align: center; margin: 45px 0;">
+          <a href="https://revival.thisiscccbilingual.com/itinerary" style="display: inline-block; background-color: #8caeb0; color: #0b1013; font-size: 14px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; padding: 20px 45px; border-radius: 50px; text-decoration: none; box-shadow: 0 10px 30px rgba(140, 174, 176, 0.2);">View Full Itinerary</a>
+          <p style="font-size: 13px; color: #94a3b8; margin-top: 15px; font-weight: 500;">Check out the schedule before you arrive!</p>
+        </div>
+
+        <div style="text-align: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 35px;">
+          <p style="font-size: 16px; color: #cbd5e1; line-height: 1.6; margin: 0 0 8px 0;">Start preparing your hearts.</p>
+          <p style="font-size: 16px; color: #cbd5e1; line-height: 1.6; margin: 0;">We will see you tomorrow!</p>
+          <p style="font-size: 13px; color: #64748b; margin: 30px 0 0 0; text-transform: uppercase; letter-spacing: 3px; font-weight: 700;">— The REVIVAL Team</p>
         </div>
       </div>
-
-      <div style="margin: 30px 0;">
-        <a href="https://revival.thisiscccbilingual.com/itinerary" style="display: inline-block; background-color: #8caeb0; color: #0f171a; font-weight: bold; padding: 16px 32px; border-radius: 12px; text-decoration: none;">View the Full Itinerary</a>
-        <p style="font-size: 14px; color: #cbd5e1; margin-top: 10px; font-weight: bold;">Check out the schedule before you arrive!</p>
-      </div>
-
-      <hr style="border: none; border-top: 1px solid #334155; margin: 40px 0;" />
-
-      <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">Start preparing your hearts, and we will see you tomorrow!</p>
-      <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">The REVIVAL Team</p>
     </div>
   `;
 }
