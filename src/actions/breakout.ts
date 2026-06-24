@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 
 export async function loginSpeaker(password: string) {
-  if (password === 'breakout123') { // Hardcoded speaker password for now, or fetch from env
+  if (password === 'revival2026') { 
     const c = await cookies();
     c.set('speaker_auth', 'true', {
       httpOnly: true,
