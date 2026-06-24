@@ -251,17 +251,28 @@ export default function ScannerPage() {
                   <div className="flex flex-col gap-3">
                     <button 
                       onClick={() => handleToggle('allCollected', !(reg.wristbandCollected && reg.starterPackCollected))}
-                      className={`flex items-center justify-between p-4 rounded-xl border transition-all ${
+                      className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border transition-all ${
                         (reg.wristbandCollected && reg.starterPackCollected)
                           ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400' 
                           : 'bg-[#1c272a] border-[#8caeb0]/20 text-white hover:border-[#8caeb0]/50'
                       }`}
                     >
-                      <div className="flex items-center gap-3 font-medium">
+                      <div className="flex items-center gap-3 font-medium mb-2 sm:mb-0">
                         {(reg.wristbandCollected && reg.starterPackCollected) ? <CheckCircle2 className="w-5 h-5" /> : <Clock className="w-5 h-5 opacity-50" />}
                         Collection (Wristband & Starter Pack)
                       </div>
-                      <div className="text-xs opacity-70">Tap to toggle</div>
+                      <div className="flex flex-col sm:items-end text-left sm:text-right">
+                        {(reg.wristbandCollected && reg.starterPackCollected) && reg.checkedInAt ? (
+                          <div className="text-[10px] sm:text-xs opacity-90 font-mono tracking-tight">
+                            {new Date(reg.checkedInAt).toLocaleString('en-GB', {
+                              day: '2-digit', month: 'short', year: 'numeric',
+                              hour: '2-digit', minute: '2-digit', hour12: true
+                            })}
+                          </div>
+                        ) : (
+                          <div className="text-xs opacity-70">Tap to toggle</div>
+                        )}
+                      </div>
                     </button>
                   </div>
                 </div>
