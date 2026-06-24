@@ -9,6 +9,8 @@ export default function AdminPhotosPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedSession, setSelectedSession] = useState(1);
+  const [filterSession, setFilterSession] = useState<number | 'all'>('all');
 
   useEffect(() => {
     fetchPhotos();
@@ -86,6 +88,7 @@ export default function AdminPhotosPage() {
           const compressedFile = await compressImageFile(file);
           const formData = new FormData();
           formData.append('file', compressedFile);
+          formData.append('sessionId', selectedSession.toString());
           
           const r = await uploadPhoto(formData);
           if (r.success && r.photo) {
@@ -168,6 +171,20 @@ export default function AdminPhotosPage() {
         <p className="text-sm text-slate-400 mb-6 max-w-md mx-auto">
           Upload multiple high-quality JPG or PNG images at once. They will be uploaded directly to AWS S3.
         </p>
+
+        <div className="mb-6 flex items-center justify-center gap-4">
+          <label className="text-sm font-medium text-slate-300">Target Session:</label>
+          <select 
+            value={selectedSession}
+            onChange={(e) => setSelectedSession(parseInt(e.target.value, 10))}
+            className="bg-black/50 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-poster-accent transition-colors"
+          >
+            <option value={1}>Session 1 (Day 1 Evening)</option>
+            <option value={2}>Session 2 (Day 2 Morning)</option>
+            <option value={3}>Session 3 (Day 2 Evening)</option>
+            <option value={4}>Session 4 (Day 3 Morning)</option>
+          </select>
+        </div>
         
         <label className={`inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-colors cursor-pointer ${isUploading ? 'bg-poster-accent/50 cursor-not-allowed text-white' : 'bg-poster-accent hover:bg-poster-accent-bright text-poster-bg'}`}>
           {isUploading ? (
@@ -187,9 +204,26 @@ export default function AdminPhotosPage() {
       </div>
 
       <div>
-        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-          <ImageIcon className="w-5 h-5 text-slate-400" /> Uploaded Photos ({photos.length})
-        </h2>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
+          <h2 className="text-xl font-bold flex items-center gap-2">
+            <ImageIcon className="w-5 h-5 text-slate-400" /> Uploaded Photos ({photos.length})
+          </h2>
+
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-slate-400">Filter:</span>
+            <select
+              value={filterSession}
+              onChange={(e) => setFilterSession(e.target.value === 'all' ? 'all' : parseInt(e.target.value, 10))}
+              className="bg-black/40 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-white/30"
+            >
+              <option value="all">All Sessions</option>
+              <option value={1}>Session 1</option>
+              <option value={2}>Session 2</option>
+              <option value={3}>Session 3</option>
+              <option value={4}>Session 4</option>
+            </select>
+          </div>
+        </div>
         
         {isLoading ? (
           <div className="py-12 flex justify-center">
@@ -201,7 +235,7 @@ export default function AdminPhotosPage() {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {photos.map(photo => (
+            {photos.filter(p => filterSession === 'all' || p.sessionId === filterSession).map(photo => (
               <div key={photo.id} className="relative group rounded-xl overflow-hidden bg-black/40 border border-white/10 aspect-[8.5/11]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img 
@@ -209,6 +243,9 @@ export default function AdminPhotosPage() {
                   alt="Gallery image" 
                   className="w-full h-full object-cover"
                 />
+                <div className="absolute top-2 left-2 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10 text-xs font-semibold text-white/90">
+                  Session {photo.sessionId || 1}
+                </div>
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center backdrop-blur-sm">
                   <button 
                     onClick={() => handleDelete(photo.id)}
@@ -220,6 +257,11 @@ export default function AdminPhotosPage() {
                 </div>
               </div>
             ))}
+            {photos.filter(p => filterSession === 'all' || p.sessionId === filterSession).length === 0 && (
+              <div className="col-span-full text-center py-12 border border-white/5 rounded-2xl bg-black/20">
+                <p className="text-slate-500">No photos found for this session.</p>
+              </div>
+            )}
           </div>
         )}
       </div>

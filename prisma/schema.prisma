@@ -223,5 +223,6 @@ model Sowing {
 model Photo {
   id        String   @id @default(uuid())
   imageUrl  String   @db.Text
+  sessionId Int      @default(1)
   createdAt DateTime @default(now())
 }

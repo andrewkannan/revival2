@@ -15,11 +15,13 @@ import 'swiper/css/navigation';
 interface Photo {
   id: string;
   imageUrl: string;
+  sessionId?: number;
 }
 
 export default function PhotoAlbum({ photos }: { photos: Photo[] }) {
   const { t } = useTranslation();
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
+  const [activeSession, setActiveSession] = useState<number>(1);
 
   if (!photos || photos.length === 0) {
     return (
@@ -43,11 +45,36 @@ export default function PhotoAlbum({ photos }: { photos: Photo[] }) {
           <h2 className="text-4xl md:text-6xl font-black uppercase tracking-[0.1em] md:tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-white via-poster-accent to-white drop-shadow-[0_0_25px_rgba(205,255,100,0.4)] mb-4">
             {t('photoAlbum.title')}
           </h2>
-          <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto uppercase tracking-widest font-medium">{t('photoAlbum.subtitle')}</p>
+          <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto uppercase tracking-widest font-medium mb-8">
+            {t('photoAlbum.subtitle')}
+          </p>
+
+          {/* Session Tabs */}
+          <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-4">
+            {[1, 2, 3, 4].map(sessionNum => (
+              <button
+                key={sessionNum}
+                onClick={() => setActiveSession(sessionNum)}
+                className={`px-4 md:px-6 py-2 rounded-full font-bold text-sm md:text-base tracking-widest uppercase transition-all duration-300 border-2 ${
+                  activeSession === sessionNum 
+                    ? 'bg-poster-accent text-poster-bg border-poster-accent shadow-[0_0_15px_rgba(205,255,100,0.4)]' 
+                    : 'bg-transparent text-white border-white/20 hover:border-white/50 hover:bg-white/5'
+                }`}
+              >
+                Session {sessionNum}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="w-full relative mx-auto pb-4">
-          <Swiper
+          {photos.filter(p => (p.sessionId || 1) === activeSession).length === 0 ? (
+            <div className="text-center py-20 text-slate-400">
+              <ImageIcon className="w-12 h-12 mx-auto mb-4 opacity-30" />
+              <p>No photos available for Session {activeSession} yet.</p>
+            </div>
+          ) : (
+            <Swiper
             effect={'coverflow'}
             grabCursor={true}
             centeredSlides={true}
@@ -70,8 +97,9 @@ export default function PhotoAlbum({ photos }: { photos: Photo[] }) {
             }}
             modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
             className="w-full pt-4 pb-16 px-4"
+            key={activeSession} // Force re-render of swiper when tab changes
           >
-            {photos.map((photo) => (
+            {photos.filter(p => (p.sessionId || 1) === activeSession).map((photo) => (
               <SwiperSlide key={photo.id} className="w-[75vw] sm:w-[350px] md:w-[450px] lg:w-[500px]">
                 <div className="group relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10 bg-black/50 aspect-[8.5/11] transform transition-all duration-500">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -98,6 +126,7 @@ export default function PhotoAlbum({ photos }: { photos: Photo[] }) {
               </SwiperSlide>
             ))}
           </Swiper>
+          )}
         </div>
       </div>
 

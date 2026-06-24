@@ -16,6 +16,9 @@ const s3Client = new S3Client({
 export async function uploadPhoto(formData: FormData) {
   try {
     const file = formData.get('file') as File;
+    const sessionIdStr = formData.get('sessionId') as string;
+    const sessionId = sessionIdStr ? parseInt(sessionIdStr, 10) : 1;
+
     if (!file) {
       return { success: false, message: 'No file uploaded' };
     }
@@ -45,6 +48,7 @@ export async function uploadPhoto(formData: FormData) {
     const photo = await prisma.photo.create({
       data: {
         imageUrl,
+        sessionId,
       }
     });
 
