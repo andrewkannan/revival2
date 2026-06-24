@@ -1335,7 +1335,7 @@ function generateConferenceEveHtml(name: string, formattedOrderNumber: string, t
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0b1013; color: #ffffff; padding: 0; border-radius: 24px; overflow: hidden; border: 1px solid #1c272a;">
       
       <!-- Hero Header -->
-      <div style="background: linear-gradient(145deg, #11181a 0%, #172023 100%); padding: 50px 30px; text-align: center; border-bottom: 1px solid #233135;">
+      <div style="background-color: #11181a; padding: 50px 30px; text-align: center; border-bottom: 1px solid #233135;">
         <h1 style="color: #ffffff; font-size: 34px; font-weight: 900; margin: 0; letter-spacing: 5px; text-transform: uppercase;">REVIVAL 2026</h1>
         <p style="color: #8caeb0; font-size: 13px; font-weight: 700; letter-spacing: 3px; margin: 12px 0 0 0; text-transform: uppercase;">1 Day to Go</p>
       </div>
