@@ -14,7 +14,7 @@ const navigation = [
   { name: 'Receipts', href: '/admin/receipts', icon: ImageIcon },
   { name: 'Email Logs', href: '/admin/emails', icon: Mail },
   { name: 'Email Queue', href: '/admin/emails/queue', icon: Mail },
-  { name: 'Scanner', href: '/admin/scanner', icon: LayoutDashboard },
+  { name: 'Scanner', href: '/scanner', icon: LayoutDashboard },
   { name: 'Spiritual', href: '/admin/spiritual', icon: Heart },
   { name: 'Sowing', href: '/admin/sowing', icon: Heart },
   { name: 'Photos', href: '/admin/photos', icon: ImageIcon },
@@ -29,8 +29,8 @@ export default function AdminLayout({
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Do not show sidebar on the login or scanner page
-  if (pathname === '/admin/login' || pathname === '/admin/scanner') {
+  // Do not show sidebar on the login page
+  if (pathname === '/admin/login') {
     return <>{children}</>;
   }
 

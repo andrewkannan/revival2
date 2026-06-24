@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
-import { getRegistrationByTicketId, toggleRegistrationCheckin, searchRegistrationManual } from '@/actions/admin';
+import { getRegistrationByTicketId, toggleRegistrationCheckin, searchRegistrationManual, logoutScanner } from '@/actions/admin';
 import { Registration, Attendee, Ticket } from '@prisma/client';
-import { BadgeCheck, Clock, CheckCircle2, User, Loader2, XCircle, ArrowLeft, Search } from 'lucide-react';
+import { BadgeCheck, Clock, CheckCircle2, User, Loader2, XCircle, ArrowLeft, Search, LogOut } from 'lucide-react';
 import Link from 'next/link';
 
 const formatQueue = (num: number) => 'R' + String(num).padStart(5, '0');
@@ -135,7 +135,27 @@ export default function ScannerPage() {
   return (
     <div className="min-h-screen bg-black text-white p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        {/* Header removed to save space */}
+        <div className="flex justify-between items-center bg-white/5 border border-white/10 rounded-2xl p-4 shadow-xl">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-poster-accent/10 rounded-xl flex items-center justify-center border border-poster-accent/20">
+              <QrCodeIcon className="w-5 h-5 text-poster-accent" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold leading-none">Scanner</h1>
+              <p className="text-xs text-slate-400 mt-1">Revival Check-in</p>
+            </div>
+          </div>
+          <button 
+            onClick={async () => {
+              await logoutScanner();
+              window.location.href = '/scanner/login';
+            }}
+            className="flex items-center gap-2 text-slate-400 hover:text-red-400 transition-colors p-2 rounded-lg hover:bg-white/5"
+          >
+            <LogOut className="w-5 h-5" />
+            <span className="hidden sm:inline font-medium text-sm">Logout</span>
+          </button>
+        </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
         {/* Scanner Panel */}

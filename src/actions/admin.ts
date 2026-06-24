@@ -8,6 +8,7 @@ import { sendPaymentRejectedEmail, sendEmail, parseTemplate } from '@/lib/email'
 import QRCode from 'qrcode';
 
 const ADMIN_COOKIE_NAME = 'revival_admin_session';
+const SCANNER_COOKIE_NAME = 'revival_scanner_session';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 1 week
 
 export async function loginAdmin(password: string) {
@@ -42,6 +43,30 @@ export async function loginAdmin(password: string) {
 
 export async function logoutAdmin() {
   await (await cookies()).delete(ADMIN_COOKIE_NAME);
+  return { success: true };
+}
+
+export async function loginScanner(password: string) {
+  const secret = process.env.SCANNER_SECRET || 'scanner';
+  
+  // If the admin logs in using the admin secret here, we can also grant them scanner access
+  const adminSecret = process.env.ADMIN_SECRET;
+  
+  if (password === secret || (adminSecret && password === adminSecret) || (password === 'admin' && !adminSecret)) {
+    await (await cookies()).set(SCANNER_COOKIE_NAME, 'authenticated', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: COOKIE_MAX_AGE,
+      path: '/',
+    });
+    return { success: true };
+  }
+
+  return { success: false, message: 'Invalid scanner password.' };
+}
+
+export async function logoutScanner() {
+  await (await cookies()).delete(SCANNER_COOKIE_NAME);
   return { success: true };
 }
 
