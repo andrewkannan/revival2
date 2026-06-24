@@ -1330,6 +1330,154 @@ export async function sendMassAnticipationEmail() {
   }
 }
 
+function generateConferenceEveHtml(name: string, formattedOrderNumber: string, ticketText: string, reg: any) {
+  return `
+    <div style="font-family: sans-serif; max-w: 600px; margin: 0 auto; text-align: center; background-color: #0f171a; color: #ffffff; padding: 40px; border-radius: 20px;">
+      
+      <!-- Registration Instructions Panel -->
+      <div style="margin: 0 0 30px 0; padding: 20px; background-color: #1c272a; border: 2px solid #8caeb0; border-radius: 15px; display: block;">
+        <h2 style="color: #8caeb0; font-size: 24px; margin: 0 0 10px 0;">Registration Info</h2>
+        <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; margin: 0;">
+          Registration opens at <strong>6:00 PM - 7:30 PM</strong>.
+        </p>
+        <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; margin: 10px 0 0 0;">
+          Please arrive early to register and collect your starter pack!
+        </p>
+      </div>
+
+      <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left; margin-bottom: 20px;">Hi ${name},</p>
+      <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">We are just ONE DAY away from REVIVAL! Below is your official ticket. Please have the QR code ready on your phone for fast group check-in.</p>
+      
+      <!-- Ticket Design -->
+      <div style="max-width: 320px; margin: 30px auto; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; background-color: #ffffff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <!-- Top Header -->
+        <div style="background-color: #0f172a; padding: 24px 20px; text-align: center;">
+          <h3 style="margin: 0 0 8px 0; color: #ffffff; font-size: 22px; font-weight: bold; letter-spacing: 1px;">REVIVAL 2026</h3>
+          <p style="margin: 0; color: #94a3b8; font-size: 14px;">Official Conference Pass</p>
+        </div>
+        
+        <!-- QR Code Section -->
+        <div style="padding: 30px 20px; background-color: #ffffff; text-align: center;">
+          <img src="cid:qrcode" alt="Master Ticket QR Code" style="width: 200px; height: 200px; display: inline-block; margin: 0 auto;" />
+        </div>
+        
+        <!-- Divider -->
+        <div style="border-top: 2px dashed #cbd5e1; margin: 0;"></div>
+        
+        <!-- Details Section -->
+        <div style="background-color: #f8fafc; padding: 24px 20px; text-align: center;">
+          <h4 style="margin: 0 0 8px 0; color: #0f172a; font-size: 20px; font-weight: bold;">${reg.attendee.name}</h4>
+          <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px; font-family: monospace; letter-spacing: 2px;">${formattedOrderNumber}</p>
+          <p style="margin: 0; color: #64748b; font-size: 14px; font-weight: 500;">${ticketText}</p>
+        </div>
+      </div>
+
+      <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">Start preparing your hearts, and we will see you tomorrow!</p>
+      <p style="font-size: 16px; color: #cbd5e1; line-height: 1.5; text-align: left;">The REVIVAL Team</p>
+    </div>
+  `;
+}
+
+export async function sendConferenceEveEmailTest(testEmail: string) {
+  try {
+    const reg = await prisma.registration.findFirst({
+      where: { status: 'SEAT_SECURED' },
+      include: { attendee: true, tickets: true }
+    });
+
+    if (!reg) return { success: false, message: "No secured registration found to generate test." };
+
+    let qrCodeUrl = reg.qrCodeUrl;
+    if (!qrCodeUrl) {
+      qrCodeUrl = await QRCode.toDataURL(reg.id);
+      await prisma.registration.update({ where: { id: reg.id }, data: { qrCodeUrl } });
+    }
+
+    const formattedOrderNumber = 'R' + String(reg.orderNumber).padStart(5, '0');
+    const attachments = [{
+      filename: `revival-ticket-${formattedOrderNumber}.png`,
+      content: qrCodeUrl.split("base64,")[1],
+      encoding: 'base64',
+      cid: 'qrcode'
+    }];
+    const attachmentsHtml = `<script type="application/json" id="attachments">${JSON.stringify(attachments)}</script>`;
+
+    const name = reg.attendee.name.split(' ')[0] || 'Friend';
+    const ticketCount = reg.tickets ? reg.tickets.length : 1;
+    const ticketText = ticketCount === 1 ? '1 Ticket' : `${ticketCount} Tickets`;
+
+    const html = generateConferenceEveHtml(name, formattedOrderNumber, ticketText, reg) + attachmentsHtml;
+
+    await prisma.emailQueue.create({
+      data: {
+        to: testEmail,
+        subject: "[TEST] See you tomorrow at REVIVAL 2026!",
+        html: html,
+        status: 'PENDING'
+      }
+    });
+
+    return { success: true, message: `Test email queued for ${testEmail}` };
+  } catch (error: any) {
+    console.error("Test email error:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+export async function sendConferenceEveEmailBulk() {
+  try {
+    const registrations = await prisma.registration.findMany({
+      where: { status: 'SEAT_SECURED' },
+      include: { attendee: true, tickets: true }
+    });
+
+    if (registrations.length === 0) return { success: false, message: "No secured registrations found." };
+
+    let successCount = 0;
+
+    for (const reg of registrations) {
+      const email = reg.attendee.email;
+      if (!email) continue;
+
+      let qrCodeUrl = reg.qrCodeUrl;
+      if (!qrCodeUrl) {
+        qrCodeUrl = await QRCode.toDataURL(reg.id);
+        await prisma.registration.update({ where: { id: reg.id }, data: { qrCodeUrl } });
+      }
+
+      const formattedOrderNumber = 'R' + String(reg.orderNumber).padStart(5, '0');
+      const attachments = [{
+        filename: `revival-ticket-${formattedOrderNumber}.png`,
+        content: qrCodeUrl.split("base64,")[1],
+        encoding: 'base64',
+        cid: 'qrcode'
+      }];
+      const attachmentsHtml = `<script type="application/json" id="attachments">${JSON.stringify(attachments)}</script>`;
+
+      const name = reg.attendee.name.split(' ')[0] || 'Friend';
+      const ticketCount = reg.tickets ? reg.tickets.length : 1;
+      const ticketText = ticketCount === 1 ? '1 Ticket' : `${ticketCount} Tickets`;
+
+      const html = generateConferenceEveHtml(name, formattedOrderNumber, ticketText, reg) + attachmentsHtml;
+
+      await prisma.emailQueue.create({
+        data: {
+          to: email,
+          subject: "See you tomorrow at REVIVAL 2026!",
+          html: html,
+          status: 'PENDING'
+        }
+      });
+      successCount++;
+    }
+
+    return { success: true, message: `Successfully queued ${successCount} emails.` };
+  } catch (error: any) {
+    console.error("Mass email error:", error);
+    return { success: false, message: error.message };
+  }
+}
+
 export async function resendTicketEmail(registrationId: string) {
   try {
     const registration = await prisma.registration.findUnique({

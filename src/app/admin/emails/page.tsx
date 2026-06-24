@@ -1,5 +1,6 @@
 import { getEmailLogs } from '@/actions/admin';
 import EmailLogsClient from '@/components/admin/EmailLogsClient';
+import ConferenceEveEmailControls from '@/components/admin/ConferenceEveEmailControls';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,6 +13,8 @@ export default async function EmailLogsPage() {
         <h1 className="text-3xl font-bold tracking-tight">Email Logs</h1>
         <p className="text-slate-400 mt-2">Track the delivery status of all automated emails sent by the system.</p>
       </div>
+
+      <ConferenceEveEmailControls />
 
       <EmailLogsClient initialLogs={logs || []} />
     </div>
