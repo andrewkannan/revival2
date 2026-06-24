@@ -991,11 +991,17 @@ export async function sendIndividualPaymentReminder(registrationId: string) {
 
 export async function toggleRegistrationCheckin(
   registrationId: string, 
-  field: 'wristbandCollected' | 'starterPackCollected',
+  field: 'wristbandCollected' | 'starterPackCollected' | 'allCollected',
   value: boolean
 ) {
   try {
-    const updateData: any = { [field]: value };
+    const updateData: any = {};
+    if (field === 'allCollected') {
+      updateData.wristbandCollected = value;
+      updateData.starterPackCollected = value;
+    } else {
+      updateData[field] = value;
+    }
     
     // Auto-set checkedInAt on the first item collected
     if (value === true) {

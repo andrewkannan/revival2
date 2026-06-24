@@ -109,11 +109,15 @@ export default function ScannerPage() {
     }, 100);
   };
 
-  const handleToggle = async (field: 'wristbandCollected' | 'starterPackCollected', val: boolean) => {
+  const handleToggle = async (field: 'wristbandCollected' | 'starterPackCollected' | 'allCollected', val: boolean) => {
     if (!reg) return;
     
     // Optimistic UI update
-    setReg({ ...reg, [field]: val });
+    if (field === 'allCollected') {
+      setReg({ ...reg, wristbandCollected: val, starterPackCollected: val });
+    } else {
+      setReg({ ...reg, [field]: val });
+    }
     
     const res = await toggleRegistrationCheckin(reg.id, field, val);
     if (!res.success) {
@@ -246,31 +250,16 @@ export default function ScannerPage() {
                   <h3 className="text-sm uppercase tracking-wider text-slate-400 font-semibold mb-4">Collection Tracking</h3>
                   <div className="flex flex-col gap-3">
                     <button 
-                      onClick={() => handleToggle('wristbandCollected', !reg.wristbandCollected)}
+                      onClick={() => handleToggle('allCollected', !(reg.wristbandCollected && reg.starterPackCollected))}
                       className={`flex items-center justify-between p-4 rounded-xl border transition-all ${
-                        reg.wristbandCollected 
+                        (reg.wristbandCollected && reg.starterPackCollected)
                           ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400' 
                           : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10'
                       }`}
                     >
                       <div className="flex items-center gap-3 font-medium">
-                        {reg.wristbandCollected ? <CheckCircle2 className="w-5 h-5" /> : <Clock className="w-5 h-5 opacity-50" />}
-                        Wristbands Collected
-                      </div>
-                      <div className="text-xs opacity-70">Tap to toggle</div>
-                    </button>
-
-                    <button 
-                      onClick={() => handleToggle('starterPackCollected', !reg.starterPackCollected)}
-                      className={`flex items-center justify-between p-4 rounded-xl border transition-all ${
-                        reg.starterPackCollected 
-                          ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400' 
-                          : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3 font-medium">
-                        {reg.starterPackCollected ? <CheckCircle2 className="w-5 h-5" /> : <Clock className="w-5 h-5 opacity-50" />}
-                        Starter Packs Collected
+                        {(reg.wristbandCollected && reg.starterPackCollected) ? <CheckCircle2 className="w-5 h-5" /> : <Clock className="w-5 h-5 opacity-50" />}
+                        Collection (Wristband & Starter Pack)
                       </div>
                       <div className="text-xs opacity-70">Tap to toggle</div>
                     </button>
