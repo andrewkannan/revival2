@@ -141,6 +141,7 @@ export default function SettingsPage() {
       tiktokUrl: generalData.tiktokUrl || null,
       youtubeUrl: generalData.youtubeUrl || null,
       playlistUrl: generalData.playlistUrl || null,
+      isBreakoutQALocked: generalData.isBreakoutQALocked,
     };
 
     const result = await updateAdminConfig(payload);

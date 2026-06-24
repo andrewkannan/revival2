@@ -91,7 +91,8 @@ export async function getAdminConfig() {
         isTestimonyLocked: true,
         testimonyUnlockTime: new Date('2026-06-26T12:00:00+08:00'),
         isGalleryLocked: true,
-        galleryUnlockTime: new Date('2026-06-26T12:00:00+08:00')
+        galleryUnlockTime: new Date('2026-06-26T12:00:00+08:00'),
+        isBreakoutQALocked: true
       }
     });
   }
@@ -118,6 +119,7 @@ export async function getAdminConfig() {
     isGalleryLocked: config.isGalleryLocked,
     galleryUnlockTime: config.galleryUnlockTime ? config.galleryUnlockTime.toISOString() : null,
     isEmailQueuePaused: config.isEmailQueuePaused,
+    isBreakoutQALocked: config.isBreakoutQALocked,
   };
 }
 
@@ -157,6 +159,7 @@ export async function updateAdminConfig(data: {
   testimonyUnlockTime?: Date | null;
   isGalleryLocked?: boolean;
   galleryUnlockTime?: Date | null;
+  isBreakoutQALocked?: boolean;
 }) {
   try {
     await prisma.adminConfig.upsert({
