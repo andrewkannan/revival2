@@ -137,12 +137,12 @@ export default function ScannerPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-4 md:p-8">
+    <div className="min-h-screen text-white p-4 md:p-8 bg-[#11181a]">
       <div className="max-w-6xl mx-auto space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div className="flex justify-between items-center bg-white/5 border border-white/10 rounded-2xl p-4 shadow-xl">
+        <div className="flex justify-between items-center bg-[#1c272a] border border-[#8caeb0]/20 rounded-2xl p-4 shadow-xl">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-poster-accent/10 rounded-xl flex items-center justify-center border border-poster-accent/20">
-              <QrCodeIcon className="w-5 h-5 text-poster-accent" />
+            <div className="w-10 h-10 bg-[#8caeb0]/10 rounded-xl flex items-center justify-center border border-[#8caeb0]/20">
+              <QrCodeIcon className="w-5 h-5 text-[#8caeb0]" />
             </div>
             <div>
               <h1 className="text-xl font-bold leading-none">Scanner</h1>
@@ -164,27 +164,27 @@ export default function ScannerPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
         {/* Scanner Panel */}
         <div className="flex flex-col gap-6">
-          <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-xl p-4">
-            <div id="reader" className="w-full bg-black rounded-xl overflow-hidden [&_video]:w-full [&_video]:rounded-xl [&_#reader__dashboard_section_csr]:hidden [&_button]:bg-white [&_button]:text-black [&_button]:px-4 [&_button]:py-2 [&_button]:rounded-md [&_button]:font-medium [&_button]:mt-4 [&_select]:bg-black [&_select]:text-white [&_select]:border [&_select]:border-white/20 [&_select]:rounded-md [&_select]:px-3 [&_select]:py-2"></div>
+          <div className="bg-[#1c272a] border border-[#8caeb0]/20 rounded-2xl overflow-hidden shadow-xl p-4">
+            <div id="reader" className="w-full bg-[#11181a] rounded-xl overflow-hidden [&_video]:w-full [&_video]:rounded-xl [&_#reader__dashboard_section_csr]:hidden [&_button]:bg-[#8caeb0] [&_button]:text-[#11181a] [&_button]:px-4 [&_button]:py-2 [&_button]:rounded-md [&_button]:font-medium [&_button]:mt-4 [&_select]:bg-[#11181a] [&_select]:text-white [&_select]:border [&_select]:border-[#8caeb0]/20 [&_select]:rounded-md [&_select]:px-3 [&_select]:py-2"></div>
           </div>
           
           {/* Manual Search */}
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 shadow-xl">
+          <div className="bg-[#1c272a] border border-[#8caeb0]/20 rounded-2xl p-6 shadow-xl">
             <form onSubmit={handleManualSearch} className="flex gap-3">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#a4c5c6]" />
                 <input
                   type="text"
                   placeholder="Name, Email, or Reg No (e.g. R00015)"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-black/50 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-white/30"
+                  className="w-full bg-[#11181a] border border-[#8caeb0]/20 rounded-xl pl-10 pr-4 py-3 text-white placeholder-[#a4c5c6]/50 focus:outline-none focus:border-[#8caeb0]/50 focus:ring-1 focus:ring-[#8caeb0]/50"
                 />
               </div>
               <button 
                 type="submit" 
                 disabled={isSearching || !searchQuery.trim()}
-                className="bg-white text-black px-6 py-3 rounded-xl font-bold hover:bg-slate-200 transition-colors disabled:opacity-50"
+                className="bg-[#8caeb0] text-[#11181a] px-6 py-3 rounded-xl font-bold hover:bg-[#a4c5c6] transition-colors disabled:opacity-50"
               >
                 {isSearching ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Find'}
               </button>
@@ -198,15 +198,15 @@ export default function ScannerPage() {
                   <button
                     key={result.id}
                     onClick={() => selectSearchResult(result)}
-                    className="w-full text-left bg-black/40 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-colors flex items-center justify-between"
+                    className="w-full text-left bg-[#11181a] border border-[#8caeb0]/20 rounded-xl p-4 hover:border-[#8caeb0]/50 transition-colors flex items-center justify-between"
                   >
                     <div>
                       <div className="font-bold text-white text-lg">{result.attendee.name}</div>
-                      <div className="text-sm text-slate-400">{result.attendee.email}</div>
+                      <div className="text-sm text-[#a4c5c6]">{result.attendee.email}</div>
                     </div>
                     <div className="text-right">
-                      <div className="font-mono text-poster-accent font-bold">{formatQueue(result.orderNumber)}</div>
-                      <div className="text-xs text-slate-500">{result.tickets.length} Tickets</div>
+                      <div className="font-mono text-[#8caeb0] font-bold">{formatQueue(result.orderNumber)}</div>
+                      <div className="text-xs text-[#a4c5c6]/70">{result.tickets.length} Tickets</div>
                     </div>
                   </button>
                 ))}
@@ -216,10 +216,10 @@ export default function ScannerPage() {
         </div>
 
         {/* Result Panel */}
-        <div ref={resultPanelRef} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-xl min-h-[400px] flex flex-col relative scroll-mt-6">
+        <div ref={resultPanelRef} className="bg-[#1c272a] border border-[#8caeb0]/20 rounded-2xl overflow-hidden shadow-xl min-h-[400px] flex flex-col relative scroll-mt-6">
           {loading ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-8">
-              <Loader2 className="w-12 h-12 text-poster-accent animate-spin mb-4" />
+            <div className="flex-1 flex flex-col items-center justify-center text-[#a4c5c6] p-8">
+              <Loader2 className="w-12 h-12 text-[#8caeb0] animate-spin mb-4" />
               <p className="text-lg font-medium animate-pulse">Loading Attendee...</p>
             </div>
           ) : error ? (
@@ -230,14 +230,14 @@ export default function ScannerPage() {
             </div>
           ) : reg ? (
             <div className="flex flex-col h-full animate-in zoom-in-95 duration-300">
-              <div className="bg-poster-accent border-b border-poster-accent-bright p-6 flex items-center justify-between text-poster-bg">
+              <div className="bg-[#8caeb0] border-b border-[#a4c5c6] p-6 flex items-center justify-between text-[#11181a]">
                 <div>
                   <h2 className="text-3xl font-black mb-1 leading-none">{reg.attendee.name}</h2>
                   <div className="font-mono font-bold tracking-widest text-lg opacity-80">
                     {formatQueue(reg.orderNumber)}
                   </div>
                 </div>
-                <div className="bg-black text-white px-6 py-3 rounded-2xl border-4 border-poster-bg shadow-lg flex flex-col items-center justify-center">
+                <div className="bg-[#11181a] text-white px-6 py-3 rounded-2xl border-4 border-[#8caeb0] shadow-lg flex flex-col items-center justify-center">
                   <div className="text-4xl font-black leading-none mb-1">{reg.tickets.length}</div>
                   <div className="text-[10px] uppercase font-bold tracking-widest opacity-80">
                     Ticket{reg.tickets.length !== 1 && 's'}
@@ -246,15 +246,15 @@ export default function ScannerPage() {
               </div>
               
               <div className="p-6 flex-1 flex flex-col gap-6">
-                <div className="bg-black/40 border border-white/10 rounded-xl p-6">
-                  <h3 className="text-sm uppercase tracking-wider text-slate-400 font-semibold mb-4">Collection Tracking</h3>
+                <div className="bg-[#11181a] border border-[#8caeb0]/20 rounded-xl p-6">
+                  <h3 className="text-sm uppercase tracking-wider text-[#a4c5c6] font-semibold mb-4">Collection Tracking</h3>
                   <div className="flex flex-col gap-3">
                     <button 
                       onClick={() => handleToggle('allCollected', !(reg.wristbandCollected && reg.starterPackCollected))}
                       className={`flex items-center justify-between p-4 rounded-xl border transition-all ${
                         (reg.wristbandCollected && reg.starterPackCollected)
                           ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400' 
-                          : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10'
+                          : 'bg-[#1c272a] border-[#8caeb0]/20 text-white hover:border-[#8caeb0]/50'
                       }`}
                     >
                       <div className="flex items-center gap-3 font-medium">
@@ -267,20 +267,20 @@ export default function ScannerPage() {
                 </div>
               </div>
 
-              <div className="p-4 border-t border-white/10 bg-black/20">
+              <div className="p-4 border-t border-[#8caeb0]/20 bg-[#11181a]">
                 <button 
                   onClick={resetScanner}
-                  className="w-full bg-white text-black font-medium px-4 py-3 rounded-xl hover:bg-slate-200 transition-colors"
+                  className="w-full bg-[#8caeb0] text-[#11181a] font-bold px-4 py-3 rounded-xl hover:bg-[#a4c5c6] transition-colors"
                 >
                   Scan Next Attendee
                 </button>
               </div>
             </div>
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center text-slate-500 p-8 text-center">
+            <div className="flex-1 flex flex-col items-center justify-center text-[#a4c5c6] p-8 text-center">
               <QrCodeIcon className="w-16 h-16 mb-4 opacity-30" />
-              <h3 className="text-lg font-medium text-slate-400 mb-2">Ready to Scan</h3>
-              <p className="text-sm">Position a ticket QR code within the frame to view details.</p>
+              <h3 className="text-lg font-medium text-[#8caeb0] mb-2">Ready to Scan</h3>
+              <p className="text-sm opacity-80">Position a ticket QR code within the frame to view details.</p>
             </div>
           )}
         </div>

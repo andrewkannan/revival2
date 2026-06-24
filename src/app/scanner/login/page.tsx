@@ -28,17 +28,17 @@ export default function ScannerLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[#11181a]">
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-poster-accent/10 mb-6 border border-poster-accent/20">
-            <QrCode className="w-8 h-8 text-poster-accent" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 border border-[#8caeb0]/20 bg-[#1c272a]">
+            <QrCode className="w-8 h-8 text-[#8caeb0]" />
           </div>
           <h1 className="text-3xl font-bold text-white tracking-tight">Scanner Access</h1>
-          <p className="text-slate-400 mt-2">Enter the password to access the check-in scanner</p>
+          <p className="text-[#a4c5c6] mt-2">Enter the password to access the check-in scanner</p>
         </div>
 
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 backdrop-blur-xl">
+        <div className="bg-[#1c272a] border border-[#8caeb0]/20 rounded-2xl p-6 md:p-8 backdrop-blur-xl shadow-2xl shadow-black/50">
           <form onSubmit={handleLogin} className="space-y-6">
             {error && (
               <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-sm text-center">
@@ -56,7 +56,7 @@ export default function ScannerLogin() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-11 pr-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-poster-accent/50 focus:border-poster-accent/50 transition-all"
+                  className="block w-full pl-11 pr-4 py-3 bg-[#11181a] border border-[#8caeb0]/20 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#8caeb0]/50 focus:border-[#8caeb0]/50 transition-all"
                   placeholder="Enter scanner password"
                   required
                 />
@@ -66,7 +66,7 @@ export default function ScannerLogin() {
             <button
               type="submit"
               disabled={isLoading || !password}
-              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-black bg-poster-accent hover:bg-poster-accent-bright focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-poster-accent disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-[#11181a] bg-[#8caeb0] hover:bg-[#a4c5c6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8caeb0] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {isLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
