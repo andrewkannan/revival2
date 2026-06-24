@@ -207,7 +207,7 @@ export default function Itinerary({ isBreakoutQALocked = true }: { isBreakoutQAL
                             <div className={`border rounded-2xl p-5 flex flex-col transition-all duration-300 ${isActive ? 'bg-white/10 border-white/30 shadow-lg' : 'bg-white/5 border-[#8caeb0]/20 hover:bg-white/10'}`}>
                               <h5 className={`text-xl font-bold leading-tight mb-2 ${isActive ? 'text-white' : 'text-white/95'}`}>Revival in Marketplace</h5>
                               <div className="mb-6 flex-grow">
-                                <span className="inline-block text-xs font-semibold tracking-wider text-[#8caeb0]">Auditorium 2</span>
+                                <span className="inline-block text-sm font-bold tracking-widest uppercase text-[#8caeb0]">Auditorium 2</span>
                               </div>
                               {(!isBreakoutQALocked || isActive) && (
                                 <a 
@@ -221,7 +221,7 @@ export default function Itinerary({ isBreakoutQALocked = true }: { isBreakoutQAL
                             <div className={`border rounded-2xl p-5 flex flex-col transition-all duration-300 ${isActive ? 'bg-white/10 border-white/30 shadow-lg' : 'bg-white/5 border-[#8caeb0]/20 hover:bg-white/10'}`}>
                               <h5 className={`text-xl font-bold leading-tight mb-2 ${isActive ? 'text-white' : 'text-white/95'}`}>Hosting the Glory</h5>
                               <div className="mb-6 flex-grow">
-                                <span className="inline-block text-xs font-semibold tracking-wider text-[#8caeb0]">Auditorium 3</span>
+                                <span className="inline-block text-sm font-bold tracking-widest uppercase text-[#8caeb0]">Auditorium 3</span>
                               </div>
                               {(!isBreakoutQALocked || isActive) && (
                                 <a 
