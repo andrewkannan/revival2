@@ -204,25 +204,29 @@ export default function Itinerary({ isBreakoutQALocked = true }: { isBreakoutQAL
                         
                         {event.isBreakout ? (
                           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
-                            <div className={`border rounded-2xl p-5 flex flex-col transition-colors ${isActive ? 'bg-white/5 border-white/20' : 'bg-[#11181a]/50 border-[#8caeb0]/20'}`}>
-                              <h5 className="font-bold text-lg text-white mb-1">Auditorium 2</h5>
-                              <p className={`text-sm mb-6 flex-grow ${isActive ? 'text-white/80' : 'text-slate-400'}`}>Revival in Marketplace</p>
+                            <div className={`border rounded-3xl p-6 flex flex-col transition-all duration-300 ${isActive ? 'bg-gradient-to-b from-white/10 to-transparent border-white/30 shadow-lg' : 'bg-gradient-to-b from-[#11181a] to-[#0b1013] border-[#8caeb0]/20'}`}>
+                              <div className="mb-3">
+                                <span className="inline-block text-[10px] font-extrabold tracking-[0.2em] uppercase text-[#0b1013] bg-[#8caeb0] px-3 py-1 rounded-full">Auditorium 2</span>
+                              </div>
+                              <h5 className={`text-2xl font-black leading-tight mb-8 flex-grow ${isActive ? 'text-white' : 'text-white/95'}`}>Revival in Marketplace</h5>
                               {(!isBreakoutQALocked || isActive) && (
                                 <a 
                                   href="/breakout-qa/1"
-                                  className="w-full text-center py-2.5 px-4 rounded-xl font-bold tracking-wide uppercase text-xs border border-[#8caeb0] text-[#8caeb0] hover:bg-[#8caeb0] hover:text-[#0b1013] transition-all mt-auto"
+                                  className="w-full text-center py-3 px-4 rounded-xl font-bold tracking-wide uppercase text-sm border-2 border-[#cdff64] text-[#cdff64] hover:bg-[#cdff64] hover:text-[#0b1013] transition-all mt-auto"
                                 >
                                   Enter Q&A
                                 </a>
                               )}
                             </div>
-                            <div className={`border rounded-2xl p-5 flex flex-col transition-colors ${isActive ? 'bg-white/5 border-white/20' : 'bg-[#11181a]/50 border-[#8caeb0]/20'}`}>
-                              <h5 className="font-bold text-lg text-white mb-1">Auditorium 3</h5>
-                              <p className={`text-sm mb-6 flex-grow ${isActive ? 'text-white/80' : 'text-slate-400'}`}>Hosting the Glory</p>
+                            <div className={`border rounded-3xl p-6 flex flex-col transition-all duration-300 ${isActive ? 'bg-gradient-to-b from-white/10 to-transparent border-white/30 shadow-lg' : 'bg-gradient-to-b from-[#11181a] to-[#0b1013] border-[#8caeb0]/20'}`}>
+                              <div className="mb-3">
+                                <span className="inline-block text-[10px] font-extrabold tracking-[0.2em] uppercase text-[#0b1013] bg-[#8caeb0] px-3 py-1 rounded-full">Auditorium 3</span>
+                              </div>
+                              <h5 className={`text-2xl font-black leading-tight mb-8 flex-grow ${isActive ? 'text-white' : 'text-white/95'}`}>Hosting the Glory</h5>
                               {(!isBreakoutQALocked || isActive) && (
                                 <a 
                                   href="/breakout-qa/2"
-                                  className="w-full text-center py-2.5 px-4 rounded-xl font-bold tracking-wide uppercase text-xs border border-[#8caeb0] text-[#8caeb0] hover:bg-[#8caeb0] hover:text-[#0b1013] transition-all mt-auto"
+                                  className="w-full text-center py-3 px-4 rounded-xl font-bold tracking-wide uppercase text-sm border-2 border-[#cdff64] text-[#cdff64] hover:bg-[#cdff64] hover:text-[#0b1013] transition-all mt-auto"
                                 >
                                   Enter Q&A
                                 </a>
