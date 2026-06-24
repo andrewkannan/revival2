@@ -1354,21 +1354,27 @@ function generateConferenceEveHtml(name: string, formattedOrderNumber: string, t
           <p style="font-size: 14px; color: #94a3b8; margin: 0; line-height: 1.5;">Please arrive early to collect your wristbands and starter packs!</p>
         </div>
         
-        <!-- Sleek Ticket Design -->
-        <div style="background-color: #ffffff; border-radius: 24px; padding: 8px; margin: 0 auto 45px auto; max-width: 320px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
-          <div style="border: 2px dashed #e2e8f0; border-radius: 18px; overflow: hidden;">
-            <div style="background-color: #f8fafc; padding: 20px; text-align: center; border-bottom: 2px dashed #e2e8f0;">
-              <p style="margin: 0; color: #64748b; font-size: 12px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;">Admit &bull; ${ticketText}</p>
-            </div>
-            
-            <div style="padding: 35px; text-align: center; background-color: #ffffff;">
-              <img src="cid:qrcode" alt="Master Ticket QR Code" style="width: 200px; height: 200px; display: block; margin: 0 auto;" />
-            </div>
-            
-            <div style="background-color: #f8fafc; padding: 20px; text-align: center; border-top: 2px dashed #e2e8f0;">
-              <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 20px; font-weight: 800;">${reg.attendee.name}</h4>
-              <p style="margin: 0; color: #64748b; font-size: 14px; font-family: 'Courier New', Courier, monospace; letter-spacing: 3px; font-weight: 700;">${formattedOrderNumber}</p>
-            </div>
+        <!-- Original Ticket Design -->
+        <div style="max-width: 320px; margin: 30px auto; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; background-color: #ffffff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+          <!-- Top Header -->
+          <div style="background-color: #0f172a; padding: 24px 20px; text-align: center;">
+            <h3 style="margin: 0 0 8px 0; color: #ffffff; font-size: 22px; font-weight: bold; letter-spacing: 1px;">REVIVAL 2026</h3>
+            <p style="margin: 0; color: #94a3b8; font-size: 14px;">Official Conference Pass</p>
+          </div>
+          
+          <!-- QR Code Section -->
+          <div style="padding: 30px 20px; background-color: #ffffff; text-align: center;">
+            <img src="cid:qrcode" alt="Master Ticket QR Code" style="width: 200px; height: 200px; display: inline-block; margin: 0 auto;" />
+          </div>
+          
+          <!-- Divider -->
+          <div style="border-top: 2px dashed #cbd5e1; margin: 0;"></div>
+          
+          <!-- Details Section -->
+          <div style="background-color: #f8fafc; padding: 24px 20px; text-align: center;">
+            <h4 style="margin: 0 0 8px 0; color: #0f172a; font-size: 20px; font-weight: bold;">${reg.attendee.name}</h4>
+            <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px; font-family: monospace; letter-spacing: 2px;">${formattedOrderNumber}</p>
+            <p style="margin: 0; color: #64748b; font-size: 14px; font-weight: 500;">${ticketText}</p>
           </div>
         </div>
 
