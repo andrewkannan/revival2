@@ -202,27 +202,39 @@ export default function Itinerary({ isBreakoutQALocked = true }: { isBreakoutQAL
                           )}
                         </div>
                         
-                        {event.descriptionKey && (
-                          <p className={`font-light leading-relaxed relative z-10 whitespace-pre-line mt-4 ${isActive ? 'text-white/90' : 'text-slate-400'}`}>
-                            {t(event.descriptionKey)}
-                          </p>
-                        )}
-                        
-                        {event.isBreakout && (!isBreakoutQALocked || isActive) && (
-                          <div className="mt-8 flex flex-col sm:flex-row gap-4 relative z-10">
-                            <a 
-                              href="/breakout-qa/1"
-                              className="flex-1 text-center py-3 px-4 rounded-xl font-bold tracking-wide uppercase text-sm border border-[#8caeb0] text-[#8caeb0] hover:bg-[#8caeb0] hover:text-[#0b1013] transition-all"
-                            >
-                              Enter Q&A: Auditorium 2
-                            </a>
-                            <a 
-                              href="/breakout-qa/2"
-                              className="flex-1 text-center py-3 px-4 rounded-xl font-bold tracking-wide uppercase text-sm border border-[#8caeb0] text-[#8caeb0] hover:bg-[#8caeb0] hover:text-[#0b1013] transition-all"
-                            >
-                              Enter Q&A: Auditorium 3
-                            </a>
+                        {event.isBreakout ? (
+                          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
+                            <div className={`border rounded-2xl p-5 flex flex-col transition-colors ${isActive ? 'bg-white/5 border-white/20' : 'bg-[#11181a]/50 border-[#8caeb0]/20'}`}>
+                              <h5 className="font-bold text-lg text-white mb-1">Auditorium 2</h5>
+                              <p className={`text-sm mb-6 flex-grow ${isActive ? 'text-white/80' : 'text-slate-400'}`}>Revival in Marketplace</p>
+                              {(!isBreakoutQALocked || isActive) && (
+                                <a 
+                                  href="/breakout-qa/1"
+                                  className="w-full text-center py-2.5 px-4 rounded-xl font-bold tracking-wide uppercase text-xs border border-[#8caeb0] text-[#8caeb0] hover:bg-[#8caeb0] hover:text-[#0b1013] transition-all mt-auto"
+                                >
+                                  Enter Q&A
+                                </a>
+                              )}
+                            </div>
+                            <div className={`border rounded-2xl p-5 flex flex-col transition-colors ${isActive ? 'bg-white/5 border-white/20' : 'bg-[#11181a]/50 border-[#8caeb0]/20'}`}>
+                              <h5 className="font-bold text-lg text-white mb-1">Auditorium 3</h5>
+                              <p className={`text-sm mb-6 flex-grow ${isActive ? 'text-white/80' : 'text-slate-400'}`}>Hosting the Glory</p>
+                              {(!isBreakoutQALocked || isActive) && (
+                                <a 
+                                  href="/breakout-qa/2"
+                                  className="w-full text-center py-2.5 px-4 rounded-xl font-bold tracking-wide uppercase text-xs border border-[#8caeb0] text-[#8caeb0] hover:bg-[#8caeb0] hover:text-[#0b1013] transition-all mt-auto"
+                                >
+                                  Enter Q&A
+                                </a>
+                              )}
+                            </div>
                           </div>
+                        ) : (
+                          event.descriptionKey && (
+                            <p className={`font-light leading-relaxed relative z-10 whitespace-pre-line mt-4 ${isActive ? 'text-white/90' : 'text-slate-400'}`}>
+                              {t(event.descriptionKey)}
+                            </p>
+                          )
                         )}
                       </motion.div>
                     );
