@@ -71,8 +71,32 @@ export default function EmailQueueClient({
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
+  const totalEmails = initialQueue.length;
+  const pendingEmails = initialQueue.filter(q => q.status === 'PENDING').length;
+  const sentEmails = initialQueue.filter(q => q.status === 'SENT').length;
+  const failedEmails = initialQueue.filter(q => q.status === 'FAILED').length;
+
   return (
     <div className="space-y-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+          <div className="text-slate-400 text-sm font-medium mb-1">Total Emails</div>
+          <div className="text-2xl font-bold text-white">{totalEmails}</div>
+        </div>
+        <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-4">
+          <div className="text-orange-400 text-sm font-medium mb-1">Pending</div>
+          <div className="text-2xl font-bold text-orange-400">{pendingEmails}</div>
+        </div>
+        <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4">
+          <div className="text-emerald-400 text-sm font-medium mb-1">Sent</div>
+          <div className="text-2xl font-bold text-emerald-400">{sentEmails}</div>
+        </div>
+        <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4">
+          <div className="text-red-400 text-sm font-medium mb-1">Failed</div>
+          <div className="text-2xl font-bold text-red-400">{failedEmails}</div>
+        </div>
+      </div>
+
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
         <div className="relative w-full sm:max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
