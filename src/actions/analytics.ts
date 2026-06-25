@@ -8,6 +8,10 @@ import { headers } from 'next/headers';
  */
 export async function trackPageVisit(path: string) {
   try {
+    if (path.startsWith('/admin')) {
+      return { success: true };
+    }
+
     const headersList = await headers();
     const userAgent = headersList.get('user-agent') || null;
 
@@ -29,11 +33,18 @@ export async function trackPageVisit(path: string) {
  */
 export async function getAnalyticsData() {
   try {
-    const totalVisits = await prisma.pageVisit.count();
+    const totalVisits = await prisma.pageVisit.count({
+      where: {
+        NOT: { path: { startsWith: '/admin' } }
+      }
+    });
 
     // Get the most visited paths
     const visitsByPathRaw = await prisma.pageVisit.groupBy({
       by: ['path'],
+      where: {
+        NOT: { path: { startsWith: '/admin' } }
+      },
       _count: {
         path: true,
       },
@@ -59,6 +70,7 @@ export async function getAnalyticsData() {
         createdAt: {
           gte: sevenDaysAgo,
         },
+        NOT: { path: { startsWith: '/admin' } }
       },
       select: {
         createdAt: true,
