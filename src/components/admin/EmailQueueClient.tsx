@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useTransition } from 'react';
-import { Mail, Clock, CheckCircle2, XCircle, AlertCircle, Search, Pause, Play, Loader2 } from 'lucide-react';
-import { toggleEmailQueue, retryAllFailedEmails } from '@/actions/admin';
+import { Mail, Clock, CheckCircle2, XCircle, AlertCircle, Search, Pause, Play, Loader2, ArrowUpCircle } from 'lucide-react';
+import { toggleEmailQueue, retryAllFailedEmails, prioritizeEmailInQueue } from '@/actions/admin';
 import { useRouter } from 'next/navigation';
 import ExportCsvButton from './ExportCsvButton';
 
@@ -37,6 +37,17 @@ export default function EmailQueueClient({
         }
       });
     }
+  };
+
+  const handlePrioritize = (id: string) => {
+    startTransition(async () => {
+      const res = await prioritizeEmailInQueue(id);
+      if (res.success) {
+        router.refresh();
+      } else {
+        alert(`Failed: ${res.message}`);
+      }
+    });
   };
 
   const filteredQueue = initialQueue.filter((item) => {
@@ -117,6 +128,7 @@ export default function EmailQueueClient({
                 <th className="px-4 py-4 font-medium">Sent At</th>
                 <th className="px-4 py-4 font-medium">Attempts</th>
                 <th className="px-4 py-4 font-medium">Error Info</th>
+                <th className="px-4 py-4 font-medium text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -171,6 +183,18 @@ export default function EmailQueueClient({
                         </span>
                       ) : (
                         <span className="opacity-50">-</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-4 text-right">
+                      {item.status === 'PENDING' && (
+                        <button
+                          onClick={() => handlePrioritize(item.id)}
+                          disabled={isPending || new Date(item.createdAt).getTime() === 0}
+                          title="Prioritize (Move to top of queue)"
+                          className="p-2 text-slate-400 hover:text-emerald-400 bg-white/5 hover:bg-emerald-500/10 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                        >
+                          <ArrowUpCircle className="w-4 h-4" />
+                        </button>
                       )}
                     </td>
                   </tr>
