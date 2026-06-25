@@ -30,6 +30,7 @@ export const metadata: Metadata = {
 };
 
 import { LanguageProvider } from '@/context/LanguageContext';
+import PageTracker from '@/components/PageTracker';
 
 export default function RootLayout({
   children,
@@ -43,6 +44,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col relative bg-poster-bg text-slate-200">
         <LanguageProvider>
+          <PageTracker />
           <CrossBackground />
           {/* Cinematic Film Grain Overlay */}
           <div 

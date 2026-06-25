@@ -18,6 +18,7 @@ const navigation = [
   { name: 'Spiritual', href: '/admin/spiritual', icon: Heart },
   { name: 'Sowing', href: '/admin/sowing', icon: Heart },
   { name: 'Photos', href: '/admin/photos', icon: ImageIcon },
+  { name: 'Analytics', href: '/admin/analytics', icon: LayoutDashboard },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 
