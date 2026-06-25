@@ -24,11 +24,13 @@ export async function submitBreakoutQuestion(sessionId: number, content: string,
       return { success: false, message: "Question cannot be empty." };
     }
 
+    const finalAuthorName = authorName && authorName.trim() ? authorName.trim() : 'Revival';
+
     const question = await prisma.breakoutQuestion.create({
       data: {
         sessionId,
         content: content.trim(),
-        authorName: authorName && authorName.trim() ? authorName.trim() : null
+        authorName: finalAuthorName
       }
     });
 
@@ -61,6 +63,23 @@ export async function markBreakoutQuestionDone(id: string, isDone: boolean) {
     return { success: true, question };
   } catch (error: any) {
     console.error("Failed to update breakout question:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+export async function clearBreakoutQuestions(sessionId: number, password: string) {
+  try {
+    if (password !== 'revival2026') {
+      return { success: false, message: 'Invalid password' };
+    }
+
+    await prisma.breakoutQuestion.deleteMany({
+      where: { sessionId }
+    });
+    
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to clear breakout questions:", error);
     return { success: false, message: error.message };
   }
 }

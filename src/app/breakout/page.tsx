@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getBreakoutQuestions, markBreakoutQuestionDone } from '@/actions/breakout';
-import { Loader2, CheckCircle, RefreshCw, User, MessageSquare } from 'lucide-react';
+import { getBreakoutQuestions, markBreakoutQuestionDone, clearBreakoutQuestions } from '@/actions/breakout';
+import { Loader2, CheckCircle, RefreshCw, User, MessageSquare, Trash2 } from 'lucide-react';
 
 export default function SpeakerDashboard() {
   const [activeSession, setActiveSession] = useState<number>(1);
@@ -43,6 +43,20 @@ export default function SpeakerDashboard() {
     await markBreakoutQuestionDone(id, false);
   };
 
+  const handleClearAll = async () => {
+    const pwd = window.prompt("Enter page password to clear all questions:");
+    if (!pwd) return;
+    
+    setIsLoading(true);
+    const res = await clearBreakoutQuestions(activeSession, pwd);
+    if (res.success) {
+      setQuestions([]);
+    } else {
+      alert("Failed to clear: " + res.message);
+    }
+    setIsLoading(false);
+  };
+
   const pendingQuestions = questions.filter(q => !q.isDone);
   const doneQuestions = questions.filter(q => q.isDone);
 
@@ -59,13 +73,13 @@ export default function SpeakerDashboard() {
             onClick={() => setActiveSession(1)}
             className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeSession === 1 ? 'bg-[#8caeb0] text-[#0b1013] shadow-lg' : 'text-slate-400 hover:text-white'}`}
           >
-            Auditorium 2
+            Auditorium 2 - Revival in Marketplace
           </button>
           <button
             onClick={() => setActiveSession(2)}
             className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeSession === 2 ? 'bg-[#8caeb0] text-[#0b1013] shadow-lg' : 'text-slate-400 hover:text-white'}`}
           >
-            Auditorium 3
+            Auditorium 3 - Hosting the Glory
           </button>
         </div>
       </div>
@@ -74,12 +88,22 @@ export default function SpeakerDashboard() {
         <h2 className="text-xl font-bold text-white flex items-center gap-2">
           New Questions <span className="bg-[#cdff64] text-[#0b1013] px-2.5 py-0.5 rounded-full text-sm">{pendingQuestions.length}</span>
         </h2>
-        <button 
-          onClick={() => fetchQuestions(true)}
-          className={`text-slate-400 hover:text-white transition-colors ${isRefreshing ? 'animate-spin' : ''}`}
-        >
-          <RefreshCw className="w-5 h-5" />
-        </button>
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => fetchQuestions(true)}
+            className={`text-slate-400 hover:text-white transition-colors ${isRefreshing ? 'animate-spin' : ''}`}
+            title="Refresh"
+          >
+            <RefreshCw className="w-5 h-5" />
+          </button>
+          <button 
+            onClick={handleClearAll}
+            className="text-slate-400 hover:text-red-400 transition-colors flex items-center gap-2 text-sm font-bold tracking-widest uppercase ml-4"
+          >
+            <Trash2 className="w-4 h-4" />
+            <span className="hidden sm:inline">Clear All</span>
+          </button>
+        </div>
       </div>
 
       {isLoading ? (
@@ -100,7 +124,7 @@ export default function SpeakerDashboard() {
                   <div>
                     <div className="flex items-center gap-2 text-sm text-[#8caeb0] font-bold tracking-widest uppercase mb-3">
                       <User className="w-4 h-4" />
-                      {q.authorName || 'Anonymous'}
+                      {q.authorName || 'Revival'}
                     </div>
                     <p className="text-xl md:text-2xl text-white leading-relaxed font-medium">{q.content}</p>
                   </div>
@@ -130,7 +154,7 @@ export default function SpeakerDashboard() {
                   <div>
                     <div className="flex items-center gap-2 text-sm text-slate-500 font-bold tracking-widest uppercase mb-2">
                       <User className="w-4 h-4" />
-                      {q.authorName || 'Anonymous'}
+                      {q.authorName || 'Revival'}
                     </div>
                     <p className="text-lg text-slate-300 leading-relaxed">{q.content}</p>
                   </div>
