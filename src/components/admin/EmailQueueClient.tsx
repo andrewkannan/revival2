@@ -76,6 +76,11 @@ export default function EmailQueueClient({
   const sentEmails = initialQueue.filter(q => q.status === 'SENT').length;
   const failedEmails = initialQueue.filter(q => q.status === 'FAILED').length;
 
+  const etaMinutes = pendingEmails * 3;
+  const etaText = etaMinutes >= 60 
+    ? `~${Math.floor(etaMinutes / 60)}h ${etaMinutes % 60}m` 
+    : `~${etaMinutes}m`;
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
@@ -83,9 +88,16 @@ export default function EmailQueueClient({
           <div className="text-slate-400 text-sm font-medium mb-1">Total Emails</div>
           <div className="text-2xl font-bold text-white">{totalEmails}</div>
         </div>
-        <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-4">
+        <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-4 flex flex-col justify-between">
           <div className="text-orange-400 text-sm font-medium mb-1">Pending</div>
-          <div className="text-2xl font-bold text-orange-400">{pendingEmails}</div>
+          <div className="flex items-end justify-between">
+            <div className="text-2xl font-bold text-orange-400">{pendingEmails}</div>
+            {pendingEmails > 0 && (
+              <div className="text-xs text-orange-400/80 mb-1 font-medium bg-orange-500/10 px-2 py-0.5 rounded-md">
+                ETA: {etaText}
+              </div>
+            )}
+          </div>
         </div>
         <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4">
           <div className="text-emerald-400 text-sm font-medium mb-1">Sent</div>
