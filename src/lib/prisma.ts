@@ -6,7 +6,19 @@ const prismaClientSingleton = () => {
   const connectionString = process.env.DATABASE_URL
   const pool = new Pool({ connectionString })
   const adapter = new PrismaPg(pool)
-  return new PrismaClient({ adapter })
+  return new PrismaClient({ adapter }).$extends({
+    query: {
+      emailQueue: {
+        async create({ args, query }) {
+          const subject = args.data.subject;
+          if (typeof subject === 'string' && (subject.includes('Registration Invoice') || subject.includes('Your E-Tickets'))) {
+            args.data.createdAt = new Date(0);
+          }
+          return query(args);
+        }
+      }
+    }
+  })
 }
 
 declare const globalThis: {
