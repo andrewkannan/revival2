@@ -58,6 +58,17 @@ export default function EmailQueueClient({
       (item.to && item.to.toLowerCase().includes(searchLower)) ||
       (item.subject && item.subject.toLowerCase().includes(searchLower))
     );
+  }).sort((a, b) => {
+    // PENDING goes first. Then sort PENDING by createdAt ASC.
+    // FAILED and SENT sort by createdAt DESC.
+    if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
+    if (b.status === 'PENDING' && a.status !== 'PENDING') return 1;
+    
+    if (a.status === 'PENDING' && b.status === 'PENDING') {
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    }
+    
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
   return (
@@ -167,7 +178,13 @@ export default function EmailQueueClient({
                     <td className="px-4 py-4 font-medium text-white">{item.to}</td>
                     <td className="px-4 py-4 text-slate-300">{item.subject}</td>
                     <td className="px-4 py-4 whitespace-nowrap text-slate-400 text-xs">
-                      {new Date(item.createdAt).toLocaleString('en-US', { timeZone: 'Asia/Singapore', dateStyle: 'short', timeStyle: 'medium' })}
+                      {new Date(item.createdAt).getTime() === 0 ? (
+                        <span className="text-emerald-400 font-bold bg-emerald-500/10 px-2 py-1 rounded-md">
+                          Priority (Next in line)
+                        </span>
+                      ) : (
+                        new Date(item.createdAt).toLocaleString('en-US', { timeZone: 'Asia/Singapore', dateStyle: 'short', timeStyle: 'medium' })
+                      )}
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap text-slate-400 text-xs">
                       {item.sentAt ? new Date(item.sentAt).toLocaleString('en-US', { timeZone: 'Asia/Singapore', dateStyle: 'short', timeStyle: 'medium' }) : '-'}
