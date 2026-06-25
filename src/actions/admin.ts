@@ -1574,9 +1574,6 @@ export async function resendTicketEmail(registrationId: string) {
 
 export async function prioritizeEmailInQueue(id: string) {
   try {
-    const isAdmin = await checkAdminAuth();
-    if (!isAdmin) return { success: false, message: 'Unauthorized' };
-
     // Set createdAt to an old date so it gets picked up first
     await prisma.emailQueue.update({
       where: { id },
