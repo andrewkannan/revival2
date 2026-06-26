@@ -79,7 +79,10 @@ export default function SpiritualAdminClient({ initialPrayers, initialTestimonie
                 prayers.map(p => (
                   <tr key={p.id} className="border-b border-white/5 hover:bg-white/[0.02]">
                     <td className="px-6 py-4">
-                      <p className="line-clamp-2 max-w-md text-white">{p.content}</p>
+                      <div className="text-white whitespace-pre-wrap">{p.content}</div>
+                      <div className="text-xs text-slate-400 mt-2">
+                        By: <span className="font-medium text-slate-300">{p.authorName || 'Anonymous'}</span> • {new Date(p.createdAt).toLocaleDateString()}
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-center">
                       {p.isApproved ? (
@@ -131,8 +134,10 @@ export default function SpiritualAdminClient({ initialPrayers, initialTestimonie
                 testimonies.map(t => (
                   <tr key={t.id} className="border-b border-white/5 hover:bg-white/[0.02]">
                     <td className="px-6 py-4">
-                      <p className="line-clamp-2 max-w-md text-white">"{t.content}"</p>
-                      <p className="text-xs text-slate-500 mt-1">{new Date(t.createdAt).toLocaleDateString()}</p>
+                      <div className="text-white whitespace-pre-wrap">"{t.content}"</div>
+                      <div className="text-xs text-slate-400 mt-2">
+                        By: <span className="font-medium text-slate-300">{t.authorName || 'Anonymous'}</span> • {new Date(t.createdAt).toLocaleDateString()}
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-center">
                       {t.isApproved ? (
