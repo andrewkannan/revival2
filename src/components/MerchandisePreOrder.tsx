@@ -97,6 +97,17 @@ export default function MerchandisePreOrder() {
     });
   };
 
+  const removeFromCart = (index: number) => {
+    setCart(prev => {
+      const newCart = [...prev];
+      newCart.splice(index, 1);
+      if (newCart.length === 0 && step === 2) {
+        setStep(1); // Go back to step 1 if cart is emptied while on step 2
+      }
+      return newCart;
+    });
+  };
+
   const totalAmount = cart.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -208,6 +219,9 @@ export default function MerchandisePreOrder() {
                                   </button>
                                 </div>
                                 <p className="font-bold w-16 text-right">RM {c.price * c.quantity}</p>
+                                <button type="button" onClick={() => removeFromCart(idx)} className="p-2 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-lg transition-colors ml-1" title="Remove item">
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
                               </div>
                             </div>
                           ))}
