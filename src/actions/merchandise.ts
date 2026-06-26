@@ -77,7 +77,7 @@ export async function submitMerchOrder(data: { name: string; email: string; phon
 
         <div style="background-color: white; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 30px;">
           <h2 style="margin: 0 0 5px; color: #0f172a; font-size: 24px;">Order ${order.orderNumber}</h2>
-          <p style="margin: 0 0 20px; color: #64748b;">Show this QR code at the merch booth for fast collection.</p>
+          <p style="margin: 0 0 20px; color: #64748b;">Please present this QR code at the merchandise booth for collection. We will notify you once the stock has arrived and is ready for pick-up!</p>
           <img src="cid:order_qr" alt="Order QR Code" style="width: 200px; height: 200px; margin: 0 auto; display: block;" />
         </div>
 

@@ -175,7 +175,7 @@ export default function MerchandisePreOrder() {
                     </div>
                     <h3 className="text-2xl font-bold mb-2">Pre-Order Confirmed!</h3>
                     <p className="text-slate-400 mb-6 max-w-sm">
-                      Your order <strong className="text-white">{orderNumber}</strong> has been received. Please check your email for the confirmation QR code. You will pay for this on the day of collection.
+                      Your order <strong className="text-white">{orderNumber}</strong> has been received and a QR code has been emailed to you. Please present this QR code at the merchandise booth for collection and payment. We will notify you once the stock is ready for pick-up!
                     </p>
                     <button onClick={() => setIsOpen(false)} className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors font-medium">
                       Back to Itinerary
