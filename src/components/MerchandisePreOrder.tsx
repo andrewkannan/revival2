@@ -178,7 +178,7 @@ export default function MerchandisePreOrder() {
                       Your order <strong className="text-white">{orderNumber}</strong> has been received. Please check your email for the confirmation QR code. You will pay for this on the day of collection.
                     </p>
                     <button onClick={() => setIsOpen(false)} className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors font-medium">
-                      Close Window
+                      Back to Itinerary
                     </button>
                   </div>
                 ) : (
