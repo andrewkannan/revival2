@@ -3,13 +3,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, Settings, LogOut, ChevronLeft, ChevronRight, Mail, Heart, Image as ImageIcon } from 'lucide-react';
+import { LayoutDashboard, Users, Settings, LogOut, ChevronLeft, ChevronRight, Mail, Heart, Image as ImageIcon, ShoppingBag } from 'lucide-react';
 import { logoutAdmin } from '@/actions/admin';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { name: 'Merchandise', href: '/admin/merchandise', icon: ShoppingBag },
   { name: 'Registrations', href: '/admin/registrations', icon: Users },
   { name: 'Receipts', href: '/admin/receipts', icon: ImageIcon },
   { name: 'Email Logs', href: '/admin/emails', icon: Mail },

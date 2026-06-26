@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { ShoppingBag, Search, Package, User, Hash } from 'lucide-react';
+import { ShoppingBag, Search, Package, User, Hash, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { updateMerchandiseOrderStatus } from '@/actions/admin';
 
 type Props = {
   initialOrders: any[];
@@ -9,13 +10,15 @@ type Props = {
 
 export default function MerchandiseAdminClient({ initialOrders }: Props) {
   const [search, setSearch] = useState('');
+  const [orders, setOrders] = useState(initialOrders);
+  const [updating, setUpdating] = useState<string | null>(null);
   
   // Calculate Aggregates
   const aggregates = useMemo(() => {
     let totalRevenue = 0;
     const itemsCount: Record<string, Record<string, number>> = {};
 
-    initialOrders.forEach(order => {
+    orders.forEach(order => {
       totalRevenue += Number(order.totalAmount);
       order.items.forEach((item: any) => {
         const type = item.itemType;
@@ -27,18 +30,29 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
     });
 
     return { totalRevenue, itemsCount };
-  }, [initialOrders]);
+  }, [orders]);
 
   // Filter Orders
   const filteredOrders = useMemo(() => {
-    if (!search) return initialOrders;
+    if (!search) return orders;
     const q = search.toLowerCase();
-    return initialOrders.filter(o => 
+    return orders.filter(o => 
       o.name.toLowerCase().includes(q) || 
       o.orderNumber.toLowerCase().includes(q) || 
       o.email.toLowerCase().includes(q)
     );
-  }, [initialOrders, search]);
+  }, [orders, search]);
+
+  const handleUpdateStatus = async (orderId: string, status: string) => {
+    setUpdating(orderId);
+    const res = await updateMerchandiseOrderStatus(orderId, status);
+    if (res.success) {
+      setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
+    } else {
+      alert("Failed to update status");
+    }
+    setUpdating(null);
+  };
 
   return (
     <div className="space-y-8">
@@ -104,6 +118,7 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
                 <th className="px-6 py-4 font-medium">Customer</th>
                 <th className="px-6 py-4 font-medium">Items Ordered</th>
                 <th className="px-6 py-4 font-medium text-right">Total Amount</th>
+                <th className="px-6 py-4 font-medium text-center">Status</th>
                 <th className="px-6 py-4 font-medium text-right">Date</th>
               </tr>
             </thead>
@@ -140,6 +155,46 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
                     </td>
                     <td className="px-6 py-4 text-right font-medium text-emerald-400">
                       RM {Number(order.totalAmount).toFixed(2)}
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <div className="flex flex-col items-center gap-2">
+                        {order.status === 'PAID' && (
+                          <span className="inline-flex items-center gap-1 text-xs font-bold px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded">
+                            <CheckCircle className="w-3 h-3" /> Paid & Collected
+                          </span>
+                        )}
+                        {order.status === 'CANCELLED' && (
+                          <span className="inline-flex items-center gap-1 text-xs font-bold px-2 py-1 bg-red-500/20 text-red-400 rounded">
+                            <XCircle className="w-3 h-3" /> Cancelled
+                          </span>
+                        )}
+                        {(!order.status || order.status === 'PENDING') && (
+                          <span className="inline-flex items-center gap-1 text-xs font-bold px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded">
+                            <Clock className="w-3 h-3" /> Pending
+                          </span>
+                        )}
+                        
+                        <div className="flex gap-1 mt-1">
+                          {order.status !== 'PAID' && (
+                            <button 
+                              disabled={updating === order.id}
+                              onClick={() => handleUpdateStatus(order.id, 'PAID')}
+                              className="text-xs px-2 py-1 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded disabled:opacity-50"
+                            >
+                              Mark Paid
+                            </button>
+                          )}
+                          {order.status !== 'CANCELLED' && (
+                            <button 
+                              disabled={updating === order.id}
+                              onClick={() => handleUpdateStatus(order.id, 'CANCELLED')}
+                              className="text-xs px-2 py-1 bg-white/10 hover:bg-white/20 text-white rounded disabled:opacity-50"
+                            >
+                              Cancel
+                            </button>
+                          )}
+                        </div>
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-right text-xs text-slate-500 whitespace-nowrap">
                       {new Date(order.createdAt).toLocaleDateString()}<br/>
