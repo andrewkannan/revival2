@@ -432,6 +432,16 @@ export async function getDashboardStats() {
     where: { status: { in: ['PENDING_FOR_PAYMENT', 'PENDING_FOR_REVIEW'] } }
   });
 
+  const wristbandAgg = await prisma.registration.aggregate({
+    _sum: { adultTickets: true, kidsTickets: true },
+    where: { wristbandCollected: true }
+  });
+
+  const starterPackAgg = await prisma.registration.aggregate({
+    _sum: { adultTickets: true, kidsTickets: true },
+    where: { starterPackCollected: true }
+  });
+
   // Calculate outreach stats
   const allRegistrations = await prisma.registration.findMany({
     select: { status: true, adultTickets: true, kidsTickets: true, attendee: { select: { outreach: true } } }
@@ -467,6 +477,8 @@ export async function getDashboardStats() {
     totalRegistrations,
     totalPaidAmount: Number(securedAgg._sum.totalAmount || 0),
     totalPendingAmount: Number(pendingAgg._sum.totalAmount || 0),
+    wristbandsCollected: (wristbandAgg._sum.adultTickets || 0) + (wristbandAgg._sum.kidsTickets || 0),
+    starterPacksCollected: (starterPackAgg._sum.adultTickets || 0) + (starterPackAgg._sum.kidsTickets || 0),
     outreachCounts
   };
 }

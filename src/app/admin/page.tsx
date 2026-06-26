@@ -3,7 +3,7 @@ import { getActiveLocksCount } from '@/lib/ticket-lock';
 import ReminderButton from '@/components/ReminderButton';
 
 export const dynamic = 'force-dynamic';
-import { Users, Ticket, Clock, CheckCircle2, AlertCircle, Banknote, MapPin } from 'lucide-react';
+import { Users, Ticket, Clock, CheckCircle2, AlertCircle, Banknote, MapPin, Package, Tag } from 'lucide-react';
 
 export default async function AdminDashboard() {
   const stats = await getDashboardStats();
@@ -117,6 +117,34 @@ export default async function AdminDashboard() {
           </div>
           <p className="text-3xl font-bold text-purple-400">{locks.activeAdults + locks.activeKids}</p>
           <p className="text-sm text-slate-500 mt-1">Tickets</p>
+        </div>
+      </div>
+
+      {/* Collection Stats */}
+      <div className="pt-6">
+        <h2 className="text-2xl font-bold tracking-tight mb-6">Collection Progress</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-10 h-10 bg-cyan-500/10 rounded-full flex items-center justify-center">
+                <Tag className="w-5 h-5 text-cyan-400" />
+              </div>
+              <h3 className="font-medium text-slate-400">Wristbands Collected</h3>
+            </div>
+            <p className="text-3xl font-bold text-cyan-400">{stats.wristbandsCollected}</p>
+            <p className="text-sm text-slate-500 mt-1">Total wristbands issued to attendees</p>
+          </div>
+
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-10 h-10 bg-pink-500/10 rounded-full flex items-center justify-center">
+                <Package className="w-5 h-5 text-pink-400" />
+              </div>
+              <h3 className="font-medium text-slate-400">Starter Packs Collected</h3>
+            </div>
+            <p className="text-3xl font-bold text-pink-400">{stats.starterPacksCollected}</p>
+            <p className="text-sm text-slate-500 mt-1">Total starter packs issued to attendees</p>
+          </div>
         </div>
       </div>
 
