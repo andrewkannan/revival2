@@ -25,8 +25,8 @@ const ITEMS = [
     id: 'kids_tshirt',
     name: 'Kids Tshirt',
     price: 35,
-    sizes: ['Kids 26', 'Kids 28', 'Kids 30', 'Kids 32', 'Adult XS', 'Adult S', 'Adult M', 'Adult L', 'Adult XL', 'Adult 2XL', 'Adult 3XL'],
-    note: '(Red Print. Kids size runs small, Adults average size)'
+    sizes: ['Kids 26', 'Kids 28', 'Kids 30', 'Kids 32'],
+    note: '(Red Print. Size runs small)'
   },
   {
     id: 'cap',
