@@ -1612,3 +1612,17 @@ export async function getMerchandiseOrders() {
     return { success: false, data: [] };
   }
 }
+
+export async function updateMerchandiseOrderStatus(orderId: string, status: string) {
+  try {
+    await prisma.merchandiseOrder.update({
+      where: { id: orderId },
+      data: { status }
+    });
+    revalidatePath('/admin/merchandise');
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to update merchandise order status:", error);
+    return { success: false, message: 'Failed to update order status' };
+  }
+}
