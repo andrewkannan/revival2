@@ -38,6 +38,7 @@ const ITEMS = [
 
 export default function MerchandisePreOrder() {
   const [isOpen, setIsOpen] = useState(false);
+  const [step, setStep] = useState<1 | 2>(1);
   
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -175,7 +176,7 @@ export default function MerchandisePreOrder() {
                     </div>
                     <h3 className="text-2xl font-bold mb-2">Pre-Order Confirmed!</h3>
                     <p className="text-slate-400 mb-6 max-w-sm">
-                      Your order <strong className="text-white">{orderNumber}</strong> has been received and a QR code has been emailed to you. Please present this QR code at the merchandise booth for collection and payment. We will notify you once the stock is ready for pick-up!
+                      Your order <strong className="text-white">{orderNumber}</strong> has been received and a QR code has been emailed to you. We will notify you once the stock has arrived for payment and pick-up.
                     </p>
                     <button onClick={() => setIsOpen(false)} className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors font-medium">
                       Back to Itinerary
@@ -183,7 +184,8 @@ export default function MerchandisePreOrder() {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-8">
-                    
+                    {step === 1 ? (
+                      <>
                     {/* Cart Summary */}
                     {cart.length > 0 && (
                       <div className="bg-black/30 border border-white/10 rounded-xl p-4">
@@ -284,7 +286,18 @@ export default function MerchandisePreOrder() {
                       </div>
                     </div>
 
-
+                    {cart.length > 0 && (
+                      <button 
+                        type="button" 
+                        onClick={() => setStep(2)}
+                        className="w-full py-4 bg-poster-accent hover:bg-poster-accent/90 text-black font-bold rounded-xl transition-all"
+                      >
+                        Next: Your Details
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <>
                     {/* Details Form */}
                     <div>
                       <h3 className="text-lg font-semibold mb-4 text-emerald-400 border-b border-white/10 pb-2 flex justify-between items-center">
@@ -330,18 +343,29 @@ export default function MerchandisePreOrder() {
                       </div>
                     </div>
 
-                    <button 
-                      type="submit" 
-                      disabled={isSubmitting || cart.length === 0}
-                      className="w-full py-4 bg-poster-accent hover:bg-poster-accent/90 text-black font-bold rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-                    >
-                      {isSubmitting ? (
-                        <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                      ) : (
-                        <>Complete Pre-Order</>
-                      )}
-                    </button>
+                    <div className="flex gap-4">
+                      <button 
+                        type="button" 
+                        onClick={() => setStep(1)}
+                        className="w-1/3 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl transition-all"
+                      >
+                        Back
+                      </button>
+                      <button 
+                        type="submit" 
+                        disabled={isSubmitting || cart.length === 0}
+                        className="w-2/3 py-4 bg-poster-accent hover:bg-poster-accent/90 text-black font-bold rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                      >
+                        {isSubmitting ? (
+                          <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                        ) : (
+                          <>Complete Pre-Order</>
+                        )}
+                      </button>
+                    </div>
 
+                  </>
+                    )}
                   </form>
                 )}
               </div>
