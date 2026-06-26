@@ -1598,3 +1598,17 @@ export async function prioritizeEmailInQueue(id: string) {
     return { success: false, message: error.message };
   }
 }
+
+export async function getMerchandiseOrders() {
+
+  try {
+    const orders = await prisma.merchandiseOrder.findMany({
+      include: { items: true },
+      orderBy: { createdAt: 'desc' }
+    });
+    return { success: true, data: orders };
+  } catch (e) {
+    console.error(e);
+    return { success: false, data: [] };
+  }
+}

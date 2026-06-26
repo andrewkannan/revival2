@@ -243,3 +243,29 @@ model PageVisit {
   userAgent String?
   createdAt DateTime @default(now())
 }
+
+// ------------------------------------------------------
+// Merchandise
+// ------------------------------------------------------
+
+model MerchandiseOrder {
+  id          String   @id @default(uuid())
+  orderNumber String   @unique // e.g. M-0042
+  name        String
+  email       String
+  phone       String
+  totalAmount Decimal  @db.Decimal(10,2)
+  items       MerchandiseOrderItem[]
+  createdAt   DateTime @default(now())
+}
+
+model MerchandiseOrderItem {
+  id         String   @id @default(uuid())
+  orderId    String
+  order      MerchandiseOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  itemType   String   // "Oversized Tshirt", "Sweatshirt", "Kids Tshirt", "Cap"
+  size       String?  // Specific size chosen
+  quantity   Int
+  price      Decimal  @db.Decimal(10,2)
+  subtotal   Decimal  @db.Decimal(10,2)
+}

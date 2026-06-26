@@ -10,6 +10,7 @@ import CountdownLock from '@/components/CountdownLock';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import ShortcutDock from '@/components/ShortcutDock';
 import TranslatedFooter from '@/components/TranslatedFooter';
+import MerchandisePreOrder from '@/components/MerchandisePreOrder';
 import Image from 'next/image';
 
 export const revalidate = 0; // Ensures fresh data for the live announcement and prayers
@@ -79,6 +80,8 @@ export default async function ItineraryPage() {
 
       {/* Sleek Shortcut Navigation - Single View Dock */}
       <ShortcutDock playlistUrl={adminConfig?.playlistUrl} />
+
+      <MerchandisePreOrder />
 
       <div className="pb-24 flex flex-col gap-8 md:gap-16 relative z-10">
         <section>
