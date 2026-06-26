@@ -19,16 +19,14 @@ const ITEMS = [
     name: 'Sweatshirt',
     price: 80,
     sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
-    colors: ['White Print'],
-    note: '(true to size and smaller cut)'
+    note: '(White Print. True to size and smaller cut)'
   },
   {
     id: 'kids_tshirt',
     name: 'Kids Tshirt',
     price: 35,
     sizes: ['Kids 26', 'Kids 28', 'Kids 30', 'Kids 32', 'Adult XS', 'Adult S', 'Adult M', 'Adult L', 'Adult XL', 'Adult 2XL', 'Adult 3XL'],
-    colors: ['Red Print'],
-    note: '(Kids size runs small, Adults average size)'
+    note: '(Red Print. Kids size runs small, Adults average size)'
   },
   {
     id: 'cap',
