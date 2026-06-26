@@ -184,6 +184,39 @@ export default function MerchandisePreOrder() {
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-8">
                     
+                    {/* Cart Summary */}
+                    {cart.length > 0 && (
+                      <div className="bg-black/30 border border-white/10 rounded-xl p-4">
+                        <h3 className="text-lg font-semibold mb-4 text-emerald-400 border-b border-white/10 pb-2">Your Cart</h3>
+                        <div className="space-y-3">
+                          {cart.map((c, idx) => (
+                            <div key={idx} className="flex items-center justify-between">
+                              <div>
+                                <p className="font-medium">{c.itemType}</p>
+                                {c.size && <p className="text-xs text-slate-400">Size: {c.size}</p>}
+                              </div>
+                              <div className="flex items-center gap-4">
+                                <div className="flex items-center gap-3 bg-white/5 rounded-lg px-2 py-1">
+                                  <button type="button" onClick={() => updateQuantity(idx, -1)} className="p-1 hover:bg-white/10 rounded">
+                                    <Minus className="w-3 h-3" />
+                                  </button>
+                                  <span className="text-sm w-4 text-center">{c.quantity}</span>
+                                  <button type="button" onClick={() => updateQuantity(idx, 1)} className="p-1 hover:bg-white/10 rounded">
+                                    <Plus className="w-3 h-3" />
+                                  </button>
+                                </div>
+                                <p className="font-bold w-16 text-right">RM {c.price * c.quantity}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-center">
+                          <p className="text-slate-400">Total Due on Collection</p>
+                          <p className="text-2xl font-bold text-poster-accent">RM {totalAmount}</p>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Items Selection */}
                     <div>
                       <h3 className="text-lg font-semibold mb-4 text-emerald-400 border-b border-white/10 pb-2">1. Choose Items</h3>
@@ -251,38 +284,6 @@ export default function MerchandisePreOrder() {
                       </div>
                     </div>
 
-                    {/* Cart Summary */}
-                    {cart.length > 0 && (
-                      <div className="bg-black/30 border border-white/10 rounded-xl p-4">
-                        <h3 className="text-lg font-semibold mb-4 text-emerald-400 border-b border-white/10 pb-2">Your Cart</h3>
-                        <div className="space-y-3">
-                          {cart.map((c, idx) => (
-                            <div key={idx} className="flex items-center justify-between">
-                              <div>
-                                <p className="font-medium">{c.itemType}</p>
-                                {c.size && <p className="text-xs text-slate-400">Size: {c.size}</p>}
-                              </div>
-                              <div className="flex items-center gap-4">
-                                <div className="flex items-center gap-3 bg-white/5 rounded-lg px-2 py-1">
-                                  <button type="button" onClick={() => updateQuantity(idx, -1)} className="p-1 hover:bg-white/10 rounded">
-                                    <Minus className="w-3 h-3" />
-                                  </button>
-                                  <span className="text-sm w-4 text-center">{c.quantity}</span>
-                                  <button type="button" onClick={() => updateQuantity(idx, 1)} className="p-1 hover:bg-white/10 rounded">
-                                    <Plus className="w-3 h-3" />
-                                  </button>
-                                </div>
-                                <p className="font-bold w-16 text-right">RM {c.price * c.quantity}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-center">
-                          <p className="text-slate-400">Total Due on Collection</p>
-                          <p className="text-2xl font-bold text-poster-accent">RM {totalAmount}</p>
-                        </div>
-                      </div>
-                    )}
 
                     {/* Details Form */}
                     <div>
