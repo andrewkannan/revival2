@@ -55,6 +55,7 @@ export default function RegistrationsTable({ initialData }: Props) {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<RegistrationStatus | 'ALL'>('ALL');
   const [outreachFilter, setOutreachFilter] = useState<OutreachLocation | 'ALL'>('ALL');
+  const [collectionFilter, setCollectionFilter] = useState<string>('ALL');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [receiptModal, setReceiptModal] = useState<{ url: string; queueNum: string } | null>(null);
@@ -259,6 +260,16 @@ export default function RegistrationsTable({ initialData }: Props) {
       // Outreach filter
       if (outreachFilter !== 'ALL' && reg.attendee.outreach !== outreachFilter) return false;
       
+      // Collection filter
+      if (collectionFilter !== 'ALL') {
+        if (collectionFilter === 'WRISTBAND_PENDING' && reg.wristbandCollected) return false;
+        if (collectionFilter === 'WRISTBAND_COLLECTED' && !reg.wristbandCollected) return false;
+        if (collectionFilter === 'STARTER_PACK_PENDING' && reg.starterPackCollected) return false;
+        if (collectionFilter === 'STARTER_PACK_COLLECTED' && !reg.starterPackCollected) return false;
+        if (collectionFilter === 'BOTH_COLLECTED' && (!reg.wristbandCollected || !reg.starterPackCollected)) return false;
+        if (collectionFilter === 'BOTH_PENDING' && (reg.wristbandCollected || reg.starterPackCollected)) return false;
+      }
+
       // Search filter
       if (search) {
         const query = search.toLowerCase();
@@ -302,7 +313,7 @@ export default function RegistrationsTable({ initialData }: Props) {
     });
 
     return result;
-  }, [initialData, search, statusFilter, outreachFilter, dateFrom, dateTo]);
+  }, [initialData, search, statusFilter, outreachFilter, collectionFilter, dateFrom, dateTo]);
 
   return (
     <div className="space-y-6">
@@ -346,6 +357,20 @@ export default function RegistrationsTable({ initialData }: Props) {
           <option value="MELAKA">Melaka</option>
           <option value="SIMPANG_RENGGAM">Simpang Renggam</option>
           <option value="OTHERS">Others</option>
+        </select>
+        
+        <select
+          value={collectionFilter}
+          onChange={(e) => setCollectionFilter(e.target.value)}
+          className="bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-white/30"
+        >
+          <option value="ALL">All Collection Status</option>
+          <option value="WRISTBAND_PENDING">Wristband Not Collected</option>
+          <option value="WRISTBAND_COLLECTED">Wristband Collected</option>
+          <option value="STARTER_PACK_PENDING">Starter Pack Not Collected</option>
+          <option value="STARTER_PACK_COLLECTED">Starter Pack Collected</option>
+          <option value="BOTH_PENDING">Both Not Collected</option>
+          <option value="BOTH_COLLECTED">Both Collected</option>
         </select>
       </div>
 
