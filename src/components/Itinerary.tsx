@@ -92,8 +92,20 @@ export default function Itinerary({ isBreakoutQALocked = true }: { isBreakoutQAL
     return currentTime >= start && currentTime < end;
   };
 
+  const isEventCompleted = (endStr: string) => {
+    if (!currentTime) return false;
+    const end = new Date(endStr);
+    return currentTime > end;
+  };
+
   const isDayActive = (events: typeof schedule[0]['events']) => {
     return events.some(event => isEventActive(event.start, event.end));
+  };
+
+  const isDayCompleted = (events: typeof schedule[0]['events']) => {
+    if (!currentTime) return false;
+    const lastEvent = events[events.length - 1];
+    return currentTime >= new Date(lastEvent.end);
   };
 
   return (
@@ -130,9 +142,10 @@ export default function Itinerary({ isBreakoutQALocked = true }: { isBreakoutQAL
         <div className="space-y-20">
           {schedule.map((dayPlan, dayIndex) => {
             const dayActive = isDayActive(dayPlan.events);
+            const dayCompleted = isDayCompleted(dayPlan.events);
             
             return (
-              <div key={dayPlan.dayKey} className="relative">
+              <div key={dayPlan.dayKey} className={`relative transition-all duration-700 ${dayCompleted ? 'opacity-40 grayscale' : ''}`}>
                 {/* Sleek animated glowing dot for the day */}
                 <motion.div 
                   initial={{ scale: 0, opacity: 0 }}
@@ -152,14 +165,20 @@ export default function Itinerary({ isBreakoutQALocked = true }: { isBreakoutQAL
                   <h3 className={`text-3xl md:text-4xl font-extrabold tracking-widest uppercase transition-colors duration-500 ${dayActive ? 'text-transparent bg-clip-text bg-gradient-to-r from-white to-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'text-transparent bg-clip-text bg-gradient-to-r from-poster-accent-bright to-white'}`}>
                     {t(dayPlan.dayKey)}
                   </h3>
-                  <span className={`text-sm md:text-base font-semibold tracking-widest uppercase md:pb-1 transition-colors duration-500 ${dayActive ? 'text-white/80' : 'text-slate-400'}`}>
+                  <span className={`text-sm md:text-base font-semibold tracking-widest uppercase md:pb-1 transition-colors duration-500 flex items-center gap-3 ${dayActive ? 'text-white/80' : 'text-slate-400'}`}>
                     {t(dayPlan.dateKey)}
+                    {dayCompleted && (
+                      <span className="text-xs bg-white/10 px-2 py-0.5 rounded border border-white/20 uppercase tracking-widest">
+                        Completed
+                      </span>
+                    )}
                   </span>
                 </motion.div>
 
                 <div className="space-y-8 pl-10 md:pl-16">
                   {dayPlan.events.map((event, eventIndex) => {
                     const isActive = isEventActive(event.start, event.end);
+                    const isCompleted = isEventCompleted(event.end);
                     
                     return (
                       <motion.div 
@@ -172,7 +191,7 @@ export default function Itinerary({ isBreakoutQALocked = true }: { isBreakoutQAL
                           isActive 
                             ? 'bg-gradient-to-br from-white/10 to-transparent border-white/30 shadow-lg shadow-white/10 scale-[1.02]' 
                             : 'bg-gradient-to-br from-white/[0.03] to-transparent border-white/[0.05] hover:bg-white/[0.06] hover:border-white/10 hover:-translate-y-1 hover:shadow-2xl hover:shadow-poster-accent/5'
-                        }`}
+                        } ${isCompleted && !dayCompleted ? 'opacity-40 grayscale' : ''}`}
                       >
                         {/* Hover/Active glare effect */}
                         <div className={`absolute inset-0 bg-gradient-to-tr from-transparent to-transparent pointer-events-none transition-opacity duration-700 ${isActive ? 'via-white/10 opacity-100' : 'via-white/[0.05] opacity-0 group-hover:opacity-100'}`} />
