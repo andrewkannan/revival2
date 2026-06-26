@@ -212,10 +212,17 @@ export default function MerchandisePreOrder() {
                             </div>
                           ))}
                         </div>
-                        <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-center">
+                        <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-center mb-6">
                           <p className="text-slate-400">Total Due on Collection</p>
                           <p className="text-2xl font-bold text-poster-accent">RM {totalAmount}</p>
                         </div>
+                        <button 
+                          type="button" 
+                          onClick={() => setStep(2)}
+                          className="w-full py-4 bg-poster-accent hover:bg-poster-accent/90 text-black font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-lg"
+                        >
+                          Proceed Pre-Order
+                        </button>
                       </div>
                     )}
 
@@ -286,15 +293,7 @@ export default function MerchandisePreOrder() {
                       </div>
                     </div>
 
-                    {cart.length > 0 && (
-                      <button 
-                        type="button" 
-                        onClick={() => setStep(2)}
-                        className="w-full py-4 bg-poster-accent hover:bg-poster-accent/90 text-black font-bold rounded-xl transition-all"
-                      >
-                        Next: Your Details
-                      </button>
-                    )}
+
                   </>
                 ) : (
                   <>
