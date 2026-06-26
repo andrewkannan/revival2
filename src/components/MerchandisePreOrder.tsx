@@ -133,9 +133,9 @@ export default function MerchandisePreOrder() {
                 <ShoppingBag className="w-6 h-6" />
               </div>
               <div className="text-left">
-                <h3 className="text-xl font-bold text-white mb-1">Pre-Order Official Merch</h3>
+                <h3 className="text-xl font-bold text-white mb-1">Pre-Order REVIVAL Merch</h3>
                 <p className="text-sm text-emerald-400 font-medium flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5" /> Closing Soon — Reserve Now, Pay Later!
+                  <Clock className="w-3.5 h-3.5" /> Closing Soon — Reserve Now
                 </p>
               </div>
             </div>
@@ -337,7 +337,7 @@ export default function MerchandisePreOrder() {
                       {isSubmitting ? (
                         <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
                       ) : (
-                        <>Complete Pre-Order (Pay Later)</>
+                        <>Complete Pre-Order</>
                       )}
                     </button>
 
