@@ -11,6 +11,7 @@ const ITEMS = [
     name: 'Oversized Tshirt',
     price: 55,
     sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'],
+    colors: ['White Print', 'Blue Print'],
     popular: true
   },
   {
@@ -18,6 +19,7 @@ const ITEMS = [
     name: 'Sweatshirt',
     price: 80,
     sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
+    colors: ['White Print'],
     note: '(true to size and smaller cut)'
   },
   {
@@ -25,6 +27,7 @@ const ITEMS = [
     name: 'Kids Tshirt',
     price: 35,
     sizes: ['Kids 26', 'Kids 28', 'Kids 30', 'Kids 32', 'Adult XS', 'Adult S', 'Adult M', 'Adult L', 'Adult XL', 'Adult 2XL', 'Adult 3XL'],
+    colors: ['Red Print'],
     note: '(Kids size runs small, Adults average size)'
   },
   {
@@ -67,16 +70,18 @@ export default function MerchandisePreOrder() {
     }
   };
 
-  const addToCart = (itemId: string, size: string) => {
+  const addToCart = (itemId: string, size: string, color?: string) => {
     const itemDef = ITEMS.find(i => i.id === itemId);
     if (!itemDef) return;
 
+    const finalItemName = color ? `${itemDef.name} (${color})` : itemDef.name;
+
     setCart(prev => {
-      const existing = prev.find(c => c.itemType === itemDef.name && c.size === size);
+      const existing = prev.find(c => c.itemType === finalItemName && c.size === size);
       if (existing) {
         return prev.map(c => c === existing ? { ...c, quantity: c.quantity + 1 } : c);
       }
-      return [...prev, { itemType: itemDef.name, size: size === 'One Size' ? null : size, quantity: 1, price: itemDef.price }];
+      return [...prev, { itemType: finalItemName, size: size === 'One Size' ? null : size, quantity: 1, price: itemDef.price }];
     });
   };
 
@@ -199,9 +204,19 @@ export default function MerchandisePreOrder() {
                               <p className="text-emerald-400 font-bold mb-1">RM {item.price}</p>
                               {item.note && <p className="text-xs text-slate-400 max-w-xs">{item.note}</p>}
                             </div>
-                            <div className="flex items-center gap-2 sm:w-auto w-full">
+                            <div className="flex flex-col sm:flex-row items-center gap-2 sm:w-auto w-full">
+                              {item.colors && item.colors.length > 0 && (
+                                <select 
+                                  className="flex-1 sm:w-32 bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-poster-accent appearance-none text-white w-full"
+                                  id={`color-${item.id}`}
+                                  defaultValue=""
+                                >
+                                  <option value="" disabled>Select Color</option>
+                                  {item.colors.map(c => <option key={c} value={c}>{c}</option>)}
+                                </select>
+                              )}
                               <select 
-                                className="flex-1 sm:w-32 bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-poster-accent appearance-none text-white"
+                                className="flex-1 sm:w-32 bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-poster-accent appearance-none text-white w-full"
                                 id={`size-${item.id}`}
                                 defaultValue=""
                               >
@@ -211,15 +226,24 @@ export default function MerchandisePreOrder() {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  const select = document.getElementById(`size-${item.id}`) as HTMLSelectElement;
-                                  if (select.value) {
-                                    addToCart(item.id, select.value);
-                                    select.value = "";
-                                  } else {
+                                  const selectSize = document.getElementById(`size-${item.id}`) as HTMLSelectElement;
+                                  const selectColor = document.getElementById(`color-${item.id}`) as HTMLSelectElement;
+                                  
+                                  if (!selectSize.value) {
                                     alert("Please select a size first");
+                                    return;
                                   }
+
+                                  if (item.colors && !selectColor.value) {
+                                    alert("Please select a print color first");
+                                    return;
+                                  }
+
+                                  addToCart(item.id, selectSize.value, selectColor ? selectColor.value : undefined);
+                                  selectSize.value = "";
+                                  if (selectColor) selectColor.value = "";
                                 }}
-                                className="px-4 py-2 bg-poster-accent text-black font-bold rounded-lg hover:bg-poster-accent/90 transition-colors shrink-0"
+                                className="w-full sm:w-auto px-4 py-2 bg-poster-accent text-black font-bold rounded-lg hover:bg-poster-accent/90 transition-colors shrink-0"
                               >
                                 Add
                               </button>
