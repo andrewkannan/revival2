@@ -72,7 +72,7 @@ export async function submitMerchOrder(data: { name: string; email: string; phon
         
         <div style="background-color: #1e293b; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
           <p style="margin: 0 0 10px; color: #cbd5e1;">Hi ${order.name},</p>
-          <p style="margin: 0; color: #cbd5e1; line-height: 1.6;">Thank you for reserving your official REVIVAL merchandise! Your pre-order is confirmed. <strong>Payment will be collected on the day of the conference at the merchandise booth.</strong></p>
+          <p style="margin: 0; color: #cbd5e1; line-height: 1.6;">Thank you for reserving your official REVIVAL merchandise! Your pre-order is confirmed. <strong>Our team will contact you for the collection and payment.</strong></p>
         </div>
 
         <div style="background-color: white; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 30px;">
