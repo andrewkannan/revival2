@@ -92,7 +92,8 @@ export async function getAdminConfig() {
         testimonyUnlockTime: new Date('2026-06-26T12:00:00+08:00'),
         isGalleryLocked: true,
         galleryUnlockTime: new Date('2026-06-26T12:00:00+08:00'),
-        isBreakoutQALocked: true
+        isBreakoutQALocked: true,
+        isEventCompleted: false
       }
     });
   }
@@ -120,6 +121,7 @@ export async function getAdminConfig() {
     galleryUnlockTime: config.galleryUnlockTime ? config.galleryUnlockTime.toISOString() : null,
     isEmailQueuePaused: config.isEmailQueuePaused,
     isBreakoutQALocked: config.isBreakoutQALocked,
+    isEventCompleted: config.isEventCompleted,
   };
 }
 
@@ -1624,5 +1626,108 @@ export async function updateMerchandiseOrderStatus(orderId: string, status: stri
   } catch (error: any) {
     console.error("Failed to update merchandise order status:", error);
     return { success: false, message: 'Failed to update order status' };
+  }
+}
+
+function generatePostEventHtml(name: string) {
+  return `
+    <div style="font-family: 'Inter', sans-serif; background-color: #0b1013; color: #f8fafc; padding: 40px 20px; line-height: 1.6;">
+      <div style="max-width: 600px; margin: 0 auto; background: linear-gradient(180deg, #162024 0%, #0b1013 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+        
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 40px;">
+          <h1 style="margin: 0; font-size: 32px; letter-spacing: 4px; color: white; text-transform: uppercase;">REVIVAL 2026</h1>
+          <p style="margin: 10px 0 0; color: #8caeb0; font-size: 14px; letter-spacing: 2px; text-transform: uppercase;">The Movement Continues</p>
+        </div>
+
+        <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 35px; margin-bottom: 35px;">
+          <h3 style="margin: 0 0 15px; font-size: 22px; color: white;">Hi ${name},</h3>
+          <p style="font-size: 16px; color: #cbd5e1; margin: 0 0 20px;">What an incredible time we had at REVIVAL 2026! Thank you for being a part of this amazing journey and for bringing your faith, energy, and presence to the conference.</p>
+          <p style="font-size: 16px; color: #cbd5e1; margin: 0 0 20px;">Although the physical event has concluded, the movement is just beginning. We want to invite you to stay connected and continue engaging with everything that God is doing.</p>
+        </div>
+
+        <!-- Links Section -->
+        <div style="background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 25px; margin-bottom: 35px;">
+          <h4 style="margin: 0 0 20px 0; color: white; font-size: 18px; text-transform: uppercase; letter-spacing: 1px;">Stay Connected</h4>
+          
+          <div style="margin-bottom: 15px;">
+            <a href="https://revival.thisiscccbilingual.com/itinerary#photos" style="display: block; color: #8caeb0; text-decoration: none; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(140, 174, 176, 0.2); padding-bottom: 10px;">📸 View Photo Gallery →</a>
+          </div>
+          <div style="margin-bottom: 15px;">
+            <a href="https://revival.thisiscccbilingual.com/itinerary#testimonies" style="display: block; color: #8caeb0; text-decoration: none; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(140, 174, 176, 0.2); padding-bottom: 10px;">🙌 Share Your Testimonies →</a>
+          </div>
+          <div style="margin-bottom: 15px;">
+            <a href="https://revival.thisiscccbilingual.com/itinerary#prayers" style="display: block; color: #8caeb0; text-decoration: none; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(140, 174, 176, 0.2); padding-bottom: 10px;">🙏 Join the Prayer Wall →</a>
+          </div>
+          <div style="margin-bottom: 15px;">
+            <a href="https://revival.thisiscccbilingual.com/itinerary#merchandise" style="display: block; color: #8caeb0; text-decoration: none; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(140, 174, 176, 0.2); padding-bottom: 10px;">👕 Pre-Order Merchandise →</a>
+          </div>
+          <div>
+            <a href="https://revival.thisiscccbilingual.com/itinerary#sow" style="display: block; color: #8caeb0; text-decoration: none; font-size: 16px; font-weight: bold;">🌱 Sow & Give →</a>
+          </div>
+        </div>
+
+        <div style="text-align: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 35px;">
+          <p style="font-size: 16px; color: #cbd5e1; line-height: 1.6; margin: 0 0 8px 0;">Keep the fire burning.</p>
+          <p style="font-size: 13px; color: #64748b; margin: 30px 0 0 0; text-transform: uppercase; letter-spacing: 3px; font-weight: 700;">— The REVIVAL Team</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+export async function sendPostEventEmailTest(testEmail: string) {
+  try {
+    const html = generatePostEventHtml('Friend');
+
+    await prisma.emailQueue.create({
+      data: {
+        to: testEmail,
+        subject: "[TEST] Thank You for Joining REVIVAL 2026",
+        html: html,
+        status: 'PENDING'
+      }
+    });
+
+    return { success: true, message: `Test post-event email queued for ${testEmail}` };
+  } catch (error: any) {
+    console.error("Test post-event email error:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+export async function sendPostEventEmailBulk() {
+  try {
+    const registrations = await prisma.registration.findMany({
+      where: { status: 'SEAT_SECURED' },
+      include: { attendee: true }
+    });
+
+    if (registrations.length === 0) return { success: false, message: "No secured registrations found." };
+
+    let successCount = 0;
+
+    for (const reg of registrations) {
+      const email = reg.attendee.email;
+      if (!email) continue;
+
+      const name = reg.attendee.name.split(' ')[0] || 'Friend';
+      const html = generatePostEventHtml(name);
+
+      await prisma.emailQueue.create({
+        data: {
+          to: email,
+          subject: "Thank You for Joining REVIVAL 2026",
+          html: html,
+          status: 'PENDING'
+        }
+      });
+      successCount++;
+    }
+
+    return { success: true, message: `Successfully queued ${successCount} post-event emails.` };
+  } catch (error: any) {
+    console.error("Mass post-event email error:", error);
+    return { success: false, message: error.message };
   }
 }

@@ -132,6 +132,7 @@ model AdminConfig {
   galleryUnlockTime    DateTime?
   isBreakoutQALocked   Boolean  @default(true)
   isEmailQueuePaused   Boolean  @default(false)
+  isEventCompleted     Boolean  @default(false)
   updatedAt            DateTime @updatedAt
 }
 

@@ -84,9 +84,20 @@ export default async function ItineraryPage() {
       <MerchandisePreOrder />
 
       <div className="pb-24 flex flex-col gap-8 md:gap-16 relative z-10">
-        <section>
-          <Itinerary isBreakoutQALocked={adminConfig?.isBreakoutQALocked ?? true} />
-        </section>
+        {!adminConfig?.isEventCompleted ? (
+          <section>
+            <Itinerary isBreakoutQALocked={adminConfig?.isBreakoutQALocked ?? true} />
+          </section>
+        ) : (
+          <section className="pt-12 px-6 md:px-12 max-w-4xl mx-auto text-white relative text-center">
+            <h2 className="text-3xl md:text-5xl font-extrabold mb-6 tracking-[0.15em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-white via-poster-accent-bright to-white">
+              REVIVAL 2026 is here
+            </h2>
+            <p className="text-slate-300 font-light text-lg tracking-wide max-w-2xl mx-auto">
+              Thank you for being part of this movement. The journey doesn't end here—continue to share your testimonies, pray for one another, and explore the memories we've made together below.
+            </p>
+          </section>
+        )}
 
         {adminConfig?.playlistUrl && (
           <section id="worship" className="scroll-mt-24">

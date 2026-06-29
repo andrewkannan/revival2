@@ -38,6 +38,7 @@ export default function SettingsPage() {
     isGalleryLocked: true,
     galleryUnlockTime: '',
     isBreakoutQALocked: true,
+    isEventCompleted: false,
   });
 
   const [smtpData, setSmtpData] = useState({
@@ -78,6 +79,7 @@ export default function SettingsPage() {
         isGalleryLocked: config.isGalleryLocked ?? true,
         galleryUnlockTime: config.galleryUnlockTime ? new Date(config.galleryUnlockTime).toISOString().slice(0, 16) : '',
         isBreakoutQALocked: config.isBreakoutQALocked ?? true,
+        isEventCompleted: config.isEventCompleted ?? false,
       });
 
       setSmtpData({
@@ -142,6 +144,7 @@ export default function SettingsPage() {
       youtubeUrl: generalData.youtubeUrl || null,
       playlistUrl: generalData.playlistUrl || null,
       isBreakoutQALocked: generalData.isBreakoutQALocked,
+      isEventCompleted: generalData.isEventCompleted,
     };
 
     const result = await updateAdminConfig(payload);
@@ -421,6 +424,23 @@ export default function SettingsPage() {
                   />
                   <div>
                     <span className="font-medium block text-white">Lock Breakout Q&A</span>
+                  </div>
+                </label>
+              </div>
+
+              {/* Event Completed Status */}
+              <div className="space-y-4">
+                <label className="flex items-center gap-3 cursor-pointer p-4 bg-poster-accent/10 border border-poster-accent/30 rounded-xl hover:bg-poster-accent/20 transition-colors">
+                  <input 
+                    type="checkbox" 
+                    name="isEventCompleted" 
+                    checked={generalData.isEventCompleted} 
+                    onChange={handleGeneralChange}
+                    className="w-5 h-5 accent-poster-accent"
+                  />
+                  <div>
+                    <span className="font-bold block text-poster-accent-bright">Event Completed (Post-Event Mode)</span>
+                    <span className="text-xs text-poster-accent/80 block mt-1">Hides the itinerary schedule and replaces it with a thank you hero banner.</span>
                   </div>
                 </label>
               </div>
