@@ -1636,8 +1636,8 @@ function generatePostEventHtml(name: string) {
         
         <!-- Header -->
         <div style="text-align: center; margin-bottom: 40px;">
-          <h1 style="margin: 0; font-size: 32px; letter-spacing: 4px; color: white; text-transform: uppercase;">REVIVAL 2026</h1>
-          <p style="margin: 10px 0 0; color: #8caeb0; font-size: 14px; letter-spacing: 2px; text-transform: uppercase;">The Movement Continues</p>
+          <img src="https://revival.thisiscccbilingual.com/hero/revival-logo.png" alt="REVIVAL Logo" style="max-width: 250px; height: auto; margin: 0 auto; display: block;" />
+          <h2 style="margin: 20px 0 0; font-size: 20px; letter-spacing: 4px; color: white; text-transform: uppercase;">Revival Is Here</h2>
         </div>
 
         <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 35px; margin-bottom: 35px;">
@@ -1647,29 +1647,26 @@ function generatePostEventHtml(name: string) {
         </div>
 
         <!-- Links Section -->
-        <div style="background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 25px; margin-bottom: 35px;">
-          <h4 style="margin: 0 0 20px 0; color: white; font-size: 18px; text-transform: uppercase; letter-spacing: 1px;">Stay Connected</h4>
+        <div style="margin-bottom: 35px;">
+          <h4 style="margin: 0 0 20px 0; color: white; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; text-align: center;">Stay Connected</h4>
           
-          <div style="margin-bottom: 15px;">
-            <a href="https://revival.thisiscccbilingual.com/itinerary#photos" style="display: block; color: #8caeb0; text-decoration: none; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(140, 174, 176, 0.2); padding-bottom: 10px;">📸 View Photo Gallery →</a>
-          </div>
-          <div style="margin-bottom: 15px;">
-            <a href="https://revival.thisiscccbilingual.com/itinerary#testimonies" style="display: block; color: #8caeb0; text-decoration: none; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(140, 174, 176, 0.2); padding-bottom: 10px;">🙌 Share Your Testimonies →</a>
-          </div>
-          <div style="margin-bottom: 15px;">
-            <a href="https://revival.thisiscccbilingual.com/itinerary#prayers" style="display: block; color: #8caeb0; text-decoration: none; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(140, 174, 176, 0.2); padding-bottom: 10px;">🙏 Join the Prayer Wall →</a>
-          </div>
-          <div style="margin-bottom: 15px;">
-            <a href="https://revival.thisiscccbilingual.com/itinerary#merchandise" style="display: block; color: #8caeb0; text-decoration: none; font-size: 16px; font-weight: bold; border-bottom: 1px solid rgba(140, 174, 176, 0.2); padding-bottom: 10px;">👕 Pre-Order Merchandise →</a>
-          </div>
-          <div>
-            <a href="https://revival.thisiscccbilingual.com/itinerary#sow" style="display: block; color: #8caeb0; text-decoration: none; font-size: 16px; font-weight: bold;">🌱 Sow & Give →</a>
-          </div>
+          <a href="https://revival.thisiscccbilingual.com/itinerary#photos" style="display: block; background-color: rgba(255,255,255,0.05); border: 1px solid rgba(140, 174, 176, 0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; color: #8caeb0; text-decoration: none; font-size: 16px; font-weight: bold;">📸 View Photo Gallery <span style="float: right;">→</span></a>
+          
+          <a href="https://revival.thisiscccbilingual.com/itinerary#testimonies" style="display: block; background-color: rgba(255,255,255,0.05); border: 1px solid rgba(140, 174, 176, 0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; color: #8caeb0; text-decoration: none; font-size: 16px; font-weight: bold;">🙌 Share Your Testimonies <span style="float: right;">→</span></a>
+          
+          <a href="https://revival.thisiscccbilingual.com/itinerary#prayers" style="display: block; background-color: rgba(255,255,255,0.05); border: 1px solid rgba(140, 174, 176, 0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; color: #8caeb0; text-decoration: none; font-size: 16px; font-weight: bold;">🙏 Join the Prayer Wall <span style="float: right;">→</span></a>
+          
+          <a href="https://revival.thisiscccbilingual.com/itinerary#merchandise" style="display: block; background-color: rgba(255,255,255,0.05); border: 1px solid rgba(140, 174, 176, 0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; color: #8caeb0; text-decoration: none; font-size: 16px; font-weight: bold;">👕 Pre-Order Merchandise <span style="float: right;">→</span></a>
+          
+          <a href="https://revival.thisiscccbilingual.com/itinerary#sow" style="display: block; background-color: rgba(255,255,255,0.05); border: 1px solid rgba(140, 174, 176, 0.3); border-radius: 12px; padding: 16px 20px; color: #8caeb0; text-decoration: none; font-size: 16px; font-weight: bold;">🌱 Sow & Give <span style="float: right;">→</span></a>
         </div>
 
         <div style="text-align: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 35px;">
-          <p style="font-size: 16px; color: #cbd5e1; line-height: 1.6; margin: 0 0 8px 0;">Keep the fire burning.</p>
-          <p style="font-size: 13px; color: #64748b; margin: 30px 0 0 0; text-transform: uppercase; letter-spacing: 3px; font-weight: 700;">— The REVIVAL Team</p>
+          <p style="font-size: 20px; color: white; line-height: 1.6; margin: 0 0 10px 0; font-weight: bold; font-style: italic;">"I Will Pour Out My Spirit"</p>
+          <p style="font-size: 16px; color: #cbd5e1; line-height: 1.6; margin: 0 0 15px 0;">An Outpouring. An Awakening. A Generation Arising.</p>
+          <p style="font-size: 14px; color: #8caeb0; line-height: 1.6; margin: 0 0 40px 0; font-weight: bold; letter-spacing: 1px;">Acts 2:17-18</p>
+
+          <p style="font-size: 13px; color: #64748b; margin: 0; text-transform: uppercase; letter-spacing: 3px; font-weight: 700;">— The REVIVAL Team, CCC Bilingual</p>
         </div>
       </div>
     </div>
