@@ -19,6 +19,8 @@
     "framer-motion": "^12.38.0",
     "html5-qrcode": "^2.3.8",
     "ioredis": "^5.10.1",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
     "jszip": "^3.10.1",
     "lucide-react": "^1.8.0",
     "matter-js": "^0.20.0",
