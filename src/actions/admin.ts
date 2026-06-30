@@ -1660,7 +1660,7 @@ function generatePostEventHtml(name: string) {
         <!-- Header -->
         <div style="text-align: center; margin-bottom: 40px;">
           <img src="https://revival.thisiscccbilingual.com/hero/revival-logo.png" alt="REVIVAL Logo" style="max-width: 250px; height: auto; margin: 0 auto; display: block;" />
-          <h2 class="text-light" style="margin: 20px 0 0; font-size: 20px; letter-spacing: 4px; color: #ffffff; text-transform: uppercase;">Revival Is Here</h2>
+          <h2 class="text-light" style="margin: 20px 0 0; font-size: 20px; letter-spacing: 4px; color: #ffffff; text-transform: uppercase;">is here</h2>
         </div>
 
         <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 35px; margin-bottom: 35px;">
@@ -1673,24 +1673,24 @@ function generatePostEventHtml(name: string) {
         <div style="margin-bottom: 40px;">
           <h4 class="text-light" style="margin: 0 0 25px 0; color: #ffffff; font-size: 14px; text-transform: uppercase; letter-spacing: 3px; text-align: center; font-weight: 600;">Stay Connected</h4>
           
-          <a href="https://revival.thisiscccbilingual.com/itinerary#photos" class="dark-card text-light" style="display: block; background-color: #1a2428; border: 1px solid rgba(140, 174, 176, 0.15); border-radius: 6px; padding: 18px 24px; margin-bottom: 12px; color: #f8fafc; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase;">
-            View Photo Gallery <span class="text-accent" style="float: right; color: #8caeb0; font-size: 20px; line-height: 0.9;">&rsaquo;</span>
+          <a href="https://revival.thisiscccbilingual.com/itinerary#photos" class="text-light" style="display: block; background-color: #2563eb; border: 1px solid #1d4ed8; border-radius: 6px; padding: 18px 24px; margin-bottom: 12px; color: #ffffff; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500;">
+            View Photo Gallery <span style="float: right; color: rgba(255,255,255,0.7); font-size: 20px; line-height: 0.9;">&rsaquo;</span>
           </a>
           
-          <a href="https://revival.thisiscccbilingual.com/itinerary#testimonies" class="dark-card text-light" style="display: block; background-color: #1a2428; border: 1px solid rgba(140, 174, 176, 0.15); border-radius: 6px; padding: 18px 24px; margin-bottom: 12px; color: #f8fafc; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase;">
-            Share Your Testimonies <span class="text-accent" style="float: right; color: #8caeb0; font-size: 20px; line-height: 0.9;">&rsaquo;</span>
+          <a href="https://revival.thisiscccbilingual.com/itinerary#testimonies" class="text-light" style="display: block; background-color: #9333ea; border: 1px solid #7e22ce; border-radius: 6px; padding: 18px 24px; margin-bottom: 12px; color: #ffffff; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500;">
+            Share Your Testimonies <span style="float: right; color: rgba(255,255,255,0.7); font-size: 20px; line-height: 0.9;">&rsaquo;</span>
           </a>
           
-          <a href="https://revival.thisiscccbilingual.com/itinerary#prayers" class="dark-card text-light" style="display: block; background-color: #1a2428; border: 1px solid rgba(140, 174, 176, 0.15); border-radius: 6px; padding: 18px 24px; margin-bottom: 12px; color: #f8fafc; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase;">
-            Join the Prayer Wall <span class="text-accent" style="float: right; color: #8caeb0; font-size: 20px; line-height: 0.9;">&rsaquo;</span>
+          <a href="https://revival.thisiscccbilingual.com/itinerary#prayers" class="text-light" style="display: block; background-color: #16a34a; border: 1px solid #15803d; border-radius: 6px; padding: 18px 24px; margin-bottom: 12px; color: #ffffff; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500;">
+            Join the Prayer Wall <span style="float: right; color: rgba(255,255,255,0.7); font-size: 20px; line-height: 0.9;">&rsaquo;</span>
           </a>
           
-          <a href="https://revival.thisiscccbilingual.com/itinerary#merchandise" class="dark-card text-light" style="display: block; background-color: #1a2428; border: 1px solid rgba(140, 174, 176, 0.15); border-radius: 6px; padding: 18px 24px; margin-bottom: 12px; color: #f8fafc; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase;">
-            Pre-Order Merchandise <span class="text-accent" style="float: right; color: #8caeb0; font-size: 20px; line-height: 0.9;">&rsaquo;</span>
+          <a href="https://revival.thisiscccbilingual.com/itinerary#merchandise" class="text-light" style="display: block; background-color: #ea580c; border: 1px solid #c2410c; border-radius: 6px; padding: 18px 24px; margin-bottom: 12px; color: #ffffff; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500;">
+            Pre-Order Merchandise <span style="float: right; color: rgba(255,255,255,0.7); font-size: 20px; line-height: 0.9;">&rsaquo;</span>
           </a>
           
-          <a href="https://revival.thisiscccbilingual.com/itinerary#sow" class="dark-card text-light" style="display: block; background-color: #1a2428; border: 1px solid rgba(140, 174, 176, 0.15); border-radius: 6px; padding: 18px 24px; color: #f8fafc; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase;">
-            Sow & Give <span class="text-accent" style="float: right; color: #8caeb0; font-size: 20px; line-height: 0.9;">&rsaquo;</span>
+          <a href="https://revival.thisiscccbilingual.com/itinerary#sow" class="text-light" style="display: block; background-color: #dc2626; border: 1px solid #b91c1c; border-radius: 6px; padding: 18px 24px; color: #ffffff; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500;">
+            Sow & Give <span style="float: right; color: rgba(255,255,255,0.7); font-size: 20px; line-height: 0.9;">&rsaquo;</span>
           </a>
         </div>
 
@@ -1699,7 +1699,9 @@ function generatePostEventHtml(name: string) {
           <p class="text-muted" style="font-size: 16px; color: #cbd5e1; line-height: 1.6; margin: 0 0 15px 0;">An Outpouring. An Awakening. A Generation Arising.</p>
           <p class="text-accent" style="font-size: 14px; color: #8caeb0; line-height: 1.6; margin: 0 0 40px 0; font-weight: bold; letter-spacing: 1px;">Acts 2:17-18</p>
 
-          <p style="font-size: 13px; color: #64748b; margin: 0; text-transform: uppercase; letter-spacing: 3px; font-weight: 700;">— The REVIVAL Team, CCC Bilingual</p>
+          <p style="font-size: 13px; color: #64748b; margin: 0; text-transform: uppercase; letter-spacing: 3px; font-weight: 700; line-height: 1.8;">
+            — The REVIVAL Team<br/>CCC Bilingual
+          </p>
         </div>
       </div>
     </div>
