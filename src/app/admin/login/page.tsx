@@ -18,7 +18,11 @@ export default function AdminLogin() {
     const result = await loginAdmin(password);
     
     if (result.success) {
-      window.location.href = '/admin'; // Force full reload to update middleware context
+      if (result.role === 'merch') {
+        window.location.href = '/admin/merchandise';
+      } else {
+        window.location.href = '/admin'; // Force full reload to update middleware context
+      }
     } else {
       setError(result.message || 'Authentication failed');
       setLoading(false);

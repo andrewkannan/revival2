@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Users, Settings, LogOut, ChevronLeft, ChevronRight, Mail, Heart, Image as ImageIcon, ShoppingBag } from 'lucide-react';
-import { logoutAdmin } from '@/actions/admin';
+import { logoutAdmin, getAdminRole } from '@/actions/admin';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -30,6 +30,12 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [role, setRole] = useState<'admin' | 'merch' | 'none'>('none');
+
+  // Fetch role on mount
+  useEffect(() => {
+    getAdminRole().then(setRole);
+  }, []);
 
   // Do not show sidebar on the login page
   if (pathname === '/admin/login') {
@@ -60,7 +66,7 @@ export default function AdminLayout({
         </div>
         
         <nav className="flex-1 p-4 space-y-2 overflow-hidden">
-          {navigation.map((item) => {
+          {navigation.filter(item => role === 'merch' ? item.name === 'Merchandise' : true).map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link

@@ -8,12 +8,24 @@ import { sendPaymentRejectedEmail, sendEmail, parseTemplate } from '@/lib/email'
 import QRCode from 'qrcode';
 
 const ADMIN_COOKIE_NAME = 'revival_admin_session';
+const MERCH_COOKIE_NAME = 'revival_merch_session';
 const SCANNER_COOKIE_NAME = 'revival_scanner_session';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 1 week
 
 export async function loginAdmin(password: string) {
   const secret = process.env.ADMIN_SECRET;
+  const merchSecret = process.env.MERCH_SECRET || 'merch2026';
   
+  if (password === merchSecret) {
+    await (await cookies()).set(MERCH_COOKIE_NAME, 'authenticated', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: COOKIE_MAX_AGE,
+      path: '/',
+    });
+    return { success: true, role: 'merch' };
+  }
+
   if (!secret) {
     console.warn("ADMIN_SECRET is not set in environment variables.");
     if (password === 'admin') {
@@ -23,7 +35,7 @@ export async function loginAdmin(password: string) {
         maxAge: COOKIE_MAX_AGE,
         path: '/',
       });
-      return { success: true };
+      return { success: true, role: 'admin' };
     }
     return { success: false, message: 'Invalid password.' };
   }
@@ -35,14 +47,23 @@ export async function loginAdmin(password: string) {
       maxAge: COOKIE_MAX_AGE,
       path: '/',
     });
-    return { success: true };
+    return { success: true, role: 'admin' };
   }
 
   return { success: false, message: 'Invalid password.' };
 }
 
+export async function getAdminRole() {
+  const cookieStore = await cookies();
+  if (cookieStore.get(ADMIN_COOKIE_NAME)?.value === 'authenticated') return 'admin';
+  if (cookieStore.get(MERCH_COOKIE_NAME)?.value === 'authenticated') return 'merch';
+  return 'none';
+}
+
 export async function logoutAdmin() {
-  await (await cookies()).delete(ADMIN_COOKIE_NAME);
+  const cookieStore = await cookies();
+  cookieStore.delete(ADMIN_COOKIE_NAME);
+  cookieStore.delete(MERCH_COOKIE_NAME);
   return { success: true };
 }
 
