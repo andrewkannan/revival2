@@ -1630,57 +1630,81 @@ export async function updateMerchandiseOrderStatus(orderId: string, status: stri
 }
 
 function generatePostEventHtml(name: string) {
-  return `
-    <div style="font-family: 'Inter', sans-serif; background-color: #0b1013; color: #f8fafc; padding: 40px 20px; line-height: 1.6;">
-      <div style="max-width: 600px; margin: 0 auto; background: linear-gradient(180deg, #162024 0%, #0b1013 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
+  <title>Thank You for Joining REVIVAL</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      supported-color-schemes: light dark;
+    }
+    /* Dark mode overrides for Gmail */
+    @media (prefers-color-scheme: dark) {
+      .dark-bg { background-color: #0b1013 !important; }
+      .dark-card { background-color: #121a1d !important; border-color: rgba(255,255,255,0.05) !important; }
+      .text-light { color: #f8fafc !important; }
+      .text-muted { color: #cbd5e1 !important; }
+      .text-accent { color: #8caeb0 !important; }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #0b1013;">
+    <div class="dark-bg" style="font-family: 'Inter', Helvetica, sans-serif; background-color: #0b1013; color: #f8fafc; padding: 40px 20px; line-height: 1.6;">
+      <div class="dark-card" style="max-width: 600px; margin: 0 auto; background-color: #162024; border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
         
         <!-- Header -->
         <div style="text-align: center; margin-bottom: 40px;">
           <img src="https://revival.thisiscccbilingual.com/hero/revival-logo.png" alt="REVIVAL Logo" style="max-width: 250px; height: auto; margin: 0 auto; display: block;" />
-          <h2 style="margin: 20px 0 0; font-size: 20px; letter-spacing: 4px; color: white; text-transform: uppercase;">Revival Is Here</h2>
+          <h2 class="text-light" style="margin: 20px 0 0; font-size: 20px; letter-spacing: 4px; color: #ffffff; text-transform: uppercase;">Revival Is Here</h2>
         </div>
 
         <div style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 35px; margin-bottom: 35px;">
-          <h3 style="margin: 0 0 15px; font-size: 22px; color: white;">Hi ${name},</h3>
-          <p style="font-size: 16px; color: #cbd5e1; margin: 0 0 20px;">What an incredible time we had at REVIVAL 2026! Thank you for being a part of this amazing journey and for bringing your faith, energy, and presence to the conference.</p>
-          <p style="font-size: 16px; color: #cbd5e1; margin: 0 0 20px;">Although the physical event has concluded, the movement is just beginning. We want to invite you to stay connected and continue engaging with everything that God is doing.</p>
+          <h3 class="text-light" style="margin: 0 0 15px; font-size: 22px; color: #ffffff;">Hi ${name},</h3>
+          <p class="text-muted" style="font-size: 16px; color: #cbd5e1; margin: 0 0 20px;">What an incredible time we had at REVIVAL 2026! Thank you for being a part of this amazing journey and for bringing your faith, energy, and presence to the conference.</p>
+          <p class="text-muted" style="font-size: 16px; color: #cbd5e1; margin: 0 0 20px;">Although the physical event has concluded, the movement is just beginning. We want to invite you to stay connected and continue engaging with everything that God is doing.</p>
         </div>
 
         <!-- Links Section -->
         <div style="margin-bottom: 40px;">
-          <h4 style="margin: 0 0 25px 0; color: #ffffff; font-size: 14px; text-transform: uppercase; letter-spacing: 3px; text-align: center; font-weight: 600;">Stay Connected</h4>
+          <h4 class="text-light" style="margin: 0 0 25px 0; color: #ffffff; font-size: 14px; text-transform: uppercase; letter-spacing: 3px; text-align: center; font-weight: 600;">Stay Connected</h4>
           
-          <a href="https://revival.thisiscccbilingual.com/itinerary#photos" style="display: block; background-color: #121a1d; border: 1px solid rgba(140, 174, 176, 0.15); border-radius: 6px; padding: 18px 24px; margin-bottom: 12px; color: #f8fafc; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase;">
-            View Photo Gallery <span style="float: right; color: #8caeb0; font-size: 20px; line-height: 0.9;">&rsaquo;</span>
+          <a href="https://revival.thisiscccbilingual.com/itinerary#photos" class="dark-card text-light" style="display: block; background-color: #1a2428; border: 1px solid rgba(140, 174, 176, 0.15); border-radius: 6px; padding: 18px 24px; margin-bottom: 12px; color: #f8fafc; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase;">
+            View Photo Gallery <span class="text-accent" style="float: right; color: #8caeb0; font-size: 20px; line-height: 0.9;">&rsaquo;</span>
           </a>
           
-          <a href="https://revival.thisiscccbilingual.com/itinerary#testimonies" style="display: block; background-color: #121a1d; border: 1px solid rgba(140, 174, 176, 0.15); border-radius: 6px; padding: 18px 24px; margin-bottom: 12px; color: #f8fafc; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase;">
-            Share Your Testimonies <span style="float: right; color: #8caeb0; font-size: 20px; line-height: 0.9;">&rsaquo;</span>
+          <a href="https://revival.thisiscccbilingual.com/itinerary#testimonies" class="dark-card text-light" style="display: block; background-color: #1a2428; border: 1px solid rgba(140, 174, 176, 0.15); border-radius: 6px; padding: 18px 24px; margin-bottom: 12px; color: #f8fafc; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase;">
+            Share Your Testimonies <span class="text-accent" style="float: right; color: #8caeb0; font-size: 20px; line-height: 0.9;">&rsaquo;</span>
           </a>
           
-          <a href="https://revival.thisiscccbilingual.com/itinerary#prayers" style="display: block; background-color: #121a1d; border: 1px solid rgba(140, 174, 176, 0.15); border-radius: 6px; padding: 18px 24px; margin-bottom: 12px; color: #f8fafc; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase;">
-            Join the Prayer Wall <span style="float: right; color: #8caeb0; font-size: 20px; line-height: 0.9;">&rsaquo;</span>
+          <a href="https://revival.thisiscccbilingual.com/itinerary#prayers" class="dark-card text-light" style="display: block; background-color: #1a2428; border: 1px solid rgba(140, 174, 176, 0.15); border-radius: 6px; padding: 18px 24px; margin-bottom: 12px; color: #f8fafc; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase;">
+            Join the Prayer Wall <span class="text-accent" style="float: right; color: #8caeb0; font-size: 20px; line-height: 0.9;">&rsaquo;</span>
           </a>
           
-          <a href="https://revival.thisiscccbilingual.com/itinerary#merchandise" style="display: block; background-color: #121a1d; border: 1px solid rgba(140, 174, 176, 0.15); border-radius: 6px; padding: 18px 24px; margin-bottom: 12px; color: #f8fafc; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase;">
-            Pre-Order Merchandise <span style="float: right; color: #8caeb0; font-size: 20px; line-height: 0.9;">&rsaquo;</span>
+          <a href="https://revival.thisiscccbilingual.com/itinerary#merchandise" class="dark-card text-light" style="display: block; background-color: #1a2428; border: 1px solid rgba(140, 174, 176, 0.15); border-radius: 6px; padding: 18px 24px; margin-bottom: 12px; color: #f8fafc; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase;">
+            Pre-Order Merchandise <span class="text-accent" style="float: right; color: #8caeb0; font-size: 20px; line-height: 0.9;">&rsaquo;</span>
           </a>
           
-          <a href="https://revival.thisiscccbilingual.com/itinerary#sow" style="display: block; background-color: #121a1d; border: 1px solid rgba(140, 174, 176, 0.15); border-radius: 6px; padding: 18px 24px; color: #f8fafc; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase;">
-            Sow & Give <span style="float: right; color: #8caeb0; font-size: 20px; line-height: 0.9;">&rsaquo;</span>
+          <a href="https://revival.thisiscccbilingual.com/itinerary#sow" class="dark-card text-light" style="display: block; background-color: #1a2428; border: 1px solid rgba(140, 174, 176, 0.15); border-radius: 6px; padding: 18px 24px; color: #f8fafc; text-decoration: none; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase;">
+            Sow & Give <span class="text-accent" style="float: right; color: #8caeb0; font-size: 20px; line-height: 0.9;">&rsaquo;</span>
           </a>
         </div>
 
         <div style="text-align: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 35px;">
-          <p style="font-size: 20px; color: white; line-height: 1.6; margin: 0 0 10px 0; font-weight: bold; font-style: italic;">"I Will Pour Out My Spirit"</p>
-          <p style="font-size: 16px; color: #cbd5e1; line-height: 1.6; margin: 0 0 15px 0;">An Outpouring. An Awakening. A Generation Arising.</p>
-          <p style="font-size: 14px; color: #8caeb0; line-height: 1.6; margin: 0 0 40px 0; font-weight: bold; letter-spacing: 1px;">Acts 2:17-18</p>
+          <p class="text-light" style="font-size: 20px; color: #ffffff; line-height: 1.6; margin: 0 0 10px 0; font-weight: bold; font-style: italic;">"I Will Pour Out My Spirit"</p>
+          <p class="text-muted" style="font-size: 16px; color: #cbd5e1; line-height: 1.6; margin: 0 0 15px 0;">An Outpouring. An Awakening. A Generation Arising.</p>
+          <p class="text-accent" style="font-size: 14px; color: #8caeb0; line-height: 1.6; margin: 0 0 40px 0; font-weight: bold; letter-spacing: 1px;">Acts 2:17-18</p>
 
           <p style="font-size: 13px; color: #64748b; margin: 0; text-transform: uppercase; letter-spacing: 3px; font-weight: 700;">— The REVIVAL Team, CCC Bilingual</p>
         </div>
       </div>
     </div>
-  `;
+</body>
+</html>`;
 }
 
 export async function sendPostEventEmailTest(testEmail: string) {
