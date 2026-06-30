@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { ShoppingBag, Search, Package, User, Hash, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { ShoppingBag, Search, Package, User, Hash, CheckCircle, XCircle, Clock, Download } from 'lucide-react';
 import { updateMerchandiseOrderStatus } from '@/actions/admin';
 
 type Props = {
@@ -19,14 +19,16 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
     const itemsCount: Record<string, Record<string, number>> = {};
 
     orders.forEach(order => {
-      totalRevenue += Number(order.totalAmount);
-      order.items.forEach((item: any) => {
-        const type = item.itemType;
-        const size = item.size || 'One Size';
-        if (!itemsCount[type]) itemsCount[type] = {};
-        if (!itemsCount[type][size]) itemsCount[type][size] = 0;
-        itemsCount[type][size] += item.quantity;
-      });
+      if (order.status !== 'CANCELLED') {
+        totalRevenue += Number(order.totalAmount);
+        order.items.forEach((item: any) => {
+          const type = item.itemType;
+          const size = item.size || 'One Size';
+          if (!itemsCount[type]) itemsCount[type] = {};
+          if (!itemsCount[type][size]) itemsCount[type][size] = 0;
+          itemsCount[type][size] += item.quantity;
+        });
+      }
     });
 
     return { totalRevenue, itemsCount };
@@ -52,6 +54,32 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
       alert("Failed to update status");
     }
     setUpdating(null);
+  };
+
+  const handleExportCsv = () => {
+    const headers = ['Order Number', 'Name', 'Email', 'Phone', 'Total Amount', 'Status', 'Date', 'Items'];
+    const rows = orders.map(order => {
+      const itemsString = order.items.map((i: any) => `${i.quantity}x ${i.itemType} ${i.size ? '('+i.size+')' : ''}`).join('; ');
+      return [
+        order.orderNumber,
+        `"${order.name.replace(/"/g, '""')}"`,
+        `"${order.email}"`,
+        `"${order.phone}"`,
+        Number(order.totalAmount).toFixed(2),
+        order.status || 'PENDING',
+        new Date(order.createdAt).toLocaleDateString(),
+        `"${itemsString}"`
+      ];
+    });
+
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `merchandise-orders-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -94,19 +122,27 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
 
       {/* Orders Table */}
       <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
-        <div className="p-4 border-b border-white/10 flex flex-col sm:flex-row justify-between gap-4">
+        <div className="p-4 border-b border-white/10 flex flex-col sm:flex-row justify-between gap-4 items-center">
           <h3 className="text-lg font-bold flex items-center gap-2">
             Order List ({filteredOrders.length})
           </h3>
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search by name, email or ID..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-black/50 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-poster-accent"
-            />
+          <div className="flex items-center gap-4 w-full sm:w-auto">
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search by name, email or ID..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full bg-black/50 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-poster-accent"
+              />
+            </div>
+            <button
+              onClick={handleExportCsv}
+              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-lg transition-colors border border-white/10 whitespace-nowrap"
+            >
+              <Download className="w-4 h-4" /> Export Excel
+            </button>
           </div>
         </div>
 
@@ -130,8 +166,10 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
                   </td>
                 </tr>
               ) : (
-                filteredOrders.map(order => (
-                  <tr key={order.id} className="border-b border-white/5 hover:bg-white/[0.02]">
+                filteredOrders.map(order => {
+                  const isCancelled = order.status === 'CANCELLED';
+                  return (
+                  <tr key={order.id} className={`border-b border-white/5 hover:bg-white/[0.02] transition-opacity ${isCancelled ? 'opacity-40 grayscale' : ''}`}>
                     <td className="px-6 py-4">
                       <span className="inline-flex items-center gap-1 font-mono text-poster-accent bg-poster-accent/10 px-2 py-1 rounded">
                         <Hash className="w-3 h-3" /> {order.orderNumber}
@@ -201,7 +239,8 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
                       {new Date(order.createdAt).toLocaleTimeString()}
                     </td>
                   </tr>
-                ))
+                  );
+                })
               )}
             </tbody>
           </table>
