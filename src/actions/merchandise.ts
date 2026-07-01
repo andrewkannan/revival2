@@ -72,13 +72,25 @@ export async function submitMerchOrder(data: { name: string; email: string; phon
         
         <div style="background-color: #1e293b; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
           <p style="margin: 0 0 10px; color: #cbd5e1;">Hi ${order.name},</p>
-          <p style="margin: 0; color: #cbd5e1; line-height: 1.6;">Thank you for reserving your official REVIVAL merchandise! Your pre-order is confirmed. <strong>Our team will contact you for the collection and payment.</strong></p>
+          <p style="margin: 0; color: #cbd5e1; line-height: 1.6;">Thank you for reserving your official REVIVAL merchandise! Your pre-order is confirmed.</p>
         </div>
 
         <div style="background-color: white; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 30px;">
           <h2 style="margin: 0 0 5px; color: #0f172a; font-size: 24px;">Order ${order.orderNumber}</h2>
-          <p style="margin: 0 0 20px; color: #64748b;">We will notify you once the stock has arrived for payment and pick-up.</p>
-          <img src="cid:order_qr" alt="Order QR Code" style="width: 200px; height: 200px; margin: 0 auto; display: block;" />
+          <p style="margin: 0 0 20px; color: #64748b;">Please complete your payment to secure your order.</p>
+          
+          <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 25px; text-align: left; font-family: monospace; color: #334155; font-size: 14px;">
+            <p style="margin: 0 0 8px;"><strong>Bank Name:</strong> Maybank</p>
+            <p style="margin: 0 0 8px;"><strong>Account Name:</strong> CALVARY COMMUNITY TT</p>
+            <p style="margin: 0 0 8px;"><strong>Account Number:</strong> 551016737305</p>
+            <p style="margin: 0;"><strong>Payment Reference:</strong> ${order.orderNumber}</p>
+          </div>
+
+          <a href="https://revival.thisiscccbilingual.com/merch-upload/${order.id}" style="display: inline-block; background-color: #0f172a; color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: bold; font-size: 16px;">
+            Upload Payment Receipt &rsaquo;
+          </a>
+          
+          <img src="cid:order_qr" alt="Order QR Code" style="width: 150px; height: 150px; margin: 25px auto 0; display: block;" />
         </div>
 
         <h3 style="color: white; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 15px;">Order Summary</h3>
@@ -128,5 +140,64 @@ export async function submitMerchOrder(data: { name: string; email: string; phon
   } catch (e) {
     console.error('Failed to submit merch order', e);
     return { success: false, message: 'Failed to submit order.' };
+  }
+}
+
+export async function uploadMerchReceipt(orderId: string, formData: FormData) {
+  try {
+    const base64String = formData.get('receiptBase64') as string | null;
+    if (!base64String) {
+      return { success: false, message: 'No receipt uploaded.' };
+    }
+
+    const order = await prisma.merchandiseOrder.update({
+      where: { id: orderId },
+      data: {
+        receiptUrl: base64String,
+        receiptUploadedAt: new Date(),
+        status: 'PAID', // Or 'PENDING_FOR_REVIEW' depending on flow
+      },
+    });
+
+    // Notify merch team
+    try {
+      const adminHtml = `
+        <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+          <h2>New Merch Payment Receipt</h2>
+          <p><strong>Name:</strong> ${order.name}</p>
+          <p><strong>Order Number:</strong> ${order.orderNumber}</p>
+          <p><strong>Amount:</strong> RM ${order.totalAmount}</p>
+          <p>Please log in to the Merchandise admin dashboard to review.</p>
+        </div>
+      `;
+      // Currently using the general notification email, or a specific merch email. For now, default admin.
+      await prisma.emailQueue.create({
+        data: {
+          to: 'kannanandrew101@gmail.com',
+          subject: `New Merch Receipt: ${order.orderNumber}`,
+          html: adminHtml,
+          status: 'PENDING'
+        }
+      });
+    } catch (emailError) {
+      console.error('Error with merch notify email logic:', emailError);
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error uploading merch receipt:', error);
+    return { success: false, message: 'Failed to upload receipt. Please try again.' };
+  }
+}
+
+export async function getMerchOrderById(id: string) {
+  try {
+    const order = await prisma.merchandiseOrder.findUnique({
+      where: { id },
+    });
+    return { success: true, data: order };
+  } catch (error) {
+    console.error("Failed to get merch order:", error);
+    return { success: false, message: "Server error" };
   }
 }

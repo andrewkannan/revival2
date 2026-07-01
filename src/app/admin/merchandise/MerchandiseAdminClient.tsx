@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { ShoppingBag, Search, Package, User, Hash, CheckCircle, XCircle, Clock, Download } from 'lucide-react';
+import { ShoppingBag, Search, Package, User, Hash, CheckCircle, XCircle, Clock, Download, Eye, X } from 'lucide-react';
+import JSZip from 'jszip';
 import { updateMerchandiseOrderStatus } from '@/actions/admin';
 
 type Props = {
@@ -12,6 +13,8 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
   const [search, setSearch] = useState('');
   const [orders, setOrders] = useState(initialOrders);
   const [updating, setUpdating] = useState<string | null>(null);
+  const [isDownloadingReceipts, setIsDownloadingReceipts] = useState(false);
+  const [previewModal, setPreviewModal] = useState<{url: string, title: string} | null>(null);
   
   // Calculate Aggregates
   const aggregates = useMemo(() => {
@@ -82,6 +85,61 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
     URL.revokeObjectURL(url);
   };
 
+  const handleDownloadReceipts = async () => {
+    setIsDownloadingReceipts(true);
+    try {
+      const zip = new JSZip();
+      const folder = zip.folder("merch_receipts");
+      
+      if (!folder) throw new Error("Failed to create zip folder");
+
+      const ordersWithReceipts = filteredOrders.filter(o => o.receiptUrl);
+      
+      if (ordersWithReceipts.length === 0) {
+        alert("No receipts found for the current filter.");
+        setIsDownloadingReceipts(false);
+        return;
+      }
+
+      for (const order of ordersWithReceipts) {
+        let data = order.receiptUrl;
+        let extension = 'jpg';
+        if (data.startsWith('data:')) {
+          const mimeType = data.split(';')[0].split(':')[1] || '';
+          if (mimeType.includes('png')) extension = 'png';
+          else if (mimeType.includes('pdf')) extension = 'pdf';
+          else if (mimeType.includes('jpeg') || mimeType.includes('jpg')) extension = 'jpg';
+        }
+
+        const filename = `Merch_${order.orderNumber}_${order.name.replace(/[^a-zA-Z0-9]/g, '_')}.${extension}`;
+        
+        try {
+          const response = await fetch(data);
+          const blob = await response.blob();
+          folder.file(filename, blob);
+        } catch (e) {
+          console.error(`Failed to process ${filename}`, e);
+        }
+      }
+
+      const content = await zip.generateAsync({ type: "blob" });
+      const url = window.URL.createObjectURL(content);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Merch_Receipts_${new Date().toISOString().split('T')[0]}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+    } catch (error) {
+      console.error("Failed to generate ZIP", error);
+      alert("Failed to generate ZIP file.");
+    } finally {
+      setIsDownloadingReceipts(false);
+    }
+  };
+
   return (
     <div className="space-y-8">
       
@@ -137,6 +195,18 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
                 className="w-full bg-black/50 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-poster-accent"
               />
             </div>
+            <button
+              onClick={handleDownloadReceipts}
+              disabled={isDownloadingReceipts}
+              className="flex items-center gap-2 px-4 py-2 bg-poster-accent/20 hover:bg-poster-accent/30 text-poster-accent text-sm font-medium rounded-lg transition-colors border border-poster-accent/30 whitespace-nowrap"
+            >
+              {isDownloadingReceipts ? (
+                <span className="animate-spin text-xl leading-none">⟳</span>
+              ) : (
+                <Download className="w-4 h-4" />
+              )}
+              Receipts
+            </button>
             <button
               onClick={handleExportCsv}
               className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-lg transition-colors border border-white/10 whitespace-nowrap"
@@ -212,7 +282,15 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
                           </span>
                         )}
                         
-                        <div className="flex gap-1 mt-1">
+                        <div className="flex gap-1 mt-1 justify-center">
+                          {order.receiptUrl && (
+                            <button
+                              onClick={() => setPreviewModal({ url: order.receiptUrl, title: `${order.orderNumber} - ${order.name}` })}
+                              className="text-xs px-2 py-1 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 font-bold rounded flex items-center gap-1"
+                            >
+                              <Eye className="w-3 h-3" /> View
+                            </button>
+                          )}
                           {order.status !== 'PAID' && (
                             <button 
                               disabled={updating === order.id}
@@ -247,6 +325,25 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
         </div>
       </div>
 
+      {previewModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-sm" onClick={() => setPreviewModal(null)}>
+          <div className="relative max-w-4xl w-full bg-[#111] border border-white/10 rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-full" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+              <h3 className="text-lg font-semibold text-white">Receipt Preview <span className="text-slate-400 text-sm font-normal ml-2">{previewModal.title}</span></h3>
+              <button onClick={() => setPreviewModal(null)} className="text-slate-400 hover:text-white transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-6 overflow-auto flex items-center justify-center bg-black/50 min-h-[300px]">
+              {previewModal.url.includes('pdf') ? (
+                <iframe src={previewModal.url} className="w-full h-[600px] rounded-lg" />
+              ) : (
+                <img src={previewModal.url} alt="Receipt" className="max-w-full max-h-[70vh] object-contain rounded-lg" />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
