@@ -15,6 +15,12 @@ const ITEMS = [
     popular: true
   },
   {
+    id: 'adults_tshirt',
+    name: 'Adults Tshirt',
+    price: 55,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL']
+  },
+  {
     id: 'sweatshirt',
     name: 'Sweatshirt',
     price: 80,
