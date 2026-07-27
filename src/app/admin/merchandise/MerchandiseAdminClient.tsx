@@ -382,23 +382,23 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
                               </a>
                             </>
                           )}
-                          {order.status !== 'PAID' && order.status !== 'CASH_PAID' && (
-                            <>
-                              <button 
-                                disabled={updating === order.id}
-                                onClick={() => handleUpdateStatus(order.id, 'PAID')}
-                                className="text-xs px-2 py-1 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded disabled:opacity-50"
-                              >
-                                Mark Transfer
-                              </button>
-                              <button 
-                                disabled={updating === order.id}
-                                onClick={() => handleUpdateStatus(order.id, 'CASH_PAID')}
-                                className="text-xs px-2 py-1 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded flex items-center gap-1 disabled:opacity-50"
-                              >
-                                <Banknote className="w-3 h-3" /> Cash
-                              </button>
-                            </>
+                          {order.status !== 'CANCELLED' && order.status !== 'PAID' && (
+                            <button 
+                              disabled={updating === order.id}
+                              onClick={() => handleUpdateStatus(order.id, 'PAID')}
+                              className="text-xs px-2 py-1 bg-emerald-500/80 hover:bg-emerald-500 text-black font-bold rounded disabled:opacity-50"
+                            >
+                              Mark Transfer
+                            </button>
+                          )}
+                          {order.status !== 'CANCELLED' && order.status !== 'CASH_PAID' && (
+                            <button 
+                              disabled={updating === order.id}
+                              onClick={() => handleUpdateStatus(order.id, 'CASH_PAID')}
+                              className="text-xs px-2 py-1 bg-emerald-500/80 hover:bg-emerald-500 text-black font-bold rounded flex items-center gap-1 disabled:opacity-50"
+                            >
+                              <Banknote className="w-3 h-3" /> Cash
+                            </button>
                           )}
                           {order.status !== 'CANCELLED' && (
                             <button 
