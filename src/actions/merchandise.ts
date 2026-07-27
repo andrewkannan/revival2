@@ -201,3 +201,59 @@ export async function getMerchOrderById(id: string) {
     return { success: false, message: "Server error" };
   }
 }
+
+export async function sendMerchReminderEmail(orderId: string, testEmail?: string) {
+  try {
+    const order = await prisma.merchandiseOrder.findUnique({
+      where: { id: orderId }
+    });
+    
+    if (!order) return { success: false, message: "Order not found" };
+
+    const recipientEmail = testEmail || order.email;
+    
+    const emailHtml = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background-color: #0f172a; color: white; padding: 40px 20px; border-radius: 16px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+          <h1 style="margin: 0; font-size: 28px; letter-spacing: 2px; color: white;">REVIVAL MERCH</h1>
+          <p style="margin: 5px 0 0; color: #94a3b8;">Payment Reminder</p>
+        </div>
+        
+        <div style="background-color: #1e293b; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
+          <p style="margin: 0 0 10px; color: #cbd5e1;">Hi ${order.name},</p>
+          <p style="margin: 0; color: #cbd5e1; line-height: 1.6;">This is a friendly reminder that we are waiting for your payment for your official REVIVAL merchandise pre-order.</p>
+        </div>
+
+        <div style="background-color: white; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 30px;">
+          <h2 style="margin: 0 0 5px; color: #0f172a; font-size: 24px;">Order ${order.orderNumber}</h2>
+          <p style="margin: 0 0 20px; color: #64748b;">Outstanding Amount: <strong>RM ${Number(order.totalAmount).toFixed(2)}</strong></p>
+          
+          <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 25px; text-align: left; font-family: monospace; color: #334155; font-size: 14px;">
+            <p style="margin: 0 0 8px;"><strong>Bank Name:</strong> Maybank</p>
+            <p style="margin: 0 0 8px;"><strong>Account Name:</strong> CALVARY COMMUNITY TT</p>
+            <p style="margin: 0 0 8px;"><strong>Account Number:</strong> 551016737305</p>
+            <p style="margin: 0;"><strong>Payment Reference:</strong> ${order.orderNumber}</p>
+          </div>
+
+          <a href="https://revival.thisiscccbilingual.com/merch-upload/${order.id}" style="display: inline-block; background-color: #0f172a; color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: bold; font-size: 16px;">
+            Upload Payment Receipt &rsaquo;
+          </a>
+        </div>
+      </div>
+    `;
+
+    await prisma.emailQueue.create({
+      data: {
+        to: recipientEmail,
+        subject: `Payment Reminder: REVIVAL Merch Pre-Order (${order.orderNumber})`,
+        html: emailHtml
+      }
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to send merch reminder email:", error);
+    return { success: false, message: "Server error" };
+  }
+}
+

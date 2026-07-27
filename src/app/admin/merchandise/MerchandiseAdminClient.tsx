@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { ShoppingBag, Search, Package, User, Hash, CheckCircle, XCircle, Clock, Download, Eye, X } from 'lucide-react';
+import { ShoppingBag, Search, Package, User, Hash, CheckCircle, XCircle, Clock, Download, Eye, X, Mail, Banknote } from 'lucide-react';
 import JSZip from 'jszip';
 import { updateMerchandiseOrderStatus } from '@/actions/admin';
+import { sendMerchReminderEmail } from '@/actions/merchandise';
 
 type Props = {
   initialOrders: any[];
@@ -11,19 +12,30 @@ type Props = {
 
 export default function MerchandiseAdminClient({ initialOrders }: Props) {
   const [search, setSearch] = useState('');
+  const [filterHasReceipt, setFilterHasReceipt] = useState(false);
   const [orders, setOrders] = useState(initialOrders);
   const [updating, setUpdating] = useState<string | null>(null);
+  const [sendingReminder, setSendingReminder] = useState<string | null>(null);
   const [isDownloadingReceipts, setIsDownloadingReceipts] = useState(false);
   const [previewModal, setPreviewModal] = useState<{url: string, title: string} | null>(null);
   
   // Calculate Aggregates
   const aggregates = useMemo(() => {
     let totalRevenue = 0;
+    let cashCollected = 0;
+    let transferCollected = 0;
     const itemsCount: Record<string, Record<string, number>> = {};
 
     orders.forEach(order => {
       if (order.status !== 'CANCELLED') {
         totalRevenue += Number(order.totalAmount);
+        
+        if (order.status === 'CASH_PAID') {
+          cashCollected += Number(order.totalAmount);
+        } else if (order.status === 'PAID') {
+          transferCollected += Number(order.totalAmount);
+        }
+
         order.items.forEach((item: any) => {
           const type = item.itemType;
           const size = item.size || 'One Size';
@@ -34,19 +46,27 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
       }
     });
 
-    return { totalRevenue, itemsCount };
+    return { totalRevenue, cashCollected, transferCollected, itemsCount };
   }, [orders]);
 
   // Filter Orders
   const filteredOrders = useMemo(() => {
-    if (!search) return orders;
-    const q = search.toLowerCase();
-    return orders.filter(o => 
-      o.name.toLowerCase().includes(q) || 
-      o.orderNumber.toLowerCase().includes(q) || 
-      o.email.toLowerCase().includes(q)
-    );
-  }, [orders, search]);
+    let result = orders;
+    
+    if (filterHasReceipt) {
+      result = result.filter(o => !!o.receiptUrl);
+    }
+    
+    if (search) {
+      const q = search.toLowerCase();
+      result = result.filter(o => 
+        o.name.toLowerCase().includes(q) || 
+        o.orderNumber.toLowerCase().includes(q) || 
+        o.email.toLowerCase().includes(q)
+      );
+    }
+    return result;
+  }, [orders, search, filterHasReceipt]);
 
   const handleUpdateStatus = async (orderId: string, status: string) => {
     setUpdating(orderId);
@@ -57,6 +77,28 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
       alert("Failed to update status");
     }
     setUpdating(null);
+  };
+
+  const handleSendReminder = async (orderId: string, isTest: boolean = false) => {
+    setSendingReminder(orderId);
+    const email = isTest ? 'kannanandrew101@gmail.com' : undefined;
+    const res = await sendMerchReminderEmail(orderId, email);
+    if (res.success) {
+      alert(isTest ? "Test reminder sent!" : "Reminder sent!");
+    } else {
+      alert("Failed to send reminder.");
+    }
+    setSendingReminder(null);
+  };
+
+  const handleTestReminder = () => {
+    const pendingOrders = orders.filter(o => o.status !== 'PAID' && o.status !== 'CASH_PAID' && o.status !== 'CANCELLED');
+    if (pendingOrders.length === 0) {
+      alert("No pending orders available to send a test reminder.");
+      return;
+    }
+    // Pick the first pending order as a sample
+    handleSendReminder(pendingOrders[0].id, true);
   };
 
   const handleExportCsv = () => {
@@ -145,15 +187,27 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
       
       {/* Aggregates Dashboard */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-6 lg:col-span-1 flex flex-col justify-center">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-emerald-500/10 rounded-full flex items-center justify-center">
-              <ShoppingBag className="w-5 h-5 text-emerald-400" />
+        <div className="bg-white/5 border border-white/10 rounded-2xl p-6 lg:col-span-1 flex flex-col justify-center space-y-4">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-8 h-8 bg-emerald-500/10 rounded-full flex items-center justify-center">
+                <ShoppingBag className="w-4 h-4 text-emerald-400" />
+              </div>
+              <h3 className="text-sm font-medium text-slate-300">Total Pre-Order Value</h3>
             </div>
-            <h3 className="text-lg font-medium text-slate-300">Total Pre-Order Revenue</h3>
+            <p className="text-2xl font-bold text-white">RM {aggregates.totalRevenue.toFixed(2)}</p>
           </div>
-          <p className="text-4xl font-bold text-emerald-400">RM {aggregates.totalRevenue.toFixed(2)}</p>
-          <p className="text-sm text-slate-500 mt-2">To be collected on conference day</p>
+          
+          <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
+            <div>
+              <h3 className="text-xs font-medium text-slate-400 mb-1">Transfer Paid</h3>
+              <p className="text-lg font-bold text-emerald-400">RM {aggregates.transferCollected.toFixed(2)}</p>
+            </div>
+            <div>
+              <h3 className="text-xs font-medium text-slate-400 mb-1">Cash Paid</h3>
+              <p className="text-lg font-bold text-emerald-400">RM {aggregates.cashCollected.toFixed(2)}</p>
+            </div>
+          </div>
         </div>
 
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6 lg:col-span-2">
@@ -185,6 +239,13 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
             Order List ({filteredOrders.length})
           </h3>
           <div className="flex items-center gap-4 w-full sm:w-auto">
+            <button
+              onClick={handleTestReminder}
+              disabled={sendingReminder !== null}
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 text-sm font-medium rounded-lg transition-colors border border-indigo-500/30 whitespace-nowrap"
+            >
+              <Mail className="w-4 h-4" /> Test Reminder
+            </button>
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
@@ -195,6 +256,12 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
                 className="w-full bg-black/50 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-poster-accent"
               />
             </div>
+            <button
+              onClick={() => setFilterHasReceipt(!filterHasReceipt)}
+              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors border whitespace-nowrap ${filterHasReceipt ? 'bg-poster-accent text-black border-poster-accent' : 'bg-white/5 hover:bg-white/10 text-white border-white/10'}`}
+            >
+              Has Receipt {filterHasReceipt && '✓'}
+            </button>
             <button
               onClick={handleDownloadReceipts}
               disabled={isDownloadingReceipts}
@@ -268,7 +335,12 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
                       <div className="flex flex-col items-center gap-2">
                         {order.status === 'PAID' && (
                           <span className="inline-flex items-center gap-1 text-xs font-bold px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded">
-                            <CheckCircle className="w-3 h-3" /> Paid & Collected
+                            <CheckCircle className="w-3 h-3" /> Paid (Transfer)
+                          </span>
+                        )}
+                        {order.status === 'CASH_PAID' && (
+                          <span className="inline-flex items-center gap-1 text-xs font-bold px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded">
+                            <CheckCircle className="w-3 h-3" /> Paid (Cash)
                           </span>
                         )}
                         {order.status === 'CANCELLED' && (
@@ -282,7 +354,7 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
                           </span>
                         )}
                         
-                        <div className="flex gap-1 mt-1 justify-center">
+                        <div className="flex gap-1 mt-1 justify-center flex-wrap max-w-[200px]">
                           {order.receiptUrl && (
                             <button
                               onClick={() => setPreviewModal({ url: order.receiptUrl, title: `${order.orderNumber} - ${order.name}` })}
@@ -291,14 +363,32 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
                               <Eye className="w-3 h-3" /> View
                             </button>
                           )}
-                          {order.status !== 'PAID' && (
+                          {(order.status === 'PENDING' || !order.status) && (
                             <button 
-                              disabled={updating === order.id}
-                              onClick={() => handleUpdateStatus(order.id, 'PAID')}
-                              className="text-xs px-2 py-1 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded disabled:opacity-50"
+                              disabled={sendingReminder === order.id}
+                              onClick={() => handleSendReminder(order.id)}
+                              className="text-xs px-2 py-1 bg-white/10 hover:bg-white/20 text-white rounded flex items-center gap-1 disabled:opacity-50"
                             >
-                              Mark Paid
+                              <Mail className="w-3 h-3" /> {sendingReminder === order.id ? '...' : 'Remind'}
                             </button>
+                          )}
+                          {order.status !== 'PAID' && order.status !== 'CASH_PAID' && (
+                            <>
+                              <button 
+                                disabled={updating === order.id}
+                                onClick={() => handleUpdateStatus(order.id, 'PAID')}
+                                className="text-xs px-2 py-1 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded disabled:opacity-50"
+                              >
+                                Mark Transfer
+                              </button>
+                              <button 
+                                disabled={updating === order.id}
+                                onClick={() => handleUpdateStatus(order.id, 'CASH_PAID')}
+                                className="text-xs px-2 py-1 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded flex items-center gap-1 disabled:opacity-50"
+                              >
+                                <Banknote className="w-3 h-3" /> Cash
+                              </button>
+                            </>
                           )}
                           {order.status !== 'CANCELLED' && (
                             <button 
