@@ -183,7 +183,7 @@ export async function uploadMerchReceipt(orderId: string, formData: FormData) {
       console.error('Error with merch notify email logic:', emailError);
     }
 
-    return { success: true };
+    return { success: true, receiptUrl: order.receiptUrl };
   } catch (error) {
     console.error('Error uploading merch receipt:', error);
     return { success: false, message: 'Failed to upload receipt. Please try again.' };

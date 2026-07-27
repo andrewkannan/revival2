@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { ShoppingBag, Search, Package, User, Hash, CheckCircle, XCircle, Clock, Download, Eye, X, Mail, Banknote, MessageCircle } from 'lucide-react';
+import { ShoppingBag, Search, Package, User, Hash, CheckCircle, XCircle, Clock, Download, Eye, X, Mail, Banknote, MessageCircle, Upload } from 'lucide-react';
 import JSZip from 'jszip';
 import { updateMerchandiseOrderStatus } from '@/actions/admin';
-import { sendMerchReminderEmail } from '@/actions/merchandise';
+import { sendMerchReminderEmail, uploadMerchReceipt } from '@/actions/merchandise';
 
 type Props = {
   initialOrders: any[];
@@ -16,8 +16,80 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
   const [orders, setOrders] = useState(initialOrders);
   const [updating, setUpdating] = useState<string | null>(null);
   const [sendingReminder, setSendingReminder] = useState<string | null>(null);
+  const [uploadingReceiptFor, setUploadingReceiptFor] = useState<string | null>(null);
   const [isDownloadingReceipts, setIsDownloadingReceipts] = useState(false);
   const [previewModal, setPreviewModal] = useState<{url: string, title: string} | null>(null);
+
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800;
+          const MAX_HEIGHT = 800;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          resolve(dataUrl);
+        };
+        img.onerror = (err) => reject(err);
+      };
+      reader.onerror = (err) => reject(err);
+    });
+  };
+
+  const handleAdminUploadReceipt = async (orderId: string) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = async (e: any) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      setUploadingReceiptFor(orderId);
+      try {
+        const compressedBase64 = await compressImage(file);
+        const formData = new FormData();
+        formData.append('receiptBase64', compressedBase64);
+
+        const res = await uploadMerchReceipt(orderId, formData);
+        if (res.success && res.receiptUrl) {
+          setOrders(prev => prev.map(o => o.id === orderId ? { ...o, receiptUrl: res.receiptUrl } : o));
+          alert('Receipt uploaded successfully!');
+        } else {
+          alert(res.message || 'Failed to upload receipt.');
+        }
+      } catch (error) {
+        console.error(error);
+        alert('An unexpected error occurred.');
+      } finally {
+        setUploadingReceiptFor(null);
+      }
+    };
+    input.click();
+  };
   
   // Calculate Aggregates
   const aggregates = useMemo(() => {
@@ -363,6 +435,13 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
                               <Eye className="w-3 h-3" /> View
                             </button>
                           )}
+                          <button
+                            disabled={uploadingReceiptFor === order.id}
+                            onClick={() => handleAdminUploadReceipt(order.id)}
+                            className="text-xs px-2 py-1 bg-sky-500/20 hover:bg-sky-500/30 text-sky-400 font-bold rounded flex items-center gap-1 disabled:opacity-50"
+                          >
+                            <Upload className="w-3 h-3" /> {uploadingReceiptFor === order.id ? '...' : 'Upload'}
+                          </button>
                           {(order.status === 'PENDING' || !order.status) && (
                             <>
                               <button 
