@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { ShoppingBag, Search, Package, User, Hash, CheckCircle, XCircle, Clock, Download, Eye, X, Mail, Banknote } from 'lucide-react';
+import { ShoppingBag, Search, Package, User, Hash, CheckCircle, XCircle, Clock, Download, Eye, X, Mail, Banknote, MessageCircle } from 'lucide-react';
 import JSZip from 'jszip';
 import { updateMerchandiseOrderStatus } from '@/actions/admin';
 import { sendMerchReminderEmail } from '@/actions/merchandise';
@@ -364,13 +364,23 @@ export default function MerchandiseAdminClient({ initialOrders }: Props) {
                             </button>
                           )}
                           {(order.status === 'PENDING' || !order.status) && (
-                            <button 
-                              disabled={sendingReminder === order.id}
-                              onClick={() => handleSendReminder(order.id)}
-                              className="text-xs px-2 py-1 bg-white/10 hover:bg-white/20 text-white rounded flex items-center gap-1 disabled:opacity-50"
-                            >
-                              <Mail className="w-3 h-3" /> {sendingReminder === order.id ? '...' : 'Remind'}
-                            </button>
+                            <>
+                              <button 
+                                disabled={sendingReminder === order.id}
+                                onClick={() => handleSendReminder(order.id)}
+                                className="text-xs px-2 py-1 bg-white/10 hover:bg-white/20 text-white rounded flex items-center gap-1 disabled:opacity-50"
+                              >
+                                <Mail className="w-3 h-3" /> {sendingReminder === order.id ? '...' : 'Remind'}
+                              </button>
+                              <a 
+                                href={`https://wa.me/${order.phone.replace(/[^0-9]/g, '').replace(/^0/, '60')}?text=${encodeURIComponent(`Hi ${order.name},\n\nThis is a friendly reminder that we are waiting for your payment for your official REVIVAL merchandise pre-order.\n\nOutstanding Amount: *RM ${Number(order.totalAmount).toFixed(2)}*\n\nPlease upload your payment receipt here: https://revival.thisiscccbilingual.com/merch-upload/${order.id}`)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 font-bold rounded flex items-center gap-1"
+                              >
+                                <MessageCircle className="w-3 h-3" /> WA
+                              </a>
+                            </>
                           )}
                           {order.status !== 'PAID' && order.status !== 'CASH_PAID' && (
                             <>
